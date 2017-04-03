@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170403155048) do
+ActiveRecord::Schema.define(version: 20170403160309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,13 +25,20 @@ ActiveRecord::Schema.define(version: 20170403155048) do
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.datetime "last_checked_at"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "completed_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "jobs_links", force: :cascade do |t|
+    t.integer "job_id"
+    t.integer "link_id"
+    t.index ["job_id"], name: "index_jobs_links_on_job_id", using: :btree
+    t.index ["link_id"], name: "index_jobs_links_on_link_id", using: :btree
   end
 
   create_table "links", force: :cascade do |t|
-    t.string   "url"
+    t.string   "uri"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -49,4 +56,5 @@ ActiveRecord::Schema.define(version: 20170403155048) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
 end

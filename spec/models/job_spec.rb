@@ -1,5 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Job, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "associations" do
+    context "for Link" do
+      let(:link) { FactoryGirl.build(:link) }
+
+      it "can have many links" do
+        subject.links << link
+        expect(subject.links).to include(link)
+      end
+    end
+  end
 end
