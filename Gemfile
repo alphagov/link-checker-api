@@ -10,6 +10,8 @@ gem "deprecated_columns"
 gem "gds-sso", "12.1.0"
 gem "plek", "~> 1.12"
 group :development, :test do
+  gem "simplecov-rcov", "0.2.3", require: false
+  gem "simplecov", "0.11.2", require: false
   gem "govuk-lint"
   gem "sqlite3" # Remove this when you choose a production database
   gem "factory_girl_rails", "4.7.0"
