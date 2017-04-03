@@ -9,6 +9,7 @@ gem "database_cleaner"
 gem "deprecated_columns"
 gem "gds-sso", "12.1.0"
 gem "plek", "~> 1.12"
+gem "airbrake", "~> 5.4.1"
 group :development, :test do
   gem "simplecov-rcov", "0.2.3", require: false
   gem "simplecov", "0.11.2", require: false
