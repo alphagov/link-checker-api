@@ -3,7 +3,10 @@ source "https://rubygems.org"
 gem "rails", "5.0.2"
 gem "unicorn", "~> 5.1.0"
 gem "logstasher", "0.6.2"
+gem "database_cleaner"
+gem "deprecated_columns"
 group :development, :test do
+  gem "sqlite3" # Remove this when you choose a production database
   gem "factory_girl_rails", "4.7.0"
   gem "timecop"
   gem "webmock", require: false
