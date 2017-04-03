@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 10
+  template: template0
+
+development:
+  <<: *default
+  database: link_checker_development
+  url: <%= ENV["DATABASE_URL"]%>
+
+test:
+  <<: *default
+  database: link_checker_test
+  url: <%= ENV["DATABASE_URL"].try(:sub, /([-_]development)?$/, '_test') %>
+
+production:
+  <<: *default
+  # Rails reads values from DATABASE_URL env var.
