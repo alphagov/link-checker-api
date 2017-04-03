@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "5.0.2"
 gem "unicorn", "~> 5.1.0"
+gem "logstasher", "0.6.2"
 group :development, :test do
   gem "byebug" # Comes standard with Rails
 end
