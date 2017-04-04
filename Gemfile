@@ -10,6 +10,8 @@ gem "plek", "~> 1.12"
 gem "airbrake", "~> 5.4"
 gem "pg"
 
+gem "faraday", "~> 0.11"
+
 group :development, :test do
   gem "pry"
   gem "simplecov-rcov", "~> 0.2", require: false
@@ -18,7 +20,7 @@ group :development, :test do
   gem "sqlite3" # Remove this when you choose a production database
   gem "factory_girl_rails", "~> 4.7"
   gem "timecop"
-  gem "webmock", require: false
+  gem "webmock"
   gem "rspec-rails", "~> 3.4"
   gem "byebug" # Comes standard with Rails
 end

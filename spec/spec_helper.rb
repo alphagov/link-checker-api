@@ -1,6 +1,6 @@
   require "pry"
   require "byebug"
-require "webmock"
+require "webmock/rspec"
 require "timecop"
 
 RSpec.configure do |config|
