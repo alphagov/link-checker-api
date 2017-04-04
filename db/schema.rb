@@ -10,10 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160622154200) do
+ActiveRecord::Schema.define(version: 20170403160309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "checks", force: :cascade do |t|
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.json     "warnings"
+    t.json     "errors"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "jobs_links", force: :cascade do |t|
+    t.integer "job_id"
+    t.integer "link_id"
+    t.index ["job_id"], name: "index_jobs_links_on_job_id", using: :btree
+    t.index ["link_id"], name: "index_jobs_links_on_link_id", using: :btree
+  end
+
+  create_table "links", force: :cascade do |t|
+    t.string   "uri"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
