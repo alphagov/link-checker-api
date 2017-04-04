@@ -252,6 +252,7 @@ DEPENDENCIES
   database_cleaner
   deprecated_columns
   factory_girl_rails (~> 4.7)
+  faraday (~> 0.11)
   gds-sso (~> 13.0)
   govuk-lint
   listen
