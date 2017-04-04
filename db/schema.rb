@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 20170404125450) do
     t.json     "link_errors"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "link_id"
+    t.index ["link_id"], name: "index_checks_on_link_id", using: :btree
   end
 
   create_table "jobs", force: :cascade do |t|
