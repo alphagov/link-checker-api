@@ -1,5 +1,3 @@
-require "uri_checker"
-require "link_check"
 require "rails_helper"
 
 RSpec.describe LinkCheck do
