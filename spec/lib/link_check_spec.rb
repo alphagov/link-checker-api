@@ -105,7 +105,7 @@ RSpec.describe LinkCheck do
 
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
-      before { stub_request(:head, uri).to_return(body: lambda { |r| sleep 2.5; "" }) }
+      before { stub_request(:head, uri).to_return(body: lambda { |r| sleep 2.6; "" }) }
       include_examples "has a warning", :slow_response
       include_examples "has no errors"
     end

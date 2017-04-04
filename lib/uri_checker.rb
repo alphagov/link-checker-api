@@ -15,7 +15,7 @@ module UriChecker
     end
 
     def has_errors?
-      !errors.empty?
+      errors.any?
     end
   end
 
@@ -51,11 +51,11 @@ module UriChecker
   end
 
   class HttpChecker
-    INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult)
-    REDIRECT_LIMIT = 10
+    INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles)
+    REDIRECT_LIMIT = 8
     REDIRECT_WARNING = 2
-    TIMEOUT = 5
-    SLOW_RESPONSE_TIME = 2
+    RESPONSE_TIME_LIMIT = 15
+    RESPONSE_TIME_WARNING = 2.5
 
     attr_reader :uri, :redirect_history, :report
 
@@ -110,7 +110,7 @@ module UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      report.warnings[:slow_response] << "Slow response time" if response_time > SLOW_RESPONSE_TIME
+      report.warnings[:slow_response] << "Slow response time" if response_time > RESPONSE_TIME_WARNING
 
       return response if report.has_errors?
 
@@ -186,8 +186,8 @@ module UriChecker
 
     def run_connection_request(method)
       connection.run_request(method, uri, nil, nil) do |request|
-        request.options[:timeout] = TIMEOUT
-        request.options[:open_timeout] = TIMEOUT
+        request.options[:timeout] = RESPONSE_TIME_LIMIT
+        request.options[:open_timeout] = RESPONSE_TIME_LIMIT
       end
     end
 
