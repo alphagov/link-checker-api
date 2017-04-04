@@ -23,5 +23,8 @@ module LinkChecker
     # -- all .rb files in that directory are automatically loaded.
 
     config.api_only = true
+
+    # GDS SSO requires a session to exist
+    middleware.insert_before Rack::Head, ActionDispatch::Session::CacheStore
   end
 end
