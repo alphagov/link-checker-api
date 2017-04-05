@@ -6,7 +6,7 @@ class LinkCheckJob < ApplicationJob
 
     check.update!(started_at: Time.now)
 
-    report = LinkCheck.new(check.link.uri).call
+    report = LinkChecker.new(check.link.uri).call
 
     check.update!(
       link_errors: report.errors,

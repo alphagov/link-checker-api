@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe LinkCheck do
+RSpec.describe LinkChecker do
   context "for different kinds of URIs" do
     subject { described_class.new(uri).call }
 

@@ -1,4 +1,4 @@
-class LinkCheck
+class LinkChecker
   attr_reader :uri, :report
 
   def initialize(uri)

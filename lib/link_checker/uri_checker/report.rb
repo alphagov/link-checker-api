@@ -1,4 +1,4 @@
-module LinkCheck::UriChecker
+module LinkChecker::UriChecker
   class Report
     attr_reader :errors, :warnings
 

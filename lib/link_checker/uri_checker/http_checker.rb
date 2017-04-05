@@ -1,4 +1,4 @@
-module LinkCheck::UriChecker
+module LinkChecker::UriChecker
   class HttpChecker
     INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles)
     REDIRECT_LIMIT = 8

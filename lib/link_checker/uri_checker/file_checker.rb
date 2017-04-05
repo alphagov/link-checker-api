@@ -1,4 +1,4 @@
-module LinkCheck::UriChecker
+module LinkChecker::UriChecker
   class FileChecker
     attr_reader :report
 
