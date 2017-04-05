@@ -1,4 +1,5 @@
 class Check < ApplicationRecord
+  has_and_belongs_to_many :batches
   belongs_to :link
 
   def to_h
@@ -29,7 +30,7 @@ class Check < ApplicationRecord
 
   def status
     return "pending" if is_pending?
-    return "error" if has_errors?
+    return "broken" if has_errors?
     return "caution" if has_warnings?
     return "ok"
   end
