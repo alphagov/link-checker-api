@@ -29,6 +29,14 @@ class Check < ApplicationRecord
   end
 
   def status
+    @status ||= determine_status
+  end
+
+  after_save { remove_instance_variable(:@status) if defined? @status }
+
+private
+
+  def determine_status
     return "pending" if is_pending?
     return "broken" if has_errors?
     return "caution" if has_warnings?

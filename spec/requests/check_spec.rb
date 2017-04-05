@@ -1,20 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "check path", type: :request do
+  include RequestHelper
+
   let(:uri) { "http://www.example.com" }
 
   def check_link_path(query_params = {})
     "/check?#{query_params.to_query}"
-  end
-
-  def build_link_report(params)
-    {
-      "uri"       => params.fetch(:uri, anything),
-      "status"    => params.fetch(:status, anything),
-      "checked"   => params.fetch(:checked, anything),
-      "errors"    => params.fetch(:errors, {}),
-      "warnings"  => params.fetch(:warnings, {}),
-    }
   end
 
   shared_examples "returns link report" do
@@ -114,7 +106,7 @@ RSpec.describe "check path", type: :request do
         ended_at: 10.minute.ago,
       )
 
-      get check_link_path(uri: uri, "checked-within": 5.minutes.to_i)
+      get check_link_path(uri: uri, checked_within: 5.minutes.to_i)
     end
 
     include_examples "returns link report"

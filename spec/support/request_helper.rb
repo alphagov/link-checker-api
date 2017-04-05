@@ -5,8 +5,8 @@ module RequestHelper
       "uri"       => params.fetch(:uri, anything),
       "status"    => params.fetch(:status, "pending"),
       "checked"   => params.fetch(:checked, anything),
-      "errors"    => params.fetch(:errors, []),
-      "warnings"  => params.fetch(:warnigns, []),
+      "errors"    => params.fetch(:errors, {}),
+      "warnings"  => params.fetch(:warnings, {}),
     }
   end
 

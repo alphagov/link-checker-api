@@ -22,7 +22,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) { build_batch_request(uris: [uri_a, uri_b]) }
       let(:batch_report) do
         build_batch_report(
-          status: "in_progess",
+          status: "in_progress",
           links: [
             {uri: uri_a, status: "pending"},
             {uri: uri_b, status: "pending"},
@@ -42,7 +42,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) { build_batch_request(uris: [uri_a, uri_b]) }
       let(:batch_report) do
         build_batch_report(
-          status: "in_progess",
+          status: "in_progress",
           links: [
             {uri: uri_a, status: "ok"},
             {uri: uri_b, status: "pending"},
@@ -51,7 +51,12 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        # create checked link
+        FactoryGirl.create(
+          :check,
+          link: FactoryGirl.create(:link, uri: uri_a),
+          ended_at: 1.minute.ago,
+        )
+
         post "/batch", params: batch_request.to_json
       end
 
@@ -74,7 +79,18 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        # create checked links
+        FactoryGirl.create(
+          :check,
+          link: FactoryGirl.create(:link, uri: uri_a),
+          ended_at: 1.minute.ago,
+        )
+
+        FactoryGirl.create(
+          :check,
+          link: FactoryGirl.create(:link, uri: uri_b),
+          ended_at: 1.minute.ago,
+        )
+
         post "/batch", params: batch_request.to_json
       end
 
@@ -113,7 +129,18 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        # create one link that is checked within 10 minutes and one that is longer
+        FactoryGirl.create(
+          :check,
+          link: FactoryGirl.create(:link, uri: uri_a),
+          ended_at: 5.minute.ago,
+        )
+
+        FactoryGirl.create(
+          :check,
+          link: FactoryGirl.create(:link, uri: uri_b),
+          ended_at: 20.minute.ago,
+        )
+
         post "/batch", params: batch_request.to_json
       end
 
@@ -129,7 +156,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) do
         build_batch_request(
           uris: [uri_a, uri_b],
-          webhook_uri: webhook_uri,
+          callback_uri: webhook_uri,
         )
       end
 
@@ -145,7 +172,18 @@ RSpec.describe "/batch endpoint" do
         end
 
         before do
-          # create checked links
+          FactoryGirl.create(
+            :check,
+            link: FactoryGirl.create(:link, uri: uri_a),
+            ended_at: 1.minute.ago,
+          )
+
+          FactoryGirl.create(
+            :check,
+            link: FactoryGirl.create(:link, uri: uri_b),
+            ended_at: 1.minute.ago,
+          )
+
           post "/batch", params: batch_request.to_json
         end
 
@@ -193,7 +231,23 @@ RSpec.describe "/batch endpoint" do
       let(:uri_b) { "http://example.com/b" }
 
       before do
-        # create models
+        FactoryGirl.create(
+          :batch,
+          id: batch_id,
+          checks: [
+            FactoryGirl.create(
+              :check,
+              link: FactoryGirl.create(:link, uri: uri_a),
+              ended_at: 1.minute.ago
+            ),
+            FactoryGirl.create(
+              :check,
+              link: FactoryGirl.create(:link, uri: uri_b),
+              ended_at: 1.minute.ago
+            ),
+          ],
+        )
+
         get "/batch/#{batch_id}"
       end
 
@@ -217,7 +271,21 @@ RSpec.describe "/batch endpoint" do
       let(:uri_b) { "http://example.com/b" }
 
       before do
-        # create models
+        FactoryGirl.create(
+          :batch,
+          id: batch_id,
+          checks: [
+            FactoryGirl.create(
+              :check,
+              link: FactoryGirl.create(:link, uri: uri_a),
+            ),
+            FactoryGirl.create(
+              :check,
+              link: FactoryGirl.create(:link, uri: uri_b),
+            ),
+          ],
+        )
+
         get "/batch/#{batch_id}"
       end
 
