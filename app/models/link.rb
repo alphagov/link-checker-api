@@ -3,9 +3,9 @@ class Link < ApplicationRecord
 
   validates_presence_of :uri
 
-  def existing_check
+  def find_check(within: 24.hours)
     checks
-      .where("ended_at > ?", Time.now - 24.hours)
+      .where("ended_at > ?", Time.now - within)
       .first
   end
 end

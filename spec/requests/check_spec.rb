@@ -46,7 +46,6 @@ RSpec.describe "check path", type: :request do
         ended_at: 1.minute.ago,
       )
 
-      # create db entries
       get check_link_path(uri: uri)
     end
 
@@ -70,7 +69,13 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "caution", warnings: warnings) }
 
     before do
-      # create db entries
+      FactoryGirl.create(
+        :check,
+        link: FactoryGirl.create(:link, uri: uri),
+        link_warnings: warnings,
+        ended_at: 1.minute.ago,
+      )
+
       get check_link_path(uri: uri)
     end
 
@@ -86,7 +91,13 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "broken", errors: errors) }
 
     before do
-      # create db entries
+      FactoryGirl.create(
+        :check,
+        link: FactoryGirl.create(:link, uri: uri),
+        link_errors: errors,
+        ended_at: 1.minute.ago,
+      )
+
       get check_link_path(uri: uri)
     end
 
@@ -97,7 +108,12 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "pending") }
 
     before do
-      # create db entries
+      FactoryGirl.create(
+        :check,
+        link: FactoryGirl.create(:link, uri: uri),
+        ended_at: 10.minute.ago,
+      )
+
       get check_link_path(uri: uri, "checked-within": 5.minutes.to_i)
     end
 
@@ -105,12 +121,15 @@ RSpec.describe "check path", type: :request do
   end
 
   context "when an unchecked uri is requested with synchronous = true" do
-    let(:link) { "http://www.example.com/page" }
-    let(:link_report) { build_link_report(uri: uri, status: "pending") }
+    let(:uri) { "http://www.example.com/page" }
+    let(:link_report) { build_link_report(uri: uri, status: "ok") }
 
     before do
-      stub_request(:head, link).to_return(status: 200)
-      get check_link_path(uri: link, "synchronous": "true")
+      stub_request(:head, uri).to_return(status: 200)
+      stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+        .to_return(status: 200, body: "{}")
+
+      get check_link_path(uri: uri, synchronous: "true")
     end
 
     include_examples "returns link report"

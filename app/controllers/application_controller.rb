@@ -1,7 +1,9 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   include GDS::SSO::ControllerMethods
 
   before_action :require_signin_permission!
 
-  protect_from_forgery with: :exception
+  rescue_from ActionController::ParameterMissing do |e|
+    render json: { error: { message: e.message } }, status: 400
+  end
 end
