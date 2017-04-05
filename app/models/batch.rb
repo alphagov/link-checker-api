@@ -13,7 +13,7 @@ class Batch < ApplicationRecord
         broken: checks.each.count { |check| check.status == "broken" },
         pending: checks.each.count { |check| check.status == "pending" },
       },
-      completed_at: ended_at,
+      completed_at: completed_at,
     }.deep_symbolize_keys
   end
 
@@ -21,12 +21,12 @@ class Batch < ApplicationRecord
     checks.minimum(:started_at)
   end
 
-  def ended_at
-    checks.maximum(:ended_at) if completed?
+  def completed_at
+    checks.maximum(:completed_at) if completed?
   end
 
   def completed?
-    checks.where(ended_at: nil).empty?
+    checks.where(completed_at: nil).empty?
   end
 
   def status

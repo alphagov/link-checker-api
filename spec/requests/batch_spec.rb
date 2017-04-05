@@ -54,7 +54,7 @@ RSpec.describe "/batch endpoint" do
         FactoryGirl.create(
           :check,
           link: FactoryGirl.create(:link, uri: uri_a),
-          ended_at: 1.minute.ago,
+          completed_at: 1.minute.ago,
         )
 
         post "/batch", params: batch_request.to_json
@@ -82,13 +82,13 @@ RSpec.describe "/batch endpoint" do
         FactoryGirl.create(
           :check,
           link: FactoryGirl.create(:link, uri: uri_a),
-          ended_at: 1.minute.ago,
+          completed_at: 1.minute.ago,
         )
 
         FactoryGirl.create(
           :check,
           link: FactoryGirl.create(:link, uri: uri_b),
-          ended_at: 1.minute.ago,
+          completed_at: 1.minute.ago,
         )
 
         post "/batch", params: batch_request.to_json
@@ -132,13 +132,13 @@ RSpec.describe "/batch endpoint" do
         FactoryGirl.create(
           :check,
           link: FactoryGirl.create(:link, uri: uri_a),
-          ended_at: 5.minute.ago,
+          completed_at: 5.minute.ago,
         )
 
         FactoryGirl.create(
           :check,
           link: FactoryGirl.create(:link, uri: uri_b),
-          ended_at: 20.minute.ago,
+          completed_at: 20.minute.ago,
         )
 
         post "/batch", params: batch_request.to_json
@@ -175,13 +175,13 @@ RSpec.describe "/batch endpoint" do
           FactoryGirl.create(
             :check,
             link: FactoryGirl.create(:link, uri: uri_a),
-            ended_at: 1.minute.ago,
+            completed_at: 1.minute.ago,
           )
 
           FactoryGirl.create(
             :check,
             link: FactoryGirl.create(:link, uri: uri_b),
-            ended_at: 1.minute.ago,
+            completed_at: 1.minute.ago,
           )
 
           post "/batch", params: batch_request.to_json
@@ -238,12 +238,12 @@ RSpec.describe "/batch endpoint" do
             FactoryGirl.create(
               :check,
               link: FactoryGirl.create(:link, uri: uri_a),
-              ended_at: 1.minute.ago
+              completed_at: 1.minute.ago
             ),
             FactoryGirl.create(
               :check,
               link: FactoryGirl.create(:link, uri: uri_b),
-              ended_at: 1.minute.ago
+              completed_at: 1.minute.ago
             ),
           ],
         )

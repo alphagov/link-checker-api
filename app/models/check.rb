@@ -6,14 +6,14 @@ class Check < ApplicationRecord
     {
       uri: link.uri,
       status: status,
-      checked: ended_at,
+      checked: completed_at,
       errors: link_errors,
       warnings: link_warnings,
     }.deep_symbolize_keys
   end
 
   def is_pending?
-    ended_at.nil?
+    completed_at.nil?
   end
 
   def has_errors?

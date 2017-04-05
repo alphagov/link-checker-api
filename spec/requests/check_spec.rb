@@ -35,7 +35,7 @@ RSpec.describe "check path", type: :request do
       FactoryGirl.create(
         :check,
         link: FactoryGirl.create(:link, uri: uri),
-        ended_at: 1.minute.ago,
+        completed_at: 1.minute.ago,
       )
 
       get check_link_path(uri: uri)
@@ -65,7 +65,7 @@ RSpec.describe "check path", type: :request do
         :check,
         link: FactoryGirl.create(:link, uri: uri),
         link_warnings: warnings,
-        ended_at: 1.minute.ago,
+        completed_at: 1.minute.ago,
       )
 
       get check_link_path(uri: uri)
@@ -87,7 +87,7 @@ RSpec.describe "check path", type: :request do
         :check,
         link: FactoryGirl.create(:link, uri: uri),
         link_errors: errors,
-        ended_at: 1.minute.ago,
+        completed_at: 1.minute.ago,
       )
 
       get check_link_path(uri: uri)
@@ -103,7 +103,7 @@ RSpec.describe "check path", type: :request do
       FactoryGirl.create(
         :check,
         link: FactoryGirl.create(:link, uri: uri),
-        ended_at: 10.minute.ago,
+        completed_at: 10.minute.ago,
       )
 
       get check_link_path(uri: uri, checked_within: 5.minutes.to_i)
