@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Job, type: :model do
+RSpec.describe Batch, type: :model do
   describe "associations" do
     context "for Link" do
       let(:link) { FactoryGirl.build(:link) }

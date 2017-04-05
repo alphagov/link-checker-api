@@ -7,8 +7,7 @@ class CheckController < ApplicationController
     return render(json: check.to_h) if check
 
     check = Check.create(link: link)
-    job = Job.create(links: [link])
-    LinkCheckJob.perform_later(job)
+    LinkCheckJob.perform_later(link)
 
     render(json: check.to_h)
   end
