@@ -2,7 +2,7 @@ class LinkCheckJob < ApplicationJob
   queue_as :default
 
   def perform(check)
-    return if check.started_at
+    return if check.started_at || check.ended_at
 
     check.update!(started_at: Time.now)
 

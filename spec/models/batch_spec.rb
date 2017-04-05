@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Batch, type: :model do
   describe "associations" do
-    context "for Link" do
-      let(:link) { FactoryGirl.build(:link) }
+    context "for Check" do
+      let(:check) { FactoryGirl.build(:check) }
 
-      it "can have many links" do
-        subject.links << link
-        expect(subject.links).to include(link)
+      it "can have many checks" do
+        subject.checks << check
+        expect(subject.checks).to include(check)
       end
     end
   end

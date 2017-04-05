@@ -7,13 +7,14 @@ RSpec.describe Link, type: :model do
       expect(subject.errors[:uri]).to include("can't be blank")
     end
   end
-  describe "associations" do
-    context "for Job" do
-      let(:job) { FactoryGirl.build(:job) }
 
-      it "can have many jobs" do
-        subject.jobs << job
-        expect(subject.jobs).to include(job)
+  describe "associations" do
+    context "for Check" do
+      let(:check) { FactoryGirl.build(:check) }
+
+      it "can have many checks" do
+        subject.checks << check
+        expect(subject.checks).to include(check)
       end
     end
   end
