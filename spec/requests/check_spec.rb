@@ -1,10 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "check path", type: :request do
-  let(:link) { "http://www.example.com" }
+  let(:uri) { "http://www.example.com" }
 
   def check_link_path(query_params = {})
-    "/check" + (query_params.empty? ? "?#{query_params.to_query}" : "")
+    "/check?#{query_params.to_query}"
   end
 
   def build_link_report(params)
@@ -12,8 +12,8 @@ RSpec.describe "check path", type: :request do
       "uri"       => params.fetch(:uri, anything),
       "status"    => params.fetch(:status, anything),
       "checked"   => params.fetch(:checked, anything),
-      "errors"    => params.fetch(:errors, []),
-      "warnings"  => params.fetch(:warnigns, []),
+      "errors"    => params.fetch(:errors, {}),
+      "warnings"  => params.fetch(:warnings, {}),
     }
   end
 
@@ -29,9 +29,7 @@ RSpec.describe "check path", type: :request do
   end
 
   context "when no uri is requested" do
-    before do
-      get "/check-link"
-    end
+    before { get check_link_path }
 
     it "returns 400" do
       expect(response).to have_http_status(400)
@@ -39,20 +37,26 @@ RSpec.describe "check path", type: :request do
   end
 
   context "when an ok checked uri is requested" do
-    let(:link_report) { build_link_report(uri: link, status: "ok") }
+    let(:link_report) { build_link_report(uri: uri, status: "ok") }
 
     before do
+      FactoryGirl.create(
+        :check,
+        link: FactoryGirl.create(:link, uri: uri),
+        ended_at: 1.minute.ago,
+      )
+
       # create db entries
-      get check_link_path(uri: link)
+      get check_link_path(uri: uri)
     end
 
     include_examples "returns link report"
   end
 
   context "when an unchecked uri is requested" do
-    let(:link_report) { build_link_report(uri: link, status: "pending") }
+    let(:link_report) { build_link_report(uri: uri, status: "pending") }
 
-    before { get check_link_path(uri: link) }
+    before { get check_link_path(uri: uri) }
 
     include_examples "returns link report"
   end
@@ -63,11 +67,11 @@ RSpec.describe "check path", type: :request do
         "risky_tld" => ["Potentially suspicious top level domain."],
       }
     end
-    let(:link_report) { build_link_report(uri: link, status: "caution", warnings: warnings) }
+    let(:link_report) { build_link_report(uri: uri, status: "caution", warnings: warnings) }
 
     before do
       # create db entries
-      get check_link_path(uri: link)
+      get check_link_path(uri: uri)
     end
 
     include_examples "returns link report"
@@ -79,22 +83,22 @@ RSpec.describe "check path", type: :request do
         "cyclic_redirect" => ["Has a cyclic redirect."],
       }
     end
-    let(:link_report) { build_link_report(uri: link, status: "broken", errors: errors) }
+    let(:link_report) { build_link_report(uri: uri, status: "broken", errors: errors) }
 
     before do
       # create db entries
-      get check_link_path(uri: link)
+      get check_link_path(uri: uri)
     end
 
     include_examples "returns link report"
   end
 
   context "when a checked uri was checked outside the `content-within` time" do
-    let(:link_report) { build_link_report(uri: link, status: "pending") }
+    let(:link_report) { build_link_report(uri: uri, status: "pending") }
 
     before do
       # create db entries
-      get check_link_path(uri: link, "checked-within": 5.minutes.to_i)
+      get check_link_path(uri: uri, "checked-within": 5.minutes.to_i)
     end
 
     include_examples "returns link report"
@@ -102,7 +106,7 @@ RSpec.describe "check path", type: :request do
 
   context "when an unchecked uri is requested with synchronous = true" do
     let(:link) { "http://www.example.com/page" }
-    let(:link_report) { build_link_report(uri: link, status: "pending") }
+    let(:link_report) { build_link_report(uri: uri, status: "pending") }
 
     before do
       stub_request(:head, link).to_return(status: 200)

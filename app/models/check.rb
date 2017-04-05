@@ -1,3 +1,36 @@
 class Check < ApplicationRecord
   belongs_to :link
+
+  def to_h
+    {
+      uri: link.uri,
+      status: status,
+      checked: ended_at,
+      errors: link_errors,
+      warnings: link_warnings,
+    }.deep_symbolize_keys
+  end
+
+  def is_pending?
+    ended_at.nil?
+  end
+
+  def has_errors?
+    link_errors.any?
+  end
+
+  def has_warnings?
+    link_warnings.any?
+  end
+
+  def is_ok?
+    !has_errors? && !has_warnings?
+  end
+
+  def status
+    return "pending" if is_pending?
+    return "error" if has_errors?
+    return "caution" if has_warnings?
+    return "ok"
+  end
 end
