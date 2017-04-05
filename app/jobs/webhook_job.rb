@@ -2,7 +2,7 @@ class WebhookJob < ApplicationJob
   queue_as :default
 
   def perform(check_or_batch, callback_uri)
-    return try_again(check_or_batch, callback_uri) unless check_or_batch.completed?
+    return WebhookJob.set(wait: 5.seconds).perform_later(check_or_batch, callback_uri) unless check_or_batch.completed?
 
     response = Faraday.post do |req|
       req.url callback_uri
@@ -11,11 +11,7 @@ class WebhookJob < ApplicationJob
     end
 
     if response.status >= 500
-      try_again(check_or_batch, callback_uri)
+      WebhookJob.set(wait: 10.minutes).perform_later(check_or_batch, callback_uri)
     end
-  end
-
-  def try_again(check_or_batch, callback_uri)
-    WebhookJob.set(wait: 10.minutes).perform_later(object, callback_uri)
   end
 end
