@@ -1,6 +1,3 @@
-require 'link_check'
-require 'uri_checker'
-
 class LinkCheckJob < ActiveJob::Base
   # TODO:
   #   - The Check#ended_at db query param should be stored in the job when

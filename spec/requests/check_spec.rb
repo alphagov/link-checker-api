@@ -1,11 +1,10 @@
 require "rails_helper"
 
-RSpec.describe "check link path", type: :request do
+RSpec.describe "check path", type: :request do
   let(:link) { "http://www.example.com" }
 
   def check_link_path(query_params = {})
-    path = "/check-link"
-    path + (query_params.empty? ? "?#{query_params.to_query}" : "")
+    "/check" + (query_params.empty? ? "?#{query_params.to_query}" : "")
   end
 
   def build_link_report(params)

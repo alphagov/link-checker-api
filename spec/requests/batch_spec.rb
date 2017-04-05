@@ -15,7 +15,6 @@ RSpec.describe "/batch endpoint" do
   end
 
   describe "POST /batch" do
-
     context "when creating a batch of links that haven't been checked" do
       let(:uri_a) { "http://example.com/a" }
       let(:uri_b) { "http://example.com/b" }
