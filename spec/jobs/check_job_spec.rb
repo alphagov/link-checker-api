@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe LinkCheckJob do
+RSpec.describe CheckJob do
   describe "perform" do
     let(:link) { FactoryGirl.build(:link, id: 123) }
     let(:report) { LinkChecker::UriChecker::Report.new }

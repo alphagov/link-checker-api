@@ -22,8 +22,10 @@ class BatchController < ApplicationController
       render json: batch.to_h, status: 201
     else
       checks.each do |check|
-        LinkCheckJob.perform_later(check, callback_uri)
+        CheckJob.perform_later(check)
       end
+
+      WebhookJob.perform_later(batch, callback_uri) if callback_uri
 
       render json: batch.to_h, status: 202
     end

@@ -28,6 +28,10 @@ class Check < ApplicationRecord
     !has_errors? && !has_warnings?
   end
 
+  def completed?
+    !is_pending?
+  end
+
   def status
     @status ||= determine_status
   end
