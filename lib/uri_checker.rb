@@ -34,18 +34,18 @@ module UriChecker
       parsed_uri = URI.parse(uri)
 
       if parsed_uri.scheme.nil?
-        report.warnings[:no_scheme] << "No scheme given."
+        report.warnings[:no_scheme] << "No scheme given, for example 'http://'."
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge!(HttpChecker.new(parsed_uri, options).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge!(FileChecker.new(parsed_uri, options).call)
       else
-        report.warnings[:unsupported_scheme] << "Unsupported scheme."
+        report.warnings[:unsupported_scheme] << "Unsupported scheme - we can't check this type of link."
       end
 
       report
     rescue URI::InvalidURIError
-      report.errors[:uri_invalid] << "Invalid URI"
+      report.errors[:uri_invalid] << "Not a valid URI or URL."
       report
     end
   end
@@ -86,21 +86,21 @@ module UriChecker
   private
 
     def check_redirects
-      report.errors[:too_many_redirects] << "Too many redirects." if redirect_history.length >= REDIRECT_LIMIT
-      report.errors[:cyclic_redirects] << "Has a cyclic redirect." if redirect_history.include?(uri)
-      report.warnings[:multiple_redirects] << "Multiple redirects." if redirect_history.length == REDIRECT_WARNING
+      report.errors[:too_many_redirects] << "Too many redirects. The page won't load for users." if redirect_history.length >= REDIRECT_LIMIT
+      report.errors[:cyclic_redirects] << "Has a cyclic redirect. This will make the user's browser crash." if redirect_history.include?(uri)
+      report.warnings[:multiple_redirects] << "Multiple redirects. This page has moved several times - find out where it is now and send users straight there." if redirect_history.length == REDIRECT_WARNING
     end
 
     def check_top_level_domain
       tld = uri.host.split(".").last
       if INVALID_TOP_LEVEL_DOMAINS.include?(tld)
-        report.warnings[:risky_tld] << "Potentially suspicious top level domain."
+        report.warnings[:risky_tld] << "Potentially suspicious top level domain. It contains the word #{tld}."
       end
     end
 
     def check_credentials
       if uri.user.present? || uri.password.present?
-        report.warnings[:credentials_in_uri] << "Credentials in URI"
+        report.warnings[:credentials_in_uri] << "Credentials in URI - there's a username or password in this link."
       end
     end
 
@@ -110,14 +110,14 @@ module UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      report.warnings[:slow_response] << "Slow response time" if response_time > RESPONSE_TIME_WARNING
+      report.warnings[:slow_response] << "Slow response time. The page loads slowly." if response_time > RESPONSE_TIME_WARNING
 
       return response if report.has_errors?
 
       if response.status >= 400 && response.status < 500
-        report.errors[:http_client_error] << "Received 4xx response"
+        report.errors[:http_client_error] << "Received 4xx response. This page doesn't exist any more."
       elsif response.status >= 500 && response.status < 600
-        report.errors[:http_server_error] << "Received 5xx response"
+        report.errors[:http_server_error] << "Received 5xx response. There's a problem with the server this page is hosted on."
       end
 
       report.warnings[:http_non_200] << "Page not available." unless response.status == 200
@@ -131,7 +131,7 @@ module UriChecker
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]")[0]["value"]
       if %w(restricted mature).include?(rating)
-        report.warnings[:meta_rating] << "Page suggests it contains mature content."
+        report.warnings[:meta_rating] << "Page suggests it contains mature content. It describes itself as '#{rating}'."
       end
     end
 
@@ -174,11 +174,11 @@ module UriChecker
 
         response
       rescue Faraday::ConnectionFailed
-        report.errors[:cant_connect] << "Connection failed"
+        report.errors[:cant_connect] << "Connection failed - this link won't work."
       rescue Faraday::TimeoutError
-        report.errors[:timeout] << "Timeout Error"
+        report.errors[:timeout] << "Timeout Error - this link won't work."
       rescue Faraday::SSLError
-        report.errors[:ssl_configuration] << "SSL Error"
+        report.errors[:ssl_configuration] << "SSL Error - this site isn't secure."
       rescue Faraday:: Error => e
         report.errors[:unknown_http_error] << e.class.to_s
       end
@@ -206,7 +206,7 @@ module UriChecker
     end
 
     def call
-      report.errors[:local_file] << "Link is to a local file."
+      report.errors[:local_file] << "Link is to a local file on your own computer."
       report
     end
   end
