@@ -12,20 +12,18 @@ class BatchController < ApplicationController
 
     checks = links.map do |link|
       check = link.find_completed_check(within: checked_within)
-      check ? check : Check.create(link: link)
+      check ? check : Check.create!(link: link)
     end
 
-    batch = Batch.create(checks: checks)
+    batch = Batch.create!(checks: checks)
 
     if batch.completed?
       WebhookJob.perform_now(batch, callback_uri) if callback_uri
       render json: batch.to_h, status: 201
     else
       checks.each do |check|
-        CheckJob.perform_later(check)
+        CheckJob.perform_later(check, batch: batch, callback_uri: callback_uri)
       end
-
-      WebhookJob.perform_later(batch, callback_uri) if callback_uri
 
       render json: batch.to_h, status: 202
     end

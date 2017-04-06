@@ -24,8 +24,8 @@ RSpec.describe "/batch endpoint" do
         build_batch_report(
           status: "in_progress",
           links: [
-            {uri: uri_a, status: "pending"},
-            {uri: uri_b, status: "pending"},
+            { uri: uri_a, status: "pending" },
+            { uri: uri_b, status: "pending" },
           ]
         )
       end
@@ -33,6 +33,10 @@ RSpec.describe "/batch endpoint" do
       before { post "/batch", params: batch_request.to_json }
 
       include_examples "returns batch report"
+
+      it "creates a job" do
+        expect(CheckJob).to have_been_enqueued.exactly(2)
+      end
     end
 
     context "when creating a batch where some of the links have been checked" do

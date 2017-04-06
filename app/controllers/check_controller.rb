@@ -7,16 +7,18 @@ class CheckController < ApplicationController
 
     link = Link.find_or_create_by!(uri: uri)
     check = link.find_completed_check(within: checked_within)
-    return render(json: check.to_h) if check
 
-    check = Check.create(link: link)
+    if check
+      WebhookJob.perform_later(check, callback_uri) if callback_uri
+      return render(json: check.to_h)
+    end
+
+    check = Check.create!(link: link)
 
     if synchronous
-      CheckJob.perform_now(check)
-      WebhookJob.perform_now(check, callback_uri) if callback_uri
+      CheckJob.perform_now(check, callback_uri: callback_uri)
     else
-      CheckJob.perform_later(check)
-      WebhookJob.perform_later(check, callback_uri) if callback_uri
+      CheckJob.perform_later(check, callback_uri: callback_uri)
     end
 
     render(json: check.to_h)

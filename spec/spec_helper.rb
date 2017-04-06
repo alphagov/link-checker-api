@@ -1,7 +1,10 @@
-  require "pry"
-  require "byebug"
+require "pry"
+require "byebug"
 require "webmock/rspec"
 require "timecop"
+require "govuk_sidekiq/testing"
+
+Sidekiq::Testing.fake!
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -29,6 +32,11 @@ RSpec.configure do |config|
 
   config.disable_monkey_patching!
   config.expose_dsl_globally = false
+
+  config.after(:each) do
+    ActiveJob::Base.queue_adapter.enqueued_jobs = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
+  end
 
   config.before(:suite) do
     WebMock.disable_net_connect!(allow_localhost: true)

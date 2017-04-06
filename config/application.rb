@@ -27,6 +27,8 @@ module LinkCheckerApi
 
     config.api_only = true
 
+    config.active_job.queue_adapter = :sidekiq
+
     # GDS SSO requires a session to exist
     middleware.insert_before Rack::Head, ActionDispatch::Session::CacheStore
   end
