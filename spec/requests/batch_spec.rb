@@ -111,6 +111,15 @@ RSpec.describe "/batch endpoint" do
       end
     end
 
+    context "when creating a batch with too many links" do
+      let(:batch_request) { build_batch_request(uris: ["http://example.com"] * 5001) }
+
+      it "returns 400" do
+        expect { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
+          .to raise_error(ActiveModel::ValidationError)
+      end
+    end
+
     context "when creating a batch and specifying links were checked_within a time" do
       let(:uri_a) { "http://example.com/a" }
       let(:uri_b) { "http://example.com/b" }
