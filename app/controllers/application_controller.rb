@@ -4,14 +4,18 @@ class ApplicationController < ActionController::Base
   before_action :require_signin_permission!
 
   rescue_from ActionController::ParameterMissing do |e|
-    render json: { error: { message: e.message } }, status: 400
+    render json: { error: { message: e.message } }, status: :bad_request
+  end
+
+  rescue_from ActionController::UnpermittedParameters do |e|
+    render json: { error: { message: e.message } }, status: :bad_request
   end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
-    render json: { error: { message: e.message } }, status: 404
+    render json: { error: { message: e.message } }, status: :not_found
   end
 
-  def payload
-    @payload ||= JSON.parse(request.body.read).deep_symbolize_keys
+  rescue_from ActiveModel::ValidationError do |e|
+    render json: { error: { message: e.message } }, status: :bad_request
   end
 end

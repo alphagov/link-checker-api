@@ -1,37 +1,67 @@
 class BatchController < ApplicationController
+  class CreateParams
+    include ActiveModel::Validations
+
+    attr_accessor :uris, :checked_within, :callback_uri
+
+    validates :uris, presence: true
+    validates :checked_within, numericality: { greater_than: 0 }
+
+    def initialize(params)
+      @params = params
+      @uris = permitted_params[:uris]
+      @checked_within = (permitted_params[:checked_within] || 24.hours).to_i
+      @callback_uri = permitted_params[:callback_uri]
+    end
+
+    def permitted_params
+      @permitted_params ||= @params.permit(:checked_within, :callback_uri, uris: [])
+    end
+  end
+
   def create
-    uris = payload.fetch(:uris)
-    checked_within = (payload[:checked_within] || 24.hours).to_i
-    callback_uri = payload[:callback_uri]
+    create_params = CreateParams.new(params)
+    create_params.validate!
 
-    return render json: { error: { message: "No URIs given." } }, status: 400 if uris.empty?
-
-    links = uris.map do |uri|
-      Link.find_or_create_by(uri: uri)
+    batch = ActiveRecord::Base.transaction do
+      links = Link.fetch_all(create_params.uris)
+      checks = Check.fetch_all(links, within: create_params.checked_within)
+      Batch.create!(checks: checks, callback_uri: create_params.callback_uri)
     end
-
-    checks = links.map do |link|
-      check = link.find_completed_check(within: checked_within)
-      check ? check : Check.create!(link: link)
-    end
-
-    batch = Batch.create!(checks: checks)
 
     if batch.completed?
-      WebhookJob.perform_now(batch, callback_uri) if callback_uri
-      render json: batch.to_h, status: 201
+      WebhookJob.perform_later(BatchPresenter.new(batch).call, batch.callback_uri) if batch.callback_uri
+      render(json: BatchPresenter.new(batch).call, status: 201)
     else
-      checks.each do |check|
-        CheckJob.perform_later(check, batch: batch, callback_uri: callback_uri)
+      batch.checks.each do |check|
+        CheckJob.perform_later(check)
       end
 
-      render json: batch.to_h, status: 202
+      render(json: BatchPresenter.new(batch).call, status: 202)
+    end
+  end
+
+  class ShowParams
+    include ActiveModel::Validations
+
+    attr_accessor :id
+
+    validates :id, presence: true, numericality: { greater_than_or_equal_to: 0 }
+
+    def initialize(params)
+      @params = params
+      @id = permitted_params[:id]
+    end
+
+    def permitted_params
+      @permitted_params ||= @params.permit(:id)
     end
   end
 
   def show
-    id = params.fetch(:id)
-    batch = Batch.find(id)
-    render json: batch.to_h
+    show_params = ShowParams.new(params)
+    show_params.validate!
+    batch = Batch.find(show_params.id)
+    render(json: BatchPresenter.new(batch).call)
   end
 end

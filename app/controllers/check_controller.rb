@@ -1,26 +1,41 @@
 class CheckController < ApplicationController
-  def check
-    uri = params.fetch(:uri)
-    synchronous = params[:synchronous] == "true"
-    checked_within = (params[:checked_within] || 24.hours).to_i
-    callback_uri = params[:callback_uri]
+  class CheckParams
+    include ActiveModel::Validations
 
-    link = Link.find_or_create_by!(uri: uri)
-    check = link.find_completed_check(within: checked_within)
+    attr_accessor :uri, :synchronous, :checked_within
 
-    if check
-      WebhookJob.perform_later(check, callback_uri) if callback_uri
-      return render(json: check.to_h)
+    validates :uri, presence: true, allow_blank: false
+    validates :synchronous, inclusion: { in: [ true, false ] }
+    validates :checked_within, numericality: { greater_than: 0 }
+
+    def initialize(params)
+      @params = params
+      @uri = permitted_params[:uri]
+      @synchronous = permitted_params[:synchronous] == "true"
+      @checked_within = (permitted_params[:checked_within] || 24.hours).to_i
     end
+
+    def permitted_params
+      @permitted_params ||= @params.permit(:uri, :synchronous, :checked_within)
+    end
+  end
+
+  def check
+    check_params = CheckParams.new(params)
+    check_params.validate!
+
+    link = Link.find_or_create_by!(uri: check_params.uri)
+    check = link.find_check(within: check_params.checked_within)
+    return render(json: CheckPresenter.new(check).call) if check
 
     check = Check.create!(link: link)
 
-    if synchronous
-      CheckJob.perform_now(check, callback_uri: callback_uri)
+    if check_params.synchronous
+      CheckJob.perform_now(check)
     else
-      CheckJob.perform_later(check, callback_uri: callback_uri)
+      CheckJob.perform_later(check)
     end
 
-    render(json: check.to_h)
+    render(json: CheckPresenter.new(check).call)
   end
 end

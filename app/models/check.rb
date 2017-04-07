@@ -2,6 +2,17 @@ class Check < ApplicationRecord
   has_and_belongs_to_many :batches
   belongs_to :link
 
+  scope :created_within, -> (within) { where("created_at > ?", Time.now - within) }
+
+  def self.fetch_all(links, within: 24.hours)
+    existing_checks = Check
+      .created_within(within)
+      .where(link: links)
+
+    existing_checks +
+      (links - existing_checks.map(&:link)).map { |link| Check.create!(link: link) }
+  end
+
   def to_h
     {
       uri: link.uri,
@@ -25,7 +36,7 @@ class Check < ApplicationRecord
   end
 
   def is_ok?
-    !has_errors? && !has_warnings?
+    !is_pending? && !has_errors? && !has_warnings?
   end
 
   def completed?
