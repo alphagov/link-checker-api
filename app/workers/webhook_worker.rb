@@ -1,9 +1,5 @@
-class WebhookJob < ApplicationJob
-  queue_as :default
-
-  rescue_from Faraday::Error do
-    retry_job wait: 5.minutes
-  end
+class WebhookWorker
+  include Sidekiq::Worker
 
   def perform(report, webhook_uri)
     connection.post do |req|

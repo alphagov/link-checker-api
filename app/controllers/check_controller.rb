@@ -31,9 +31,9 @@ class CheckController < ApplicationController
     check = Check.create!(link: link)
 
     if check_params.synchronous
-      CheckJob.perform_now(check)
+      CheckWorker.new.perform(check)
     else
-      CheckJob.perform_later(check)
+      CheckWorker.perform_async(check)
     end
 
     render(json: link_report(check))
