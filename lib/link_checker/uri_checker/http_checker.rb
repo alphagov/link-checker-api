@@ -111,7 +111,7 @@ module LinkChecker::UriChecker
           "Unable to talk to Google Safebrowsing API!",
           status: response.status,
           body: response.body,
-          headers: repsonse.headers,
+          headers: response.headers,
         )
       end
     end
