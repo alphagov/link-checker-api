@@ -1,7 +1,7 @@
 module LinkChecker::UriChecker
   class ValidUri
-    HTTP_URI_SCHEMES = %w(http https)
-    FILE_URI_SCHEMES = %w(file)
+    HTTP_URI_SCHEMES = %w(http https).freeze
+    FILE_URI_SCHEMES = %w(file).freeze
 
     attr_reader :report, :options
 

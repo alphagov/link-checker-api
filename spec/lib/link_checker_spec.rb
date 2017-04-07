@@ -103,7 +103,7 @@ RSpec.describe LinkChecker do
 
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
-      before { stub_request(:head, uri).to_return(body: lambda { |r| sleep 2.6; "" }) }
+      before { stub_request(:head, uri).to_return(body: lambda { |_| sleep 2.6; "" }) }
       include_examples "has a warning", :slow_response
       include_examples "has no errors"
     end
@@ -144,7 +144,7 @@ RSpec.describe LinkChecker do
 
         20.times do |i|
           stub_request(:head, "http://www.not-gov.uk/too_many_redirects_#{i}")
-            .to_return(status: 301, headers: { "Location" => "/too_many_redirects_#{i+1}" })
+            .to_return(status: 301, headers: { "Location" => "/too_many_redirects_#{i + 1}" })
         end
       end
       include_examples "has an error", :too_many_redirects
@@ -158,14 +158,14 @@ RSpec.describe LinkChecker do
 
         2.times do |i|
           stub_request(:head, "http://www.not-gov.uk/multiple_redirects_#{i}")
-            .to_return(status: 301, headers: { "Location" => "/multiple_redirects_#{i+1}" })
+            .to_return(status: 301, headers: { "Location" => "/multiple_redirects_#{i + 1}" })
         end
 
         stub_request(:head, "http://www.not-gov.uk/multiple_redirects_2")
           .to_return(status: 301, headers: { "Location" => "https://www.gov.uk/ok" })
       end
 
-      let(:uri) { "http://www.not-gov.uk/multiple_redirects"}
+      let(:uri) { "http://www.not-gov.uk/multiple_redirects" }
       include_examples "has a warning", :multiple_redirects
       include_examples "has no errors"
     end
@@ -182,7 +182,7 @@ RSpec.describe LinkChecker do
           .to_return(status: 301, headers: { "Location" => "/cyclic" })
       end
 
-      let(:uri) { "http://www.not-gov.uk/cyclic"}
+      let(:uri) { "http://www.not-gov.uk/cyclic" }
       include_examples "has a warning", :multiple_redirects
       include_examples "has an error", :cyclic_redirects
       include_examples "does not have error", :too_many_redirects
@@ -207,7 +207,7 @@ RSpec.describe LinkChecker do
           )
       end
 
-      let(:uri) { "http://www.not-gov.uk/mature_content"}
+      let(:uri) { "http://www.not-gov.uk/mature_content" }
       include_examples "has a warning", :meta_rating
       include_examples "has no errors"
     end

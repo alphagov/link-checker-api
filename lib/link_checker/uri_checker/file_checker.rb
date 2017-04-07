@@ -2,7 +2,7 @@ module LinkChecker::UriChecker
   class FileChecker
     attr_reader :report
 
-    def initialize(uri, options = {})
+    def initialize(_uri, _options = {})
       @report = Report.new
     end
 

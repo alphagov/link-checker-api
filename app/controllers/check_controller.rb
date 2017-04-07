@@ -5,7 +5,7 @@ class CheckController < ApplicationController
     attr_accessor :uri, :synchronous, :checked_within
 
     validates :uri, presence: true, allow_blank: false
-    validates :synchronous, inclusion: { in: [ true, false ] }
+    validates :synchronous, inclusion: { in: [true, false] }
     validates :checked_within, numericality: { greater_than: 0 }
 
     def initialize(params)

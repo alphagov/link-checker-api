@@ -6,7 +6,7 @@ class WebhookJob < ApplicationJob
   end
 
   def perform(report, webhook_uri)
-    response = connection.post do |req|
+    connection.post do |req|
       req.url webhook_uri
       req.headers["Content-Type"] = "application/json"
       req.body = report.to_json

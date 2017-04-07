@@ -7,5 +7,5 @@ Airbrake.configure do |config|
   config.project_id = 1 # dummy, not used in Errbit
   config.host = errbit_uri.to_s
   config.environment = environment
-  config.ignore_environments = ENV["ERRBIT_API_KEY"] ? [environment] : []
+  config.ignore_environments = ENV["ERRBIT_API_KEY"] ? [] : [environment]
 end

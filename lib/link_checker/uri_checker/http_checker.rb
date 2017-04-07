@@ -1,6 +1,6 @@
 module LinkChecker::UriChecker
   class HttpChecker
-    INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles)
+    INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles).freeze
     REDIRECT_LIMIT = 8
     REDIRECT_WARNING = 2
     RESPONSE_TIME_LIMIT = 15
@@ -8,7 +8,7 @@ module LinkChecker::UriChecker
 
     attr_reader :uri, :redirect_history, :report
 
-     def initialize(uri, redirect_history: [])
+    def initialize(uri, redirect_history: [])
       @uri = uri
       @redirect_history = redirect_history
       @report = Report.new
@@ -107,11 +107,12 @@ module LinkChecker::UriChecker
           report.add_warning(:google_safebrowsing, "Google Safebrowsing has detected a threat.")
         end
       else
-        Airbrake.notify("Unable to talk to Google Safebrowsing API!", {
+        Airbrake.notify(
+          "Unable to talk to Google Safebrowsing API!",
           status: response.status,
           body: response.body,
           headers: repsonse.headers,
-        })
+        )
       end
     end
 

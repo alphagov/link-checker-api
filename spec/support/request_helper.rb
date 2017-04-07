@@ -1,5 +1,4 @@
 module RequestHelper
-
   def build_link_report(params)
     {
       "uri"       => params.fetch(:uri, anything),

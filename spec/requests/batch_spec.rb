@@ -49,8 +49,8 @@ RSpec.describe "/batch endpoint" do
         build_batch_report(
           status: "in_progress",
           links: [
-            {uri: uri_a, status: "ok"},
-            {uri: uri_b, status: "pending"},
+            { uri: uri_a, status: "ok" },
+            { uri: uri_b, status: "pending" },
           ]
         )
       end
@@ -77,8 +77,8 @@ RSpec.describe "/batch endpoint" do
         build_batch_report(
           status: "completed",
           links: [
-            {uri: uri_a, status: "ok"},
-            {uri: uri_b, status: "ok"},
+            { uri: uri_a, status: "ok" },
+            { uri: uri_b, status: "ok" },
           ]
         )
       end
@@ -171,8 +171,8 @@ RSpec.describe "/batch endpoint" do
           build_batch_report(
             status: "completed",
             links: [
-              {uri: uri_a, status: "ok"},
-              {uri: uri_b, status: "ok"},
+              { uri: uri_a, status: "ok" },
+              { uri: uri_b, status: "ok" },
             ]
           )
         end
@@ -207,8 +207,8 @@ RSpec.describe "/batch endpoint" do
           build_batch_report(
             status: "in_progress",
             links: [
-              {uri: uri_a, status: "pending"},
-              {uri: uri_b, status: "pending"},
+              { uri: uri_a, status: "pending" },
+              { uri: uri_b, status: "pending" },
             ]
           )
         end
@@ -309,5 +309,4 @@ RSpec.describe "/batch endpoint" do
       include_examples "returns batch report", 200
     end
   end
-
 end
