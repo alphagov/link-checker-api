@@ -65,9 +65,12 @@ module LinkChecker::UriChecker
         report.add_error(:http_client_error, "Received 4xx response")
       elsif response.status >= 500 && response.status < 600
         report.add_error(:http_server_error, "Received 5xx response")
+      else
+        unless response.status == 200
+          report.add_warning(:http_non_200, "Received a non 200 success response.")
+        end
       end
 
-      report.add_warning(:http_non_200, "Page not available.") unless response.status == 200
       response
     end
 
