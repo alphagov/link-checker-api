@@ -26,7 +26,7 @@ class CheckController < ApplicationController
 
     link = Link.find_or_create_by!(uri: check_params.uri)
     check = link.find_check(within: check_params.checked_within)
-    return render(json: CheckPresenter.new(check).call) if check
+    return render(json: link_report(check)) if check
 
     check = Check.create!(link: link)
 
@@ -36,6 +36,12 @@ class CheckController < ApplicationController
       CheckJob.perform_later(check)
     end
 
-    render(json: CheckPresenter.new(check).call)
+    render(json: link_report(check))
+  end
+
+private
+
+  def link_report(check)
+    CheckPresenter.new(check).link_report
   end
 end

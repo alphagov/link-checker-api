@@ -1,19 +1,11 @@
-class CheckPresenter
-  def initialize(check)
-    @check = check
-  end
-
-  def call
+class CheckPresenter < SimpleDelegator
+  def link_report
     {
-      uri: check.link.uri,
-      status: check.status.to_s,
-      checked: check.completed_at.try(:iso8601),
-      errors: check.link_errors,
-      warnings: check.link_warnings,
-    }.deep_symbolize_keys
+      uri: link.uri,
+      status: status.to_s,
+      checked: completed_at.try(:iso8601),
+      errors: link_errors.symbolize_keys,
+      warnings: link_warnings.symbolize_keys,
+    }
   end
-
-private
-
-  attr_reader :check
 end

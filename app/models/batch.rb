@@ -1,16 +1,6 @@
 class Batch < ApplicationRecord
   has_and_belongs_to_many :checks
 
-  def to_h
-    {
-      id: id,
-      status: status,
-      checks: checks.map(&:to_h),
-      started_at: started_at,
-      completed_at: completed_at,
-    }
-  end
-
   def started_at
     checks.minimum(:started_at)
   end

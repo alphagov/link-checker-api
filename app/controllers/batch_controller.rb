@@ -30,38 +30,25 @@ class BatchController < ApplicationController
     end
 
     if batch.completed?
-      WebhookJob.perform_later(BatchPresenter.new(batch).call, batch.webhook_uri) if batch.webhook_uri
-      render(json: BatchPresenter.new(batch).call, status: 201)
+      WebhookJob.perform_later(batch_report(batch), batch.webhook_uri) if batch.webhook_uri
+      render(json: batch_report(batch), status: 201)
     else
       batch.checks.each do |check|
         CheckJob.perform_later(check)
       end
 
-      render(json: BatchPresenter.new(batch).call, status: 202)
-    end
-  end
-
-  class ShowParams
-    include ActiveModel::Validations
-
-    attr_accessor :id
-
-    validates :id, presence: true, numericality: { greater_than_or_equal_to: 0 }
-
-    def initialize(params)
-      @params = params
-      @id = permitted_params[:id]
-    end
-
-    def permitted_params
-      @permitted_params ||= @params.permit(:id)
+      render(json: batch_report(batch), status: 202)
     end
   end
 
   def show
-    show_params = ShowParams.new(params)
-    show_params.validate!
-    batch = Batch.find(show_params.id)
-    render(json: BatchPresenter.new(batch).call)
+    batch = Batch.find(params[:id])
+    render(json: batch_report(batch))
+  end
+
+private
+
+  def batch_report(batch)
+    BatchPresenter.new(batch).report
   end
 end

@@ -13,16 +13,6 @@ class Check < ApplicationRecord
       (links - existing_checks.map(&:link)).map { |link| Check.create!(link: link) }
   end
 
-  def to_h
-    {
-      uri: link.uri,
-      status: status,
-      checked: completed_at,
-      errors: link_errors,
-      warnings: link_warnings,
-    }.deep_symbolize_keys
-  end
-
   def is_pending?
     completed_at.nil?
   end
@@ -44,14 +34,6 @@ class Check < ApplicationRecord
   end
 
   def status
-    @status ||= determine_status
-  end
-
-  after_save { remove_instance_variable(:@status) if defined? @status }
-
-private
-
-  def determine_status
     return :pending if is_pending?
     return :broken if has_errors?
     return :caution if has_warnings?
