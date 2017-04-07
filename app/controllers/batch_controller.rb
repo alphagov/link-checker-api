@@ -2,7 +2,7 @@ class BatchController < ApplicationController
   class CreateParams
     include ActiveModel::Validations
 
-    attr_accessor :uris, :checked_within, :callback_uri
+    attr_accessor :uris, :checked_within, :webhook_uri
 
     validates :uris, presence: true
     validates :checked_within, numericality: { greater_than: 0 }
@@ -11,11 +11,11 @@ class BatchController < ApplicationController
       @params = params
       @uris = permitted_params[:uris]
       @checked_within = (permitted_params[:checked_within] || 24.hours).to_i
-      @callback_uri = permitted_params[:callback_uri]
+      @webhook_uri = permitted_params[:webhook_uri]
     end
 
     def permitted_params
-      @permitted_params ||= @params.permit(:checked_within, :callback_uri, uris: [])
+      @permitted_params ||= @params.permit(:checked_within, :webhook_uri, uris: [])
     end
   end
 
@@ -26,11 +26,11 @@ class BatchController < ApplicationController
     batch = ActiveRecord::Base.transaction do
       links = Link.fetch_all(create_params.uris)
       checks = Check.fetch_all(links, within: create_params.checked_within)
-      Batch.create!(checks: checks, callback_uri: create_params.callback_uri)
+      Batch.create!(checks: checks, webhook_uri: create_params.webhook_uri)
     end
 
     if batch.completed?
-      WebhookJob.perform_later(BatchPresenter.new(batch).call, batch.callback_uri) if batch.callback_uri
+      WebhookJob.perform_later(BatchPresenter.new(batch).call, batch.webhook_uri) if batch.webhook_uri
       render(json: BatchPresenter.new(batch).call, status: 201)
     else
       batch.checks.each do |check|

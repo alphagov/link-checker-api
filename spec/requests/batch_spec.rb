@@ -163,7 +163,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) do
         build_batch_request(
           uris: [uri_a, uri_b],
-          callback_uri: webhook_uri,
+          webhook_uri: webhook_uri,
         )
       end
 
@@ -196,7 +196,7 @@ RSpec.describe "/batch endpoint" do
           end
         end
 
-        it "posts a request to the callback_uri" do
+        it "posts a request to the webhook_uri" do
           expect(stubbed_request).to have_been_requested
         end
 

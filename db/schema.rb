@@ -16,9 +16,9 @@ ActiveRecord::Schema.define(version: 20170407082207) do
   enable_extension "plpgsql"
 
   create_table "batches", force: :cascade do |t|
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.string   "callback_uri"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "webhook_uri"
   end
 
   create_table "batches_checks", force: :cascade do |t|

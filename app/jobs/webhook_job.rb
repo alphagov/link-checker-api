@@ -5,9 +5,9 @@ class WebhookJob < ApplicationJob
     retry_job wait: 5.minutes
   end
 
-  def perform(report, callback_uri)
+  def perform(report, webhook_uri)
     response = connection.post do |req|
-      req.url callback_uri
+      req.url webhook_uri
       req.headers["Content-Type"] = "application/json"
       req.body = report.to_json
     end

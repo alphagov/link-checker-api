@@ -21,8 +21,8 @@ class CheckJob < ApplicationJob
     check.batches.each do |batch|
       WebhookJob.perform_now(
         BatchPresenter.new(batch).call,
-        batch.callback_uri
-      ) if batch.callback_uri
+        batch.webhook_uri
+      ) if batch.webhook_uri
     end
   end
 end
