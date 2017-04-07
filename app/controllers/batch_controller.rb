@@ -4,7 +4,7 @@ class BatchController < ApplicationController
 
     attr_accessor :uris, :checked_within, :webhook_uri
 
-    validates :uris, presence: true
+    validates :uris, presence: true, length: { maximum: 5000 }
     validates :checked_within, numericality: { greater_than: 0 }
 
     def initialize(params)
