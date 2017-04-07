@@ -84,7 +84,7 @@ module LinkChecker::UriChecker
       return unless response
 
       page = Nokogiri::HTML(response.body)
-      rating = page.css("meta[name=rating]")[0]["value"]
+      rating = page.css("meta[name=rating]").first&.attr("value")
       if %w(restricted mature).include?(rating)
         report.add_warning(:meta_rating, "Page suggests it contains mature content.")
       end
