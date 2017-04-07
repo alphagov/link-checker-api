@@ -21,10 +21,8 @@ RSpec.describe "check path", type: :request do
   end
 
   context "when no uri is requested" do
-    before { get check_link_path }
-
-    it "returns 400" do
-      expect(response).to have_http_status(400)
+    it "raises a validation error" do
+      expect { get check_link_path }.to raise_error(ActiveModel::ValidationError)
     end
   end
 

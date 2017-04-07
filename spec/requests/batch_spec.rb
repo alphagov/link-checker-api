@@ -105,10 +105,9 @@ RSpec.describe "/batch endpoint" do
     context "when creating a batch with no links" do
       let(:batch_request) { build_batch_request(uris: []) }
 
-      before { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
-
       it "returns 400" do
-        expect(response).to have_http_status(400)
+        expect { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
+          .to raise_error(ActiveModel::ValidationError)
       end
     end
 
@@ -227,10 +226,8 @@ RSpec.describe "/batch endpoint" do
 
   describe "GET /batch/:id" do
     context "when requesting a batch that doesn't exist" do
-      before { get "/batch/432" }
-
       it "returns 404" do
-        expect(response).to have_http_status(404)
+        expect { get "/batch/432" }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
