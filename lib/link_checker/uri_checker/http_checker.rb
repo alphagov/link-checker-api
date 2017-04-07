@@ -15,6 +15,11 @@ module LinkChecker::UriChecker
     end
 
     def call
+      if uri.host.nil?
+        report.add_error(:no_host, "No host given.")
+        return report
+      end
+
       check_redirects
       check_top_level_domain
       check_credentials
