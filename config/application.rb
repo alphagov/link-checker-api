@@ -16,7 +16,7 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module LinkChecker
+module LinkCheckerApi
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -26,6 +26,8 @@ module LinkChecker
     config.eager_load_paths += Dir["#{config.root}/lib/**/"]
 
     config.api_only = true
+
+    config.active_job.queue_adapter = :sidekiq
 
     # GDS SSO requires a session to exist
     middleware.insert_before Rack::Head, ActionDispatch::Session::CacheStore

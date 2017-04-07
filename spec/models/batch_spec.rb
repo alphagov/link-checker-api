@@ -1,13 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Link, type: :model do
-  describe "validations" do
-    it "validates the presence of uri" do
-      expect(subject).not_to be_valid
-      expect(subject.errors[:uri]).to include("can't be blank")
-    end
-  end
-
+RSpec.describe Batch, type: :model do
   describe "associations" do
     context "for Check" do
       let(:check) { FactoryGirl.build(:check) }

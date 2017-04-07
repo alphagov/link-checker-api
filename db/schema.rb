@@ -10,37 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404125450) do
+ActiveRecord::Schema.define(version: 20170407082207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "batches", force: :cascade do |t|
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "webhook_uri"
+  end
+
+  create_table "batches_checks", force: :cascade do |t|
+    t.integer "batch_id"
+    t.integer "check_id"
+    t.index ["batch_id"], name: "index_batches_checks_on_batch_id", using: :btree
+    t.index ["check_id"], name: "index_batches_checks_on_check_id", using: :btree
+  end
+
   create_table "checks", force: :cascade do |t|
     t.datetime "started_at"
-    t.datetime "ended_at"
-    t.json     "link_warnings"
-    t.json     "link_errors"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "completed_at"
+    t.json     "link_warnings", default: {}, null: false
+    t.json     "link_errors",   default: {}, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "link_id"
     t.index ["link_id"], name: "index_checks_on_link_id", using: :btree
   end
 
-  create_table "jobs", force: :cascade do |t|
-    t.datetime "completed_at"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  create_table "jobs_links", force: :cascade do |t|
-    t.integer "job_id"
-    t.integer "link_id"
-    t.index ["job_id"], name: "index_jobs_links_on_job_id", using: :btree
-    t.index ["link_id"], name: "index_jobs_links_on_link_id", using: :btree
-  end
-
   create_table "links", force: :cascade do |t|
-    t.string   "uri"
+    t.string   "uri",        null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -59,4 +59,7 @@ ActiveRecord::Schema.define(version: 20170404125450) do
     t.datetime "updated_at"
   end
 
+  add_foreign_key "batches_checks", "batches"
+  add_foreign_key "batches_checks", "checks"
+  add_foreign_key "checks", "links"
 end

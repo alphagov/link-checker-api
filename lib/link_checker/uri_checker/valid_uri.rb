@@ -1,7 +1,7 @@
-module LinkCheck::UriChecker
+module LinkChecker::UriChecker
   class ValidUri
-    HTTP_URI_SCHEMES = %w(http https)
-    FILE_URI_SCHEMES = %w(file)
+    HTTP_URI_SCHEMES = %w(http https).freeze
+    FILE_URI_SCHEMES = %w(file).freeze
 
     attr_reader :report, :options
 
@@ -18,7 +18,7 @@ module LinkCheck::UriChecker
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, options).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
-        report.merge(LinkCheck::UriChecker::FileChecker.new(parsed_uri, options).call)
+        report.merge(FileChecker.new(parsed_uri, options).call)
       else
         report.add_warning(:unsupported_scheme, "Unsupported scheme.")
       end

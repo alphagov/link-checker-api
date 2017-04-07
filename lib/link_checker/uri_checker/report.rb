@@ -1,4 +1,4 @@
-module LinkCheck::UriChecker
+module LinkChecker::UriChecker
   class Report
     attr_reader :errors, :warnings
 
@@ -8,8 +8,8 @@ module LinkCheck::UriChecker
     end
 
     def merge(other)
-      errors.merge!(other.errors) { |key, oldval, newval| oldval | newval }
-      warnings.merge!(other.warnings) { |key, oldval, newval| oldval | newval }
+      errors.merge!(other.errors) { |_, oldval, newval| oldval | newval }
+      warnings.merge!(other.warnings) { |_, oldval, newval| oldval | newval }
       self
     end
 
