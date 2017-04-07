@@ -30,11 +30,11 @@ class BatchController < ApplicationController
     end
 
     if batch.completed?
-      WebhookJob.perform_later(batch_report(batch), batch.webhook_uri) if batch.webhook_uri
+      WebhookWorker.perform_async(batch_report(batch), batch.webhook_uri) if batch.webhook_uri
       render(json: batch_report(batch), status: 201)
     else
       batch.checks.each do |check|
-        CheckJob.perform_later(check)
+        CheckWorker.perform_async(check)
       end
 
       render(json: batch_report(batch), status: 202)

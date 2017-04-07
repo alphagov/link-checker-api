@@ -34,8 +34,7 @@ RSpec.configure do |config|
   config.expose_dsl_globally = false
 
   config.after(:each) do
-    ActiveJob::Base.queue_adapter.enqueued_jobs = []
-    ActiveJob::Base.queue_adapter.performed_jobs = []
+    Sidekiq::Worker.clear_all
   end
 
   config.before(:suite) do

@@ -1,5 +1,5 @@
-class CheckJob < ApplicationJob
-  queue_as :default
+class CheckWorker
+  include Sidekiq::Worker
 
   def perform(check)
     return trigger_callbacks(check) if check.started_at || check.completed_at
@@ -19,7 +19,7 @@ class CheckJob < ApplicationJob
 
   def trigger_callbacks(check)
     check.batches.each do |batch|
-      WebhookJob.perform_now(
+      WebhookWorker.perform_async(
         BatchPresenter.new(batch).call,
         batch.webhook_uri
       ) if batch.webhook_uri

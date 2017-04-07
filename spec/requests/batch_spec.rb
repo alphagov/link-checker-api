@@ -36,7 +36,7 @@ RSpec.describe "/batch endpoint" do
       include_examples "returns batch report"
 
       it "creates a job" do
-        expect(CheckJob).to have_been_enqueued.exactly(2)
+        expect(CheckWorker.jobs.size).to eq(2)
       end
     end
 
@@ -190,7 +190,7 @@ RSpec.describe "/batch endpoint" do
             completed_at: 1.minute.ago,
           )
 
-          perform_enqueued_jobs do
+          Sidekiq::Testing.inline! do
             post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" }
           end
         end
