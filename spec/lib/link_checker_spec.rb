@@ -58,8 +58,14 @@ RSpec.describe LinkChecker do
 
     context "URI with no scheme" do
       let(:uri) { "//test/test" }
-      include_examples "has a warning", :no_scheme
-      include_examples "has no errors"
+      include_examples "has an error", :no_scheme
+      include_examples "has no warnings"
+    end
+
+    context "URI with no host" do
+      let(:uri) { "http:///" }
+      include_examples "has an error", :no_host
+      include_examples "has no warnings"
     end
 
     context "URI with an unsupported scheme" do
