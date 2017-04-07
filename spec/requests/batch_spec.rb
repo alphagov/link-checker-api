@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "/batch endpoint" do
+  include ActiveJob::TestHelper
   include RequestHelper
 
   shared_examples "returns batch report" do |status_code = 202|
@@ -30,7 +31,7 @@ RSpec.describe "/batch endpoint" do
         )
       end
 
-      before { post "/batch", params: batch_request.to_json }
+      before { post "/batch", params: batch_request.to_json, headers: { "Content-Type" => "application/json" } }
 
       include_examples "returns batch report"
 
@@ -61,7 +62,7 @@ RSpec.describe "/batch endpoint" do
           completed_at: 1.minute.ago,
         )
 
-        post "/batch", params: batch_request.to_json
+        post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" }
       end
 
       include_examples "returns batch report"
@@ -95,7 +96,7 @@ RSpec.describe "/batch endpoint" do
           completed_at: 1.minute.ago,
         )
 
-        post "/batch", params: batch_request.to_json
+        post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" }
       end
 
       include_examples "returns batch report", 201
@@ -104,7 +105,7 @@ RSpec.describe "/batch endpoint" do
     context "when creating a batch with no links" do
       let(:batch_request) { build_batch_request(uris: []) }
 
-      before { post "/batch", params: batch_request.to_json }
+      before { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
 
       it "returns 400" do
         expect(response).to have_http_status(400)
@@ -126,8 +127,8 @@ RSpec.describe "/batch endpoint" do
         build_batch_report(
           status: "in_progress",
           links: [
-            {uri: uri_a, status: "ok"},
-            {uri: uri_b, status: "pending"},
+            { uri: uri_a, status: "ok" },
+            { uri: uri_b, status: "pending" },
           ]
         )
       end
@@ -137,15 +138,17 @@ RSpec.describe "/batch endpoint" do
           :check,
           link: FactoryGirl.create(:link, uri: uri_a),
           completed_at: 5.minute.ago,
+          created_at: 5.minute.ago,
         )
 
         FactoryGirl.create(
           :check,
           link: FactoryGirl.create(:link, uri: uri_b),
           completed_at: 20.minute.ago,
+          created_at: 20.minute.ago,
         )
 
-        post "/batch", params: batch_request.to_json
+        post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" }
       end
 
       include_examples "returns batch report"
@@ -188,10 +191,12 @@ RSpec.describe "/batch endpoint" do
             completed_at: 1.minute.ago,
           )
 
-          post "/batch", params: batch_request.to_json
+          perform_enqueued_jobs do
+            post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" }
+          end
         end
 
-        it "posts a request to the webhook_uri" do
+        it "posts a request to the callback_uri" do
           expect(stubbed_request).to have_been_requested
         end
 
@@ -209,7 +214,7 @@ RSpec.describe "/batch endpoint" do
           )
         end
 
-        before { post "/batch", params: batch_request.to_json }
+        before { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
 
         it "doesn't post a request to the webhook_uri" do
           expect(stubbed_request).not_to have_been_requested

@@ -104,6 +104,7 @@ RSpec.describe "check path", type: :request do
         :check,
         link: FactoryGirl.create(:link, uri: uri),
         completed_at: 10.minute.ago,
+        created_at: 11.minute.ago,
       )
 
       get check_link_path(uri: uri, checked_within: 5.minutes.to_i)
