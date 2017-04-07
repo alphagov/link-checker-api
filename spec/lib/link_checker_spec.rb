@@ -119,14 +119,14 @@ RSpec.describe LinkChecker do
       let(:uri) { "http://www.not-gov.uk/404" }
       before { stub_request(:head, uri).to_return(status: 404) }
       include_examples "has an error", :http_client_error
-      include_examples "has a warning", :http_non_200
+      include_examples "has no warnings"
     end
 
     context "5xx status code" do
       let(:uri) { "http://www.not-gov.uk/500" }
       before { stub_request(:head, uri).to_return(status: 500) }
       include_examples "has an error", :http_server_error
-      include_examples "has a warning", :http_non_200
+      include_examples "has no warnings"
     end
 
     context "non-200 status code" do
