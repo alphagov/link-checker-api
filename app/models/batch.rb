@@ -5,16 +5,10 @@ class Batch < ApplicationRecord
     {
       id: id,
       status: status,
-      links: checks.map(&:to_h),
-      totals: {
-        links: checks.count,
-        ok: checks.each.count { |check| check.status == "ok" },
-        caution: checks.each.count { |check| check.status == "caution" },
-        broken: checks.each.count { |check| check.status == "broken" },
-        pending: checks.each.count { |check| check.status == "pending" },
-      },
+      checks: checks.map(&:to_h),
+      started_at: started_at,
       completed_at: completed_at,
-    }.deep_symbolize_keys
+    }
   end
 
   def started_at
@@ -30,7 +24,6 @@ class Batch < ApplicationRecord
   end
 
   def status
-    return "completed" if completed?
-    return "in_progress"
+    completed? ? :completed : :in_progress
   end
 end

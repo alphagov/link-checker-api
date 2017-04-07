@@ -41,9 +41,9 @@ class Check < ApplicationRecord
 private
 
   def determine_status
-    return "pending" if is_pending?
-    return "broken" if has_errors?
-    return "caution" if has_warnings?
-    return "ok"
+    return :pending if is_pending?
+    return :broken if has_errors?
+    return :caution if has_warnings?
+    :ok
   end
 end
