@@ -10,22 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170407082207) do
+ActiveRecord::Schema.define(version: 20170410080630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "batch_checks", force: :cascade do |t|
+    t.integer "batch_id"
+    t.integer "check_id"
+    t.index ["batch_id"], name: "index_batch_checks_on_batch_id", using: :btree
+    t.index ["check_id"], name: "index_batch_checks_on_check_id", using: :btree
+  end
 
   create_table "batches", force: :cascade do |t|
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "webhook_uri"
-  end
-
-  create_table "batches_checks", force: :cascade do |t|
-    t.integer "batch_id"
-    t.integer "check_id"
-    t.index ["batch_id"], name: "index_batches_checks_on_batch_id", using: :btree
-    t.index ["check_id"], name: "index_batches_checks_on_check_id", using: :btree
   end
 
   create_table "checks", force: :cascade do |t|
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20170407082207) do
     t.datetime "updated_at"
   end
 
-  add_foreign_key "batches_checks", "batches"
-  add_foreign_key "batches_checks", "checks"
+  add_foreign_key "batch_checks", "batches"
+  add_foreign_key "batch_checks", "checks"
   add_foreign_key "checks", "links"
 end

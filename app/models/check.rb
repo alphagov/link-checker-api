@@ -1,5 +1,7 @@
 class Check < ApplicationRecord
-  has_and_belongs_to_many :batches
+  has_many :batch_checks
+  has_many :batches, :through => :batch_checks
+
   belongs_to :link
 
   scope :created_within, -> (within) { where("created_at > ?", Time.now - within) }
