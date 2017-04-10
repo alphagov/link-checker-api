@@ -92,6 +92,7 @@ module LinkChecker::UriChecker
 
     def check_google_safebrowsing
       api_key = Rails.application.secrets.google_api_key
+      return unless api_key
 
       response = Faraday.post do |req|
         req.url "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=#{api_key}"
