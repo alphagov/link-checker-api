@@ -26,6 +26,7 @@ group :development, :test do
   gem "timecop"
   gem "webmock"
   gem "rspec-rails", "~> 3.4"
+  gem "rspec-sidekiq", "~> 3.0"
   gem "byebug" # Comes standard with Rails
 end
 
