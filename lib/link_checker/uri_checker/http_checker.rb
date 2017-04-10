@@ -72,7 +72,7 @@ module LinkChecker::UriChecker
       elsif response.status >= 500 && response.status < 600
         report.add_error(:http_server_error, "Received 5xx response")
       else
-        unless response.status == 200
+        unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
           report.add_warning(:http_non_200, "Received a non 200 success response.")
         end
       end
