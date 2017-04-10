@@ -37,7 +37,7 @@ class CheckWorker
   def trigger_callbacks(check)
     check.batches.each do |batch|
       WebhookWorker.perform_async(
-        BatchPresenter.new(batch).call,
+        BatchPresenter.new(batch).report,
         batch.webhook_uri
       ) if batch.webhook_uri
     end
