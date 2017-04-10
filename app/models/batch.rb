@@ -1,5 +1,6 @@
 class Batch < ApplicationRecord
-  has_and_belongs_to_many :checks
+  has_many :batch_checks, -> { order(:order) }
+  has_many :checks, through: :batch_checks
 
   def started_at
     checks.minimum(:started_at)

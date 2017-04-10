@@ -1,5 +1,7 @@
 class Check < ApplicationRecord
-  has_and_belongs_to_many :batches
+  has_many :batch_checks
+  has_many :batches, through: :batch_checks
+
   belongs_to :link
 
   scope :created_within, -> (within) { where("created_at > ?", Time.now - within) }
@@ -9,8 +11,13 @@ class Check < ApplicationRecord
       .created_within(within)
       .where(link: links)
 
-    existing_checks +
-      (links - existing_checks.map(&:link)).map { |link| Check.create!(link: link) }
+    new_checks = (links - existing_checks.map(&:link)).map do |link|
+      Check.new(link: link)
+    end
+
+    Check.import(new_checks)
+
+    existing_checks + new_checks
   end
 
   def is_pending?

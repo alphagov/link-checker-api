@@ -26,7 +26,15 @@ class BatchController < ApplicationController
     batch = ActiveRecord::Base.transaction do
       links = Link.fetch_all(create_params.uris)
       checks = Check.fetch_all(links, within: create_params.checked_within)
-      Batch.create!(checks: checks, webhook_uri: create_params.webhook_uri)
+      batch = Batch.create!(webhook_uri: create_params.webhook_uri)
+
+      batch_checks = checks.each_with_index.map do |check, i|
+        BatchCheck.new(batch_id: batch.id, check_id: check.id, order: i)
+      end
+
+      BatchCheck.import(batch_checks)
+
+      batch
     end
 
     if batch.completed?
@@ -34,15 +42,15 @@ class BatchController < ApplicationController
       render(json: batch_report(batch), status: 201)
     else
       batch.checks.each do |check|
-        CheckWorker.perform_async(check)
+        CheckWorker.perform_async(check.id)
       end
 
-      render(json: batch_report(batch), status: 202)
+      render(json: batch_report(batch.reload), status: 202)
     end
   end
 
   def show
-    batch = Batch.find(params[:id])
+    batch = Batch.includes(checks: :link).find(params[:id])
     render(json: batch_report(batch))
   end
 

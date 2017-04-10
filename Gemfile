@@ -14,6 +14,8 @@ gem "faraday", "~> 0.11"
 
 gem "govuk_sidekiq", "~> 1.0"
 
+gem "activerecord-import", "~> 0.17"
+
 group :development, :test do
   gem "pry"
   gem "simplecov-rcov", "~> 0.2", require: false
