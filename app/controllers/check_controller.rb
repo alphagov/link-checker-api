@@ -31,12 +31,12 @@ class CheckController < ApplicationController
     check = Check.create!(link: link)
 
     if check_params.synchronous
-      CheckWorker.new.perform(check)
+      CheckWorker.new.perform(check.id)
     else
-      CheckWorker.perform_async(check)
+      CheckWorker.perform_async(check.id)
     end
 
-    render(json: link_report(check))
+    render(json: link_report(check.reload))
   end
 
 private

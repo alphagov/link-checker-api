@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CheckWorker do
   describe "perform" do
-    let(:link) { FactoryGirl.build(:link, id: 123) }
+    let(:link) { FactoryGirl.create(:link, id: 123) }
     let(:report) { LinkChecker::UriChecker::Report.new }
 
     before do
@@ -10,7 +10,7 @@ RSpec.describe CheckWorker do
     end
 
     context "for previously unchecked links" do
-      let(:check) { FactoryGirl.build(:check, link: link) }
+      let(:check) { FactoryGirl.create(:check, link: link) }
       let(:link_checker) { double(:link_checker) }
 
       it "initialises and runs a link check" do
@@ -20,18 +20,18 @@ RSpec.describe CheckWorker do
 
         expect(link_checker).to receive(:call).and_return(report)
 
-        subject.perform(check)
+        subject.perform(check.id)
       end
     end
 
     context "for previously checked links" do
-      let(:check) { FactoryGirl.build(:check, link: link, started_at: 1.hour.ago) }
+      let(:check) { FactoryGirl.create(:check, link: link, started_at: 1.hour.ago) }
 
       it "does not perform a Link Check" do
         expect(LinkChecker).not_to receive(:new)
         expect_any_instance_of(LinkChecker).not_to receive(:call)
 
-        subject.perform(check)
+        subject.perform(check.id)
       end
     end
   end

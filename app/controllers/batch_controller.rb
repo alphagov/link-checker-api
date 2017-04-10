@@ -37,7 +37,7 @@ class BatchController < ApplicationController
       render(json: batch_report(batch), status: 201)
     else
       batch.checks.each do |check|
-        CheckWorker.perform_async(check)
+        CheckWorker.perform_async(check.id)
       end
 
       render(json: batch_report(batch), status: 202)
