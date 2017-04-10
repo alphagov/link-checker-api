@@ -1,6 +1,7 @@
 module LinkChecker::UriChecker
   class HttpChecker
     INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles).freeze
+    REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
     REDIRECT_WARNING = 2
     RESPONSE_TIME_LIMIT = 15
@@ -71,7 +72,7 @@ module LinkChecker::UriChecker
       elsif response.status >= 500 && response.status < 600
         report.add_error(:http_server_error, "Received 5xx response")
       else
-        unless response.status == 200
+        unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
           report.add_warning(:http_non_200, "Received a non 200 success response.")
         end
       end
@@ -129,7 +130,7 @@ module LinkChecker::UriChecker
       begin
         response = run_connection_request(method)
 
-        if [301, 302, 303, 307, 308].include?(response.status) && response.headers.include?("location") && !report.has_errors?
+        if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
           target_uri = uri + response.headers["location"]
           subreport = ValidUri
             .new(redirect_history: redirect_history + [uri])
