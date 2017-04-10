@@ -1,6 +1,8 @@
 class WebhookWorker
   include Sidekiq::Worker
 
+  sidekiq_options queue: :webhooks
+
   def perform(report, webhook_uri)
     connection.post do |req|
       req.url webhook_uri
