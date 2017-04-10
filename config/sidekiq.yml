@@ -3,3 +3,4 @@
 :logfile: ./log/sidekiq.json.log
 :queues:
   - default
+  - webhooks
