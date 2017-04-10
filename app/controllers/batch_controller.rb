@@ -40,12 +40,12 @@ class BatchController < ApplicationController
         CheckWorker.perform_async(check.id)
       end
 
-      render(json: batch_report(batch), status: 202)
+      render(json: batch_report(batch.reload), status: 202)
     end
   end
 
   def show
-    batch = Batch.find(params[:id])
+    batch = Batch.includes(checks: :link).find(params[:id])
     render(json: batch_report(batch))
   end
 
