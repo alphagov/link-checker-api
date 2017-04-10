@@ -5,8 +5,14 @@ class Link < ApplicationRecord
 
   def self.fetch_all(uris)
     existing_links = Link.where(uri: uris).all
-    existing_links +
-      (uris - existing_links.map(&:uri)).map { |uri| Link.create!(uri: uri) }
+
+    new_links = (uris - existing_links.map(&:uri)).map do |uri|
+      Link.new(uri: uri)
+    end
+
+    Link.import(new_links)
+
+    existing_links + new_links
   end
 
   def find_check(within: 24.hours)
