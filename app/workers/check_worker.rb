@@ -1,6 +1,8 @@
 class CheckWorker
   include Sidekiq::Worker
 
+  sidekiq_options retry: 3
+
   def perform(check_id)
     check = Check.includes(:link, :batches).find(check_id)
 
