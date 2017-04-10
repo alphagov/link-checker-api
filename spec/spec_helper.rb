@@ -33,10 +33,6 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
   config.expose_dsl_globally = false
 
-  config.after(:each) do
-    Sidekiq::Worker.clear_all
-  end
-
   config.before(:suite) do
     WebMock.disable_net_connect!(allow_localhost: true)
   end

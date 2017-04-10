@@ -34,5 +34,15 @@ RSpec.describe CheckWorker do
         subject.perform(check.id)
       end
     end
+
+    context "when it is unable to check the link" do
+      let(:check) { FactoryGirl.create(:check, link: link, started_at: 1.hour.ago) }
+      let(:msg) { { "args" => [check] } }
+
+      it "sets the check to a warning" do
+        described_class.within_sidekiq_retries_exhausted_block(msg) {}
+        expect(check.reload.status).to eq(:caution)
+      end
+    end
   end
 end

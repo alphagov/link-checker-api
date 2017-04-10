@@ -1,6 +1,21 @@
 class CheckWorker
   include Sidekiq::Worker
 
+  sidekiq_options retry: 3
+
+  sidekiq_retries_exhausted do |msg|
+    Check.connection_pool.with_connection do |_|
+      check = msg["args"].first
+      check.update!(
+        link_errors: {},
+        link_warnings: {
+          check_failed: "Could not complete the check."
+        },
+        completed_at: Time.now
+      )
+    end
+  end
+
   def perform(check_id)
     check = Check.includes(:link, :batches).find(check_id)
 
