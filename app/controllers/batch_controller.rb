@@ -26,7 +26,10 @@ class BatchController < ApplicationController
     batch = ActiveRecord::Base.transaction do
       links = Link.fetch_all(create_params.uris)
       checks = Check.fetch_all(links, within: create_params.checked_within)
-      Batch.create!(checks: checks, webhook_uri: create_params.webhook_uri)
+      Batch.create!(
+        batch_checks: checks.each_with_index.map { |check, i| BatchCheck.create(check: check, order: i) },
+        webhook_uri: create_params.webhook_uri,
+      )
     end
 
     if batch.completed?

@@ -1,6 +1,6 @@
 class Check < ApplicationRecord
   has_many :batch_checks
-  has_many :batches, :through => :batch_checks
+  has_many :batches, through: :batch_checks
 
   belongs_to :link
 
