@@ -7,7 +7,7 @@ module LinkChecker::UriChecker
     end
 
     def call
-      report.add_error(:local_file, "Link is to a local file.")
+      report.add_error("Local file", "Link is to a local file.")
       report
     end
   end
