@@ -53,7 +53,9 @@ RSpec.describe "check path", type: :request do
   context "when a checked uri, that is of status caution, is requested" do
     let(:warnings) do
       {
-        "risky_tld" => ["Potentially suspicious top level domain."],
+        "risky_tld" => {
+          "Risky TLD" => ["Potentially suspicious top level domain."],
+        },
       }
     end
     let(:link_report) { build_link_report(uri: uri, status: "caution", warnings: warnings) }
@@ -75,7 +77,9 @@ RSpec.describe "check path", type: :request do
   context "when a checked uri, that is of status broken, is requested" do
     let(:errors) do
       {
-        "cyclic_redirect" => ["Has a cyclic redirect."],
+        "cyclic_redirect" => {
+          "Cyclic Redirect" => ["Has a cyclic redirect."],
+        },
       }
     end
     let(:link_report) { build_link_report(uri: uri, status: "broken", errors: errors) }
