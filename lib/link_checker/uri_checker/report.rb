@@ -3,8 +3,8 @@ module LinkChecker::UriChecker
     attr_reader :errors, :warnings
 
     def initialize(errors: nil, warnings: nil)
-      @errors = errors || Hash.new { |hash, key| hash[key] = [] }
-      @warnings = warnings || Hash.new { |hash, key| hash[key] = [] }
+      @errors = errors || default_hash([])
+      @warnings = warnings || default_hash([])
     end
 
     def merge(other)
@@ -25,6 +25,12 @@ module LinkChecker::UriChecker
 
     def has_errors?
       errors.any?
+    end
+
+  private
+
+    def default_hash(value)
+      Hash.new { |hash, key| hash[key] = value }
     end
   end
 end
