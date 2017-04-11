@@ -17,7 +17,7 @@ module LinkChecker::UriChecker
 
     def call
       if uri.host.nil?
-        report.add_error(:no_host, "No host given.")
+        report.add_error("No host", "No host given.")
         return report
       end
 
@@ -39,21 +39,21 @@ module LinkChecker::UriChecker
   private
 
     def check_redirects
-      report.add_error(:too_many_redirects, "Too many redirects.") if redirect_history.length >= REDIRECT_LIMIT
-      report.add_error(:cyclic_redirects, "Has a cyclic redirect.") if redirect_history.include?(uri)
-      report.add_warning(:multiple_redirects, "Multiple redirects.") if redirect_history.length == REDIRECT_WARNING
+      report.add_error("Too many redirects", "Too many redirects.") if redirect_history.length >= REDIRECT_LIMIT
+      report.add_error("Cyclic redirects", "Has a cyclic redirect.") if redirect_history.include?(uri)
+      report.add_warning("Multiple redirects", "Multiple redirects.") if redirect_history.length == REDIRECT_WARNING
     end
 
     def check_top_level_domain
       tld = uri.host.split(".").last
       if INVALID_TOP_LEVEL_DOMAINS.include?(tld)
-        report.add_warning(:risky_tld, "Potentially suspicious top level domain (#{tld}).")
+        report.add_warning("Risky TLD", "Potentially suspicious top level domain (#{tld}).")
       end
     end
 
     def check_credentials
       if uri.user.present? || uri.password.present?
-        report.add_warning(:credentials_in_uri, "Credentials in URI")
+        report.add_warning("Credentials in URI", "Username and password in URI")
       end
     end
 
@@ -63,17 +63,17 @@ module LinkChecker::UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      report.add_warning(:slow_response, "Slow response time") if response_time > RESPONSE_TIME_WARNING
+      report.add_warning("Slow response", "Page took a long time to load") if response_time > RESPONSE_TIME_WARNING
 
       return response if report.has_errors?
 
       if response.status >= 400 && response.status < 500
-        report.add_error(:http_client_error, "Received 4xx response")
+        report.add_error("Client error", "Received 4xx response")
       elsif response.status >= 500 && response.status < 600
-        report.add_error(:http_server_error, "Received 5xx response")
+        report.add_error("Server error", "Received 5xx response")
       else
         unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
-          report.add_warning(:http_non_200, "Received a non 200 success response.")
+          report.add_warning("Non 200 status", "Received a non 200 success response.")
         end
       end
 
@@ -87,7 +87,7 @@ module LinkChecker::UriChecker
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")
       if %w(restricted mature).include?(rating)
-        report.add_warning(:meta_rating, "Page suggests it contains mature content.")
+        report.add_warning("Mature content", "Page suggests it contains mature content.")
       end
     end
 
@@ -114,7 +114,7 @@ module LinkChecker::UriChecker
       if response.status == 200
         data = JSON.parse(response.body)
         if data.include?("matches") && data["matches"]
-          report.add_warning(:google_safebrowsing, "Google Safebrowsing has detected a threat.")
+          report.add_warning("Threat detected", "Google Safebrowsing has detected a threat.")
         end
       else
         Airbrake.notify(
@@ -140,13 +140,13 @@ module LinkChecker::UriChecker
 
         response
       rescue Faraday::ConnectionFailed
-        report.add_error(:cant_connect, "Connection failed")
+        report.add_error("Can't connect", "Connection failed")
       rescue Faraday::TimeoutError
-        report.add_error(:timeout, "Timeout Error")
+        report.add_error("Timeout", "Timeout Error")
       rescue Faraday::SSLError
-        report.add_error(:ssl_configuration, "SSL Error")
+        report.add_error("SSL Error", "Page is not secure.")
       rescue Faraday::Error => e
-        report.add_error(:unknown_http_error, e.class.to_s)
+        report.add_error(e.class.to_s, e.message)
       end
     end
 

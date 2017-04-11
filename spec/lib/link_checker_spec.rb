@@ -51,26 +51,25 @@ RSpec.describe LinkChecker do
 
     context "invalid URI" do
       let(:uri) { "this is not a URI" }
-      include_examples "has an error", :uri_invalid
-      include_examples "does not have error", :unknown_http_error
+      include_examples "has an error", "URI invalid"
       include_examples "has no warnings"
     end
 
     context "URI with no scheme" do
       let(:uri) { "//test/test" }
-      include_examples "has an error", :no_scheme
+      include_examples "has an error", "No scheme"
       include_examples "has no warnings"
     end
 
     context "URI with no host" do
       let(:uri) { "http:///" }
-      include_examples "has an error", :no_host
+      include_examples "has an error", "No host"
       include_examples "has no warnings"
     end
 
     context "URI with an unsupported scheme" do
       let(:uri) { "mailto:test@test" }
-      include_examples "has a warning", :unsupported_scheme
+      include_examples "has a warning", "Unsupported scheme"
       include_examples "has no errors"
     end
 
@@ -83,62 +82,62 @@ RSpec.describe LinkChecker do
     context "TLD is risky" do
       let(:uri) { "https://www.gov.xxx" }
       before { stub_request(:head, uri).to_return(status: 200) }
-      include_examples "has a warning", :risky_tld
+      include_examples "has a warning", "Risky TLD"
       include_examples "has no errors"
     end
 
     context "there are credentials in the URI" do
       let(:uri) { "https://username:password@www.gov.uk/ok" }
-      include_examples "has a warning", :credentials_in_uri
+      include_examples "has a warning", "Credentials in URI"
       include_examples "has no errors"
     end
 
     context "cannot connect to page" do
       let(:uri) { "http://www.not-gov.uk/connection_failed" }
       before { stub_request(:head, uri).to_raise(Faraday::ConnectionFailed) }
-      include_examples "has an error", :cant_connect
+      include_examples "has an error", "Can't connect"
       include_examples "has no warnings"
     end
 
     context "SSL error" do
       let(:uri) { "http://www.not-gov.uk/ssl_error" }
       before { stub_request(:head, uri).to_raise(Faraday::SSLError) }
-      include_examples "has an error", :ssl_configuration
+      include_examples "has an error", "SSL Error"
       include_examples "has no warnings"
     end
 
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
       before { stub_request(:head, uri).to_return(body: lambda { |_| sleep 2.6; "" }) }
-      include_examples "has a warning", :slow_response
+      include_examples "has a warning", "Slow response"
       include_examples "has no errors"
     end
 
     context "request timed out" do
       let(:uri) { "http://www.not-gov.uk/timeout" }
       before { stub_request(:head, uri).to_raise(Faraday::TimeoutError) }
-      include_examples "has an error", :timeout
+      include_examples "has an error", "Timeout"
       include_examples "has no warnings"
     end
 
     context "4xx status code" do
       let(:uri) { "http://www.not-gov.uk/404" }
       before { stub_request(:head, uri).to_return(status: 404) }
-      include_examples "has an error", :http_client_error
+      include_examples "has an error", "Client error"
       include_examples "has no warnings"
     end
 
     context "5xx status code" do
       let(:uri) { "http://www.not-gov.uk/500" }
       before { stub_request(:head, uri).to_return(status: 500) }
-      include_examples "has an error", :http_server_error
+      include_examples "has an error", "Server error"
       include_examples "has no warnings"
     end
 
     context "non-200 status code" do
       let(:uri) { "http://www.not-gov.uk/201" }
       before { stub_request(:head, uri).to_return(status: 201) }
-      include_examples "has a warning", :http_non_200
+      include_examples "has a warning", "Non 200 status"
       include_examples "has no errors"
     end
 
@@ -153,8 +152,8 @@ RSpec.describe LinkChecker do
             .to_return(status: 301, headers: { "Location" => "/too_many_redirects_#{i + 1}" })
         end
       end
-      include_examples "has an error", :too_many_redirects
-      include_examples "has a warning", :multiple_redirects
+      include_examples "has an error", "Too many redirects"
+      include_examples "has a warning", "Multiple redirects"
     end
 
     context "multiple redirects" do
@@ -172,7 +171,7 @@ RSpec.describe LinkChecker do
       end
 
       let(:uri) { "http://www.not-gov.uk/multiple_redirects" }
-      include_examples "has a warning", :multiple_redirects
+      include_examples "has a warning", "Multiple redirects"
       include_examples "has no errors"
     end
 
@@ -189,14 +188,14 @@ RSpec.describe LinkChecker do
       end
 
       let(:uri) { "http://www.not-gov.uk/cyclic" }
-      include_examples "has a warning", :multiple_redirects
-      include_examples "has an error", :cyclic_redirects
-      include_examples "does not have error", :too_many_redirects
+      include_examples "has a warning", "Multiple redirects"
+      include_examples "has an error", "Cyclic redirects"
+      include_examples "does not have error", "Too many redirects"
     end
 
     context "a local file" do
       let(:uri) { "file://file.txt" }
-      include_examples "has an error", :local_file
+      include_examples "has an error", "Local file"
       include_examples "has no warnings"
     end
 
@@ -214,7 +213,7 @@ RSpec.describe LinkChecker do
       end
 
       let(:uri) { "http://www.not-gov.uk/mature_content" }
-      include_examples "has a warning", :meta_rating
+      include_examples "has a warning", "Mature content"
       include_examples "has no errors"
     end
 
@@ -225,7 +224,7 @@ RSpec.describe LinkChecker do
         stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
           .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
       end
-      include_examples "has a warning", :google_safebrowsing
+      include_examples "has a warning", "Threat detected"
       include_examples "has no errors"
     end
   end

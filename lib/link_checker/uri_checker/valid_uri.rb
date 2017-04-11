@@ -14,18 +14,18 @@ module LinkChecker::UriChecker
       parsed_uri = URI.parse(uri)
 
       if parsed_uri.scheme.nil?
-        report.add_error(:no_scheme, "No scheme given.")
+        report.add_error("No scheme", "No scheme given.")
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, options).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(FileChecker.new(parsed_uri, options).call)
       else
-        report.add_warning(:unsupported_scheme, "Unsupported scheme.")
+        report.add_warning("Unsupported scheme", "Unsupported scheme.")
       end
 
       report
     rescue URI::InvalidURIError
-      report.add_error(:uri_invalid, "Invalid URI")
+      report.add_error("URI invalid", "The URI is not valid")
       report
     end
   end
