@@ -45,4 +45,4 @@ Keep this section limited to core endpoints - if the app is complex link out to 
 
 ## Licence
 
-[MIT License](LICENCE)
+[MIT License](LICENSE)
