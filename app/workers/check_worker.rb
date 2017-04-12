@@ -39,7 +39,7 @@ class CheckWorker
       WebhookWorker.perform_async(
         BatchPresenter.new(batch).report,
         batch.webhook_uri
-      ) if batch.webhook_uri
+      ) if batch.webhook_uri && batch.completed?
     end
   end
 end
