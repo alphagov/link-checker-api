@@ -3,11 +3,16 @@ class WebhookWorker
 
   sidekiq_options queue: :webhooks
 
-  def perform(report, webhook_uri)
+  SIGNATURE_HEADER = "X-LinkCheckerApi-Signature".freeze
+
+  def perform(report, uri, secret_token)
+    body = report.to_json
+
     connection.post do |req|
-      req.url webhook_uri
+      req.url uri
       req.headers["Content-Type"] = "application/json"
-      req.body = report.to_json
+      req.headers[SIGNATURE_HEADER] = generate_signature(body, secret_token) if secret_token
+      req.body = body
     end
   end
 
@@ -16,5 +21,9 @@ class WebhookWorker
       faraday.adapter Faraday.default_adapter
       faraday.use Faraday::Response::RaiseError
     end
+  end
+
+  def generate_signature(body, key)
+    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha1"), key, body)
   end
 end

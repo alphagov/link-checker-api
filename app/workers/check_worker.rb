@@ -38,7 +38,8 @@ class CheckWorker
     check.batches.each do |batch|
       WebhookWorker.perform_async(
         BatchPresenter.new(batch).report,
-        batch.webhook_uri
+        batch.webhook_uri,
+        batch.webhook_secret_token,
       ) if batch.webhook_uri && batch.completed?
     end
   end
