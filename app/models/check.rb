@@ -15,9 +15,9 @@ class Check < ApplicationRecord
       Check.new(link: link)
     end
 
-    Check.import(new_checks)
+    import_result = Check.import(new_checks)
 
-    existing_checks + new_checks
+    existing_checks + new_checks.select { |check| import_result.ids.include?(check.id) }
   end
 
   def is_pending?
