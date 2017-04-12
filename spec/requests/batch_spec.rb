@@ -40,6 +40,20 @@ RSpec.describe "/batch endpoint" do
       end
     end
 
+    context "when creating a batch of links with a secret key" do
+      let(:uri_a) { "http://example.com/a" }
+      let(:uri_b) { "http://example.com/b" }
+      let(:webhook_secret_token) { "this is a secret key" }
+
+      let(:batch_request) { build_batch_request(uris: [uri_a, uri_b], webhook_secret_token: webhook_secret_token) }
+
+      before { post "/batch", params: batch_request.to_json, headers: { "Content-Type" => "application/json" } }
+
+      it "creates a batch with a secret key" do
+        expect(Batch.last.webhook_secret_token).to eq(webhook_secret_token)
+      end
+    end
+
     context "when creating a batch of links and one of them is empty" do
       let(:uri_a) { "" }
       let(:uri_b) { "http://example.com/b" }

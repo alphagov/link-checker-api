@@ -14,6 +14,7 @@ module RequestHelper
       uris: params.fetch(:uris, ["https://www.gov.uk"]),
       checked_within: params[:checked_within],
       webhook_uri: params[:webhook_uri],
+      webhook_secret_token: params[:webhook_secret_token],
     }
   end
 
