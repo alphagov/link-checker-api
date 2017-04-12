@@ -40,6 +40,25 @@ RSpec.describe "/batch endpoint" do
       end
     end
 
+    context "when creating a batch of links and one of them is empty" do
+      let(:uri_a) { "" }
+      let(:uri_b) { "http://example.com/b" }
+
+      let(:batch_request) { build_batch_request(uris: [uri_a, uri_b]) }
+      let(:batch_report) do
+        build_batch_report(
+          status: "in_progress",
+          links: [
+            { uri: uri_b, status: "pending" },
+          ]
+        )
+      end
+
+      before { post "/batch", params: batch_request.to_json, headers: { "Content-Type" => "application/json" } }
+
+      include_examples "returns batch report"
+    end
+
     context "with many links, it retains the ordering" do
       let(:uris) do
         1000.times.map { |i| "http://example.com/#{i}" }
