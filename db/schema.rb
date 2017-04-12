@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410080840) do
+ActiveRecord::Schema.define(version: 20170412080603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "batch_checks", force: :cascade do |t|
-    t.integer "batch_id"
-    t.integer "check_id"
+    t.integer "batch_id",             null: false
+    t.integer "check_id",             null: false
     t.integer "order",    default: 0, null: false
     t.index ["batch_id"], name: "index_batch_checks_on_batch_id", using: :btree
     t.index ["check_id"], name: "index_batch_checks_on_check_id", using: :btree
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20170410080840) do
     t.json     "link_errors",   default: {}, null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.integer  "link_id"
+    t.integer  "link_id",                    null: false
     t.index ["link_id"], name: "index_checks_on_link_id", using: :btree
   end
 
