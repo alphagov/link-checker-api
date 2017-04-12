@@ -10,9 +10,9 @@ class Link < ApplicationRecord
       Link.new(uri: uri)
     end
 
-    Link.import(new_links)
+    import_result = Link.import(new_links)
 
-    existing_links + new_links
+    existing_links + new_links.select { |link| import_result.ids.include?(link.id) }
   end
 
   def find_check(within: 24.hours)
