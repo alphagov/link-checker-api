@@ -21,6 +21,8 @@ API. The majority of link checking is done through a background worker than
 uses Sidekiq. There is a webhook functionality for applications to receive
 notifications when link checking is complete.
 
+The HTTP API is defined in [docs/api.md](docs/api.md).
+
 ### Dependencies
 
 - [PostgreSQL](https://www.postgresql.org/) - provides a database
