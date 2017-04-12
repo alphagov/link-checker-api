@@ -17,7 +17,7 @@ module LinkChecker::UriChecker
 
     def call
       if uri.host.nil?
-        report.add_error("No host", "No host given.")
+        report.add_error("Invalid URL", "No host is given in the URL.")
         return report
       end
 
@@ -39,21 +39,21 @@ module LinkChecker::UriChecker
   private
 
     def check_redirects
-      report.add_error("Too many redirects", "Too many redirects.") if redirect_history.length >= REDIRECT_LIMIT
-      report.add_error("Cyclic redirects", "Has a cyclic redirect.") if redirect_history.include?(uri)
-      report.add_warning("Multiple redirects", "Multiple redirects.") if redirect_history.length == REDIRECT_WARNING
+      report.add_error("Too many redirects", "There are too many redirects set up on this url - it won't work. Find where the content is now hosted and link there instead.") if redirect_history.length >= REDIRECT_LIMIT
+      report.add_error("Circular redirect", "This page automatically sends users to another page, which automatically sends them back again. Neither page will load for the user.") if redirect_history.include?(uri)
+      report.add_warning("Slow page load", "Several redirects are set up on this URL - it will load slowly. Find where the content is now hosted and link to that instead.") if redirect_history.length == REDIRECT_WARNING
     end
 
     def check_top_level_domain
       tld = uri.host.split(".").last
       if INVALID_TOP_LEVEL_DOMAINS.include?(tld)
-        report.add_warning("Risky TLD", "Potentially suspicious top level domain (#{tld}).")
+        report.add_warning("Suspicious URL", "This URL contains the word '#{tld}'. Check if it's appropriate to send users here.")
       end
     end
 
     def check_credentials
       if uri.user.present? || uri.password.present?
-        report.add_warning("Credentials in URI", "Username and password in URI")
+        report.add_warning("Login details in URL", "Check it's ok for these to be public.")
       end
     end
 
@@ -63,17 +63,21 @@ module LinkChecker::UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      report.add_warning("Slow response", "Page took a long time to load") if response_time > RESPONSE_TIME_WARNING
+      report.add_warning("Slow page load", "Pages on this site take more than #{RESPONSE_TIME_WARNING} seconds to load - this may be frustrating for users.") if response_time > RESPONSE_TIME_WARNING
 
       return response if report.has_errors?
 
-      if response.status >= 400 && response.status < 500
-        report.add_error("Client error", "Received 4xx response")
+      if response.status == 404 || response.status == 410
+        report.add_error("404 error (page not found)", "Received #{response.status} response from the server.")
+      elsif response.status == 401 || response.status == 403
+        report.add_error("Access denied", "You need a password to access this site. If you gave a password, it wasn't correct.")
+      elsif response.status >= 400 && response.status < 500
+        report.add_error("Unusual response", "Speak to your technical team. Received #{response.status} response from the server.")
       elsif response.status >= 500 && response.status < 600
-        report.add_error("Server error", "Received 5xx response")
+        report.add_error("500 (server error)", "Received #{response.status} response from the server.")
       else
         unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
-          report.add_warning("Non 200 status", "Received a non 200 success response.")
+          report.add_warning("Unusual response", "Speak to your technical team. Received #{response.status} response from the server.")
         end
       end
 
@@ -87,7 +91,7 @@ module LinkChecker::UriChecker
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")
       if %w(restricted mature).include?(rating)
-        report.add_warning("Mature content", "Page suggests it contains mature content.")
+        report.add_warning("Possible adult content", "This site describes itself as '#{rating}'. Check if it's appropriate to send users here.")
       end
     end
 
@@ -114,7 +118,7 @@ module LinkChecker::UriChecker
       if response.status == 200
         data = JSON.parse(response.body)
         if data.include?("matches") && data["matches"]
-          report.add_warning("Threat detected", "Google Safebrowsing has detected a threat.")
+          report.add_warning("Flagged as dangerous", "This site has been flagged as dangerous by Google Safebrowsing API. Don't send users to this site.")
         end
       else
         Airbrake.notify(
@@ -140,13 +144,13 @@ module LinkChecker::UriChecker
 
         response
       rescue Faraday::ConnectionFailed
-        report.add_error("Can't connect", "Connection failed")
+        report.add_error("Connection failed", "Connection to the server could not be established.")
       rescue Faraday::TimeoutError
-        report.add_error("Timeout", "Timeout Error")
+        report.add_error("Timeout error", "The connection to the server timed out.")
       rescue Faraday::SSLError
-        report.add_error("SSL Error", "Page is not secure.")
+        report.add_error("Unsafe link", "This site's SSL security certificate has expired - it might not be safe for users.")
       rescue Faraday::Error => e
-        report.add_error(e.class.to_s, e.message)
+        report.add_error("Unknown issue", "Speak to your technical team: #{e}")
       end
     end
 

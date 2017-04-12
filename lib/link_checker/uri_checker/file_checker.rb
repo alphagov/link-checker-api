@@ -7,7 +7,7 @@ module LinkChecker::UriChecker
     end
 
     def call
-      report.add_error("Local file", "Link is to a local file.")
+      report.add_error("Not available online", "This links to a file on your computer - users won't be able to access it online.")
       report
     end
   end
