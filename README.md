@@ -5,6 +5,9 @@
 A web service that takes an input of URIs. It performs a number of checks on
 them to determine whether these are things that should be linked to.
 
+This service was created in the GOV.UK 2 week blitz of April 2017, thoughts on
+next steps are documented in [docs/blitz.md](docs/blitz.md).
+
 ## Nomenclature
 
 - **Link**: The consideration of a URI and all resulting redirects
