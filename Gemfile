@@ -7,7 +7,7 @@ gem "database_cleaner"
 gem "deprecated_columns"
 gem "gds-sso", "~> 13.0"
 gem "plek", "~> 1.12"
-gem "airbrake", "~> 5.4"
+gem "airbrake", "~> 4"
 gem "pg"
 
 gem "faraday", "~> 0.11"
