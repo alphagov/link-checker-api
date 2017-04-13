@@ -13,6 +13,7 @@ gem "pg"
 gem "faraday", "~> 0.11"
 
 gem "govuk_sidekiq", "~> 1.0"
+gem "sidekiq-scheduler", "~> 2.1"
 
 gem "activerecord-import", "~> 0.17"
 

@@ -25,7 +25,7 @@ RSpec.describe CheckWorker do
     end
 
     context "for previously checked links" do
-      let(:check) { FactoryGirl.create(:check, link: link, started_at: 1.hour.ago) }
+      let(:check) { FactoryGirl.create(:check, link: link, created_at: 1.hour.ago, started_at: 1.hour.ago, completed_at: 50.minutes.ago) }
 
       it "does not perform a Link Check" do
         expect(LinkChecker).not_to receive(:new)
@@ -35,8 +35,23 @@ RSpec.describe CheckWorker do
       end
     end
 
+    context "for links started a long time ago but not yet finished" do
+      let(:check) { FactoryGirl.create(:check, link: link, created_at: 1.hour.ago, started_at: 1.hour.ago) }
+      let(:link_checker) { double(:link_checker) }
+
+      it "does perform a check" do
+        expect(LinkChecker).to receive(:new)
+          .with(link.uri)
+          .and_return(link_checker)
+
+        expect(link_checker).to receive(:call).and_return(report)
+
+        subject.perform(check.id)
+      end
+    end
+
     context "when it is unable to check the link" do
-      let(:check) { FactoryGirl.create(:check, link: link, started_at: 1.hour.ago) }
+      let(:check) { FactoryGirl.create(:check, link: link, created_at: 1.hour.ago, started_at: 1.hour.ago) }
       let(:msg) { { "args" => [check] } }
 
       it "sets the check to a warning" do

@@ -5,3 +5,7 @@
   - default
   - checks_low
   - webhooks
+:schedule:
+  cleanup:
+    every: 20m
+    class: CleanupWorker

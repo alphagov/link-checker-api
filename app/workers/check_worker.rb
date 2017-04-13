@@ -20,7 +20,7 @@ class CheckWorker
   def perform(check_id)
     check = Check.includes(:link, :batches).find(check_id)
 
-    return trigger_callbacks(check) if check.started_at || check.completed_at
+    return trigger_callbacks(check) unless check.requires_checking?
 
     check.update!(started_at: Time.now)
 
