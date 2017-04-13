@@ -125,4 +125,21 @@ RSpec.describe "check path", type: :request do
 
     include_examples "returns link report"
   end
+
+  context "when an uri is in progress with synchronous = true" do
+    let(:uri) { "http://www.example.com/page" }
+    let(:link_report) { build_link_report(uri: uri, status: "ok") }
+
+    before do
+      FactoryGirl.create(:check, link: FactoryGirl.create(:link, uri: uri),)
+
+      stub_request(:head, uri).to_return(status: 200)
+      stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+        .to_return(status: 200, body: "{}")
+
+      get check_link_path(uri: uri, synchronous: true)
+    end
+
+    include_examples "returns link report"
+  end
 end
