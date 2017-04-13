@@ -2,21 +2,23 @@ class BatchController < ApplicationController
   class CreateParams
     include ActiveModel::Validations
 
-    attr_accessor :uris, :checked_within, :webhook_uri, :webhook_secret_token
+    attr_accessor :uris, :checked_within, :priority, :webhook_uri, :webhook_secret_token
 
     validates :uris, presence: true, length: { maximum: 5000 }
     validates :checked_within, numericality: { greater_than: 0 }
+    validates :priority, inclusion: { in: %w(low high) }
 
     def initialize(params)
       @params = params
       @uris = permitted_params[:uris]
       @checked_within = (permitted_params[:checked_within] || 24.hours).to_i
+      @priority = permitted_params.fetch(:priority, "high")
       @webhook_uri = permitted_params[:webhook_uri]
       @webhook_secret_token = permitted_params[:webhook_secret_token]
     end
 
     def permitted_params
-      @permitted_params ||= @params.permit(:checked_within, :webhook_uri, :webhook_secret_token, uris: [])
+      @permitted_params ||= @params.permit(:checked_within, :webhook_uri, :webhook_secret_token, :priority, uris: [])
     end
   end
 
@@ -51,7 +53,7 @@ class BatchController < ApplicationController
       render(json: batch_report(batch), status: 201)
     else
       batch.checks.each do |check|
-        CheckWorker.perform_async(check.id)
+        CheckWorker.run(check.id, priority: create_params.priority)
       end
 
       render(json: batch_report(batch.reload), status: 202)
