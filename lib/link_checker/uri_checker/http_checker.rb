@@ -25,10 +25,10 @@ module LinkChecker::UriChecker
       check_top_level_domain
       check_credentials
 
-      head_response = check_head_request
+      check_request
       return report if report.has_errors?
 
-      check_get_request if head_response && head_response.headers["Content-Type"] == "text/html"
+      check_meta_mature_rating
       return report if report.has_errors?
 
       check_google_safebrowsing
@@ -37,6 +37,8 @@ module LinkChecker::UriChecker
     end
 
   private
+
+    attr_reader :response
 
     def check_redirects
       report.add_error("Too many redirects", "There are too many redirects set up on this url - it won't work. Find where the content is now hosted and link there instead.") if redirect_history.length >= REDIRECT_LIMIT
@@ -57,9 +59,9 @@ module LinkChecker::UriChecker
       end
     end
 
-    def check_head_request
+    def check_request
       start_time = Time.now
-      response = make_request(:head)
+      @response = make_request(:get)
       end_time = Time.now
       response_time = end_time - start_time
 
@@ -84,9 +86,8 @@ module LinkChecker::UriChecker
       response
     end
 
-    def check_get_request
-      response = make_request(:get)
-      return unless response
+    def check_meta_mature_rating
+      return unless response && response.headers["Content-Type"] == "text/html"
 
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")

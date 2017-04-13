@@ -116,7 +116,7 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "ok") }
 
     before do
-      stub_request(:head, uri).to_return(status: 200)
+      stub_request(:get, uri).to_return(status: 200)
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
         .to_return(status: 200, body: "{}")
 
@@ -133,7 +133,7 @@ RSpec.describe "check path", type: :request do
     before do
       FactoryGirl.create(:check, link: FactoryGirl.create(:link, uri: uri),)
 
-      stub_request(:head, uri).to_return(status: 200)
+      stub_request(:get, uri).to_return(status: 200)
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
         .to_return(status: 200, body: "{}")
 

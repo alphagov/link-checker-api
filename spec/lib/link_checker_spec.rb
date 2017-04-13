@@ -43,7 +43,7 @@ RSpec.describe LinkChecker do
     end
 
     before do
-      stub_request(:head, "https://www.gov.uk/ok").to_return(status: 200)
+      stub_request(:get, "https://www.gov.uk/ok").to_return(status: 200)
 
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
         .to_return(status: 200, body: "{}")
@@ -81,7 +81,7 @@ RSpec.describe LinkChecker do
 
     context "TLD is risky" do
       let(:uri) { "https://www.gov.xxx" }
-      before { stub_request(:head, uri).to_return(status: 200) }
+      before { stub_request(:get, uri).to_return(status: 200) }
       include_examples "has a warning", "Suspicious URL"
       include_examples "has no errors"
     end
@@ -94,49 +94,49 @@ RSpec.describe LinkChecker do
 
     context "cannot connect to page" do
       let(:uri) { "http://www.not-gov.uk/connection_failed" }
-      before { stub_request(:head, uri).to_raise(Faraday::ConnectionFailed) }
+      before { stub_request(:get, uri).to_raise(Faraday::ConnectionFailed) }
       include_examples "has an error", "Connection failed"
       include_examples "has no warnings"
     end
 
     context "SSL error" do
       let(:uri) { "http://www.not-gov.uk/ssl_error" }
-      before { stub_request(:head, uri).to_raise(Faraday::SSLError) }
+      before { stub_request(:get, uri).to_raise(Faraday::SSLError) }
       include_examples "has an error", "Unsafe link"
       include_examples "has no warnings"
     end
 
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
-      before { stub_request(:head, uri).to_return(body: lambda { |_| sleep 2.6; "" }) }
+      before { stub_request(:get, uri).to_return(body: lambda { |_| sleep 2.6; "" }) }
       include_examples "has a warning", "Slow page load"
       include_examples "has no errors"
     end
 
     context "request timed out" do
       let(:uri) { "http://www.not-gov.uk/timeout" }
-      before { stub_request(:head, uri).to_raise(Faraday::TimeoutError) }
+      before { stub_request(:get, uri).to_raise(Faraday::TimeoutError) }
       include_examples "has an error", "Timeout error"
       include_examples "has no warnings"
     end
 
     context "4xx status code" do
       let(:uri) { "http://www.not-gov.uk/404" }
-      before { stub_request(:head, uri).to_return(status: 404) }
+      before { stub_request(:get, uri).to_return(status: 404) }
       include_examples "has an error", "404 error (page not found)"
       include_examples "has no warnings"
     end
 
     context "5xx status code" do
       let(:uri) { "http://www.not-gov.uk/500" }
-      before { stub_request(:head, uri).to_return(status: 500) }
+      before { stub_request(:get, uri).to_return(status: 500) }
       include_examples "has an error", "500 (server error)"
       include_examples "has no warnings"
     end
 
     context "non-200 status code" do
       let(:uri) { "http://www.not-gov.uk/201" }
-      before { stub_request(:head, uri).to_return(status: 201) }
+      before { stub_request(:get, uri).to_return(status: 201) }
       include_examples "has a warning", "Unusual response"
       include_examples "has no errors"
     end
@@ -144,11 +144,11 @@ RSpec.describe LinkChecker do
     context "too many redirects" do
       let(:uri) { "http://www.not-gov.uk/too_many_redirects" }
       before do
-        stub_request(:head, uri)
+        stub_request(:get, uri)
           .to_return(status: 301, headers: { "Location" => "/too_many_redirects_1" })
 
         20.times do |i|
-          stub_request(:head, "http://www.not-gov.uk/too_many_redirects_#{i}")
+          stub_request(:get, "http://www.not-gov.uk/too_many_redirects_#{i}")
             .to_return(status: 301, headers: { "Location" => "/too_many_redirects_#{i + 1}" })
         end
       end
@@ -158,15 +158,15 @@ RSpec.describe LinkChecker do
 
     context "multiple redirects" do
       before do
-        stub_request(:head, uri)
+        stub_request(:get, uri)
           .to_return(status: 301, headers: { "Location" => "/multiple_redirects_1" })
 
         2.times do |i|
-          stub_request(:head, "http://www.not-gov.uk/multiple_redirects_#{i}")
+          stub_request(:get, "http://www.not-gov.uk/multiple_redirects_#{i}")
             .to_return(status: 301, headers: { "Location" => "/multiple_redirects_#{i + 1}" })
         end
 
-        stub_request(:head, "http://www.not-gov.uk/multiple_redirects_2")
+        stub_request(:get, "http://www.not-gov.uk/multiple_redirects_2")
           .to_return(status: 301, headers: { "Location" => "https://www.gov.uk/ok" })
       end
 
@@ -177,13 +177,13 @@ RSpec.describe LinkChecker do
 
     context "cyclic redirects" do
       before do
-        stub_request(:head, "http://www.not-gov.uk/cyclic")
+        stub_request(:get, "http://www.not-gov.uk/cyclic")
           .to_return(status: 301, headers: { "Location" => "/cyclic1" })
 
-        stub_request(:head, "http://www.not-gov.uk/cyclic1")
+        stub_request(:get, "http://www.not-gov.uk/cyclic1")
           .to_return(status: 301, headers: { "Location" => "/cyclic2" })
 
-        stub_request(:head, "http://www.not-gov.uk/cyclic2")
+        stub_request(:get, "http://www.not-gov.uk/cyclic2")
           .to_return(status: 301, headers: { "Location" => "/cyclic" })
       end
 
@@ -201,7 +201,7 @@ RSpec.describe LinkChecker do
 
     context "meta rating suggests mature content" do
       before do
-        stub_request(:head, "http://www.not-gov.uk/mature_content")
+        stub_request(:get, "http://www.not-gov.uk/mature_content")
           .to_return(status: 200, headers: { "Content-Type" => "text/html" })
 
         stub_request(:get, "http://www.not-gov.uk/mature_content")
@@ -220,7 +220,7 @@ RSpec.describe LinkChecker do
     context "a URL detected by Google Safebrowser API" do
       let(:uri) { "http://malware.testing.google.test/testing/malware/" }
       before do
-        stub_request(:head, uri).to_return(status: 200)
+        stub_request(:get, uri).to_return(status: 200)
         stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
           .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
       end
