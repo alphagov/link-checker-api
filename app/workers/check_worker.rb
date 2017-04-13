@@ -1,5 +1,6 @@
 class CheckWorker
   include Sidekiq::Worker
+  include PerformAsyncInQueue
 
   sidekiq_options retry: 3
 
@@ -41,6 +42,15 @@ class CheckWorker
         batch.webhook_uri,
         batch.webhook_secret_token,
       ) if batch.webhook_uri && batch.completed?
+    end
+  end
+
+  def self.run(check_id, priority: "high", synchronous: false)
+    if synchronous
+      self.new.perform(check_id)
+    else
+      queue = priority == "low" ? "checks_low" : "default"
+      self.perform_async_in_queue(queue, check_id)
     end
   end
 end
