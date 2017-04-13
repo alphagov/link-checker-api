@@ -25,7 +25,11 @@ class CheckController < ApplicationController
     check_params.validate!
 
     link = Link.find_or_create_by!(uri: check_params.uri)
-    check = link.find_check(within: check_params.checked_within)
+    check = link.find_check(
+      within: check_params.checked_within,
+      completed: check_params.synchronous
+    )
+
     return render(json: link_report(check)) if check
 
     check = Check.create!(link: link)
