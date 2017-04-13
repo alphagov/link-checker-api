@@ -4,3 +4,7 @@
 :queues:
   - default
   - webhooks
+:schedule:
+  cleanup:
+    every: 20m
+    class: CleanupWorker
