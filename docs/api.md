@@ -1,10 +1,14 @@
 # Link Checker API's API
 
+This documents the means to interface with the Link Checker API. This can be
+done through HTTP Endpoints and webhooks. These methods will respond/send
+specific entities.
+
 ## Endpoints
 
 - [`GET /check`](#get-check)
 - [`POST /batch`](#post-batch)
-- [`GET /batch/:id`](#get-batch_id)
+- [`GET /batch/:id`](#get-batchid)
 
 ## Webhook
 
@@ -63,7 +67,7 @@ can force it to return a completed check with the `synchronous` parameter.
 
 ### Returns
 
-A [`LinkReport`](#linkreport)
+A [`LinkReport`](#linkreport-entity)
 
 ## `POST /batch`
 
@@ -139,7 +143,7 @@ the batch, as well as return the resource in the response of this request.
 
 ### Returns
 
-A [`BatchReport`](#batchreport), status code will be 202 for an in-progress
+A [`BatchReport`](#batchreport-entity), status code will be 202 for an in-progress
 BatchReport and 201 for a completed one.
 
 ## `GET /batch/:id`
@@ -202,13 +206,13 @@ a completed batch
 
 ### Returns
 
-A [`BatchReport`](#batchreport)
+A [`BatchReport`](#batchreport-entity)
 
 ## Batch complete webhook
 
 You can specify a `webhook_uri` to [`POST /batch`](#post-batch) to receive a
 callback when a batch is completed. This URL will receive a
-`BatchReport`(#batchreport) in a JSON POST request.
+`BatchReport`(#batchreport-entity) in a JSON POST request.
 
 To use it you will need an endpoint available in your application that is
 accessible without authentication and can receive POST requests.
@@ -332,7 +336,7 @@ And verify this matches the value in the header.
   - A value of "in_progress" or "completed", indicating whether all links have
     been checked.
 - `links`
-  - A collection of [`LinkReports](#link-report-entity)
+  - A collection of [`LinkReports`](#linkreport-entity)
 - `totals`
   - An object with numbers summarising the link progress. Contains the
     following keys:
