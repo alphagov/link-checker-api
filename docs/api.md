@@ -1,5 +1,9 @@
 # Link Checker API's API
 
+This documents the means to interface with the Link Checker API. This can be
+done through HTTP Endpoints and webhooks. These methods will respond/send
+specific entities.
+
 ## Endpoints
 
 - [`GET /check`](#get-check)
