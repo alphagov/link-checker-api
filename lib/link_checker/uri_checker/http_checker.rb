@@ -146,12 +146,16 @@ module LinkChecker::UriChecker
         response
       rescue Faraday::ConnectionFailed
         report.add_error("Connection failed", "Connection to the server could not be established.")
+        nil
       rescue Faraday::TimeoutError
         report.add_error("Timeout error", "The connection to the server timed out.")
+        nil
       rescue Faraday::SSLError
         report.add_error("Unsafe link", "This site's SSL security certificate has expired - it might not be safe for users.")
+        nil
       rescue Faraday::Error => e
         report.add_error("Unknown issue", "Speak to your technical team: #{e}")
+        nil
       end
     end
 
