@@ -1,21 +1,22 @@
 module LinkChecker::UriChecker
-  class ValidUri
-    attr_reader :report, :options
+  class ValidUriChecker
+    attr_reader :uri, :report
 
-    def initialize(options = {})
+    def initialize(uri, redirect_history: [])
+      @uri = uri
+      @redirect_history = redirect_history
       @report = Report.new
-      @options = options
     end
 
-    def call(uri)
+    def call
       parsed_uri = URI.parse(uri)
 
       if parsed_uri.scheme.nil?
         report.add_problem(NO_SCHEME_PROBLEM)
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
-        report.merge(HttpChecker.new(parsed_uri, options).call)
+        report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
-        report.merge(FileChecker.new(parsed_uri, options).call)
+        report.merge(FileChecker.new(parsed_uri, redirect_history: redirect_history).call)
       elsif OTHER_SCHEMES.include?(parsed_uri.scheme)
         report.add_problem(OTHER_SCHEME_PROBLEM)
       else
@@ -29,6 +30,8 @@ module LinkChecker::UriChecker
     end
 
   private
+
+    attr_reader :redirect_history
 
     HTTP_URI_SCHEMES = %w(http https).freeze
     FILE_URI_SCHEMES = %w(file).freeze

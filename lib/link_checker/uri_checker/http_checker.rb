@@ -151,9 +151,9 @@ module LinkChecker::UriChecker
 
         if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
           target_uri = uri + response.headers["location"]
-          subreport = ValidUri
-            .new(redirect_history: redirect_history + [uri])
-            .call(target_uri.to_s)
+          subreport = ValidUriChecker
+            .new(target_uri.to_s, redirect_history: redirect_history + [uri])
+            .call
           report.merge(subreport, with_priority: 1)
         end
 
