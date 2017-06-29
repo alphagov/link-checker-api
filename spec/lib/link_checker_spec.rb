@@ -78,7 +78,7 @@ RSpec.describe LinkChecker do
     context "TLD is risky" do
       let(:uri) { "https://www.gov.xxx" }
       before { stub_request(:get, uri).to_return(status: 200) }
-      include_examples "has a problem summary", "Suspicious URL"
+      include_examples "has a problem summary", "Suspicious destination"
       include_examples "has warnings"
       include_examples "has no errors"
     end
@@ -93,7 +93,7 @@ RSpec.describe LinkChecker do
     context "cannot connect to page" do
       let(:uri) { "http://www.not-gov.uk/connection_failed" }
       before { stub_request(:get, uri).to_raise(Faraday::ConnectionFailed) }
-      include_examples "has a problem summary", "Connection failed"
+      include_examples "has a problem summary", "Website unavailable"
       include_examples "has errors"
       include_examples "has no warnings"
     end
@@ -101,7 +101,7 @@ RSpec.describe LinkChecker do
     context "SSL error" do
       let(:uri) { "http://www.not-gov.uk/ssl_error" }
       before { stub_request(:get, uri).to_raise(Faraday::SSLError) }
-      include_examples "has a problem summary", "Unsafe link"
+      include_examples "has a problem summary", "Security Error"
       include_examples "has errors"
       include_examples "has no warnings"
     end
@@ -109,7 +109,7 @@ RSpec.describe LinkChecker do
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
       before { stub_request(:get, uri).to_return(body: lambda { |_| sleep 2.6; "" }) }
-      include_examples "has a problem summary", "Slow page load"
+      include_examples "has a problem summary", "Slow page"
       include_examples "has warnings"
       include_examples "has no errors"
     end
@@ -117,7 +117,7 @@ RSpec.describe LinkChecker do
     context "request timed out" do
       let(:uri) { "http://www.not-gov.uk/timeout" }
       before { stub_request(:get, uri).to_raise(Faraday::TimeoutError) }
-      include_examples "has a problem summary", "Timeout error"
+      include_examples "has a problem summary", "Website unavailable"
       include_examples "has errors"
       include_examples "has no warnings"
     end
@@ -139,7 +139,7 @@ RSpec.describe LinkChecker do
     context "non-200 status code" do
       let(:uri) { "http://www.not-gov.uk/201" }
       before { stub_request(:get, uri).to_return(status: 201) }
-      include_examples "has a problem summary", "Unusual response"
+      include_examples "has a problem summary", "Page unavailable"
       include_examples "has warnings"
       include_examples "has no errors"
     end
@@ -155,7 +155,7 @@ RSpec.describe LinkChecker do
             .to_return(status: 301, headers: { "Location" => "/too_many_redirects_#{i + 1}" })
         end
       end
-      include_examples "has a problem summary", "Too many redirects"
+      include_examples "has a problem summary", "Broken Redirect"
       include_examples "has errors"
       include_examples "has warnings"
     end
@@ -175,7 +175,7 @@ RSpec.describe LinkChecker do
       end
 
       let(:uri) { "http://www.not-gov.uk/multiple_redirects" }
-      include_examples "has a problem summary", "Slow page load"
+      include_examples "has a problem summary", "Bad Redirect"
       include_examples "has warnings"
       include_examples "has no errors"
     end
@@ -193,7 +193,7 @@ RSpec.describe LinkChecker do
       end
 
       let(:uri) { "http://www.not-gov.uk/cyclic" }
-      include_examples "has a problem summary", "Circular redirect"
+      include_examples "has a problem summary", "Broken Redirect"
       include_examples "has warnings"
       include_examples "has errors"
     end
@@ -219,7 +219,7 @@ RSpec.describe LinkChecker do
       end
 
       let(:uri) { "http://www.not-gov.uk/mature_content" }
-      include_examples "has a problem summary", "Possible adult content"
+      include_examples "has a problem summary", "Suspicious content"
       include_examples "has warnings"
       include_examples "has no errors"
     end
@@ -231,7 +231,7 @@ RSpec.describe LinkChecker do
         stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
           .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
       end
-      include_examples "has a problem summary", "Flagged as dangerous"
+      include_examples "has a problem summary", "Suspicious content"
       include_examples "has warnings"
       include_examples "has no errors"
     end

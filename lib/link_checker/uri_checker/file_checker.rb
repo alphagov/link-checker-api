@@ -1,11 +1,13 @@
 module LinkChecker::UriChecker
   class FileChecker < Checker
     def call
-      report.add_problem(PROBLEM)
+      add_error(
+        summary: "Not available online",
+        message: {
+          singular: "This links to a file on your computer and won't open for users",
+          redirect: "This redirects to an invalid link.",
+        }
+      )
     end
-
-  private
-
-    PROBLEM = Problem.new(:error, 0, "Not available online", "This links to a file on your computer - users won't be able to access it online.", "Find an online version of your file.")
   end
 end

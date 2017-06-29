@@ -2,33 +2,54 @@ module LinkChecker::UriChecker
   class ValidUriChecker < Checker
     def call
       if parsed_uri.scheme.nil?
-        report.add_problem(NO_SCHEME_PROBLEM)
+        add_error(
+          summary: "Invalid URL",
+          message: {
+            singular: "This link is missing the scheme (http, ftp, mailto).",
+            redirect: "This redirects to an invalid link.",
+          }
+        )
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(FileChecker.new(parsed_uri, redirect_history: redirect_history).call)
-      elsif OTHER_SCHEMES.include?(parsed_uri.scheme)
-        report.add_problem(OTHER_SCHEME_PROBLEM)
+      elsif CONTACT_SCHEMES.include?(parsed_uri.scheme)
+        add_warning(
+          summary: "Contact details",
+          message: {
+            singular: "This links to contact details which we don't support.",
+            redirect: "This redirects to contact details which we don't support.",
+          },
+          suggested_fix: "Check this are correct manually."
+        )
       else
-        report.add_problem(UNUSUAL_URL_PROBLEM)
+        add_warning(
+          summary: "Unusual URL",
+          message: {
+            singular: "This links to something which we don't support.",
+            redirect: "This redirects to something which we don't support.",
+          },
+          suggested_fix: "Check this are correct manually."
+        )
       end
     rescue URI::InvalidURIError
-      report.add_problem(INVALID_URL_PROBLEM)
+      add_error(
+        summary: "Invalid URL",
+        message: {
+          singular: "This is not a valid link.",
+          redirect: "This redirects to an invalid link.",
+        }
+      )
     end
 
   private
 
+    HTTP_URI_SCHEMES = %w(http https).freeze
+    FILE_URI_SCHEMES = %w(file).freeze
+    CONTACT_SCHEMES = %w(mailto tel).freeze
+
     def parsed_uri
       @parsed_uri ||= URI.parse(uri)
     end
-
-    HTTP_URI_SCHEMES = %w(http https).freeze
-    FILE_URI_SCHEMES = %w(file).freeze
-    OTHER_SCHEMES = %w(mailto tel).freeze
-
-    NO_SCHEME_PROBLEM = Problem.new(:error, 0, "Invalid URL", "URLs for external sites must start with 'http://' or 'https://'.", "Make sure to use a full URL. If you're linking to a heading on your page, use '#'.")
-    INVALID_URL_PROBLEM = Problem.new(:error, 0, "Invalid URL", "URL may be missing a forward slash at the beginning or be placeholder text.", "Double check to make sure your URL is correct.")
-    OTHER_SCHEME_PROBLEM = Problem.new(:warning, 0, "Contact details", "Link cannot be checked automatically.", "Check these are correct manually.")
-    UNUSUAL_URL_PROBLEM = Problem.new(:warning, 0, "Unusual URL", "Link cannot be checked automatically.", "Check this is meant to be here.")
   end
 end
