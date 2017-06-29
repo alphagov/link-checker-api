@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170412085820) do
+ActiveRecord::Schema.define(version: 20170629094931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,11 +33,13 @@ ActiveRecord::Schema.define(version: 20170412085820) do
   create_table "checks", force: :cascade do |t|
     t.datetime "started_at"
     t.datetime "completed_at"
-    t.json     "link_warnings", default: {}, null: false
-    t.json     "link_errors",   default: {}, null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.integer  "link_id",                    null: false
+    t.string   "link_warnings",   null: false, array: true, default: []
+    t.string   "link_errors",     null: false, array: true, default: []
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "link_id",         null: false
+    t.string   "problem_summary"
+    t.string   "suggested_fix"
     t.index ["link_id"], name: "index_checks_on_link_id", using: :btree
   end
 

@@ -8,11 +8,13 @@ class CheckWorker
     Check.connection_pool.with_connection do |_|
       check = msg["args"].first
       check.update!(
-        link_errors: {},
-        link_warnings: {
-          check_failed: "Could not complete the check."
-        },
-        completed_at: Time.now
+        problem_summary: "Check failed",
+        suggested_fix: "Speak to your system administrator.",
+        link_errors: [],
+        link_warnings: [
+          "Could not complete the check."
+        ],
+        completed_at: Time.now,
       )
     end
   end
