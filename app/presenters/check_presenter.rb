@@ -4,8 +4,10 @@ class CheckPresenter < SimpleDelegator
       uri: link.uri,
       status: status.to_s,
       checked: completed_at.try(:iso8601),
-      errors: link_errors.symbolize_keys,
-      warnings: link_warnings.symbolize_keys,
+      problem_summary: problem_summary,
+      errors: link_errors.is_a?(Array) ? link_errors : link_errors.values.flatten,
+      warnings: link_warnings.is_a?(Array) ? link_warnings : link_warnings.values.flatten,
+      suggested_fix: suggested_fix,
     }
   end
 end

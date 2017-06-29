@@ -53,4 +53,14 @@ class Check < ApplicationRecord
     return :caution if has_warnings?
     :ok
   end
+
+  def problem_summary
+    return nil if is_ok? || is_pending?
+    "A problem summary."
+  end
+
+  def suggested_fix
+    return nil if is_ok? || is_pending?
+    "A suggested fix."
+  end
 end
