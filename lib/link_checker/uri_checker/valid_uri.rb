@@ -1,9 +1,5 @@
 module LinkChecker::UriChecker
   class ValidUri
-    HTTP_URI_SCHEMES = %w(http https).freeze
-    FILE_URI_SCHEMES = %w(file).freeze
-    OTHER_SCHEMES = %w(mailto tel).freeze
-
     attr_reader :report, :options
 
     def initialize(options = {})
@@ -15,21 +11,32 @@ module LinkChecker::UriChecker
       parsed_uri = URI.parse(uri)
 
       if parsed_uri.scheme.nil?
-        report.add_error("Invalid URL", "URLs for external sites must start with 'http://' or 'https://'. If you're linking to a heading on your page, use '#'.")
+        report.add_problem(NO_SCHEME_PROBLEM)
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, options).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(FileChecker.new(parsed_uri, options).call)
       elsif OTHER_SCHEMES.include?(parsed_uri.scheme)
-        report.add_warning("Contact details", "Check these are correct manually.")
+        report.add_problem(OTHER_SCHEME_PROBLEM)
       else
-        report.add_warning("Unusual URL", "Check this is meant to be here.")
+        report.add_problem(UNUSUAL_URL_PROBLEM)
       end
 
       report
     rescue URI::InvalidURIError
-      report.add_error("Invalid URL", "URL may be missing a forward slash at the beginning or be placeholder text.")
+      report.add_problem(INVALID_URL_PROBLEM)
       report
     end
+
+  private
+
+    HTTP_URI_SCHEMES = %w(http https).freeze
+    FILE_URI_SCHEMES = %w(file).freeze
+    OTHER_SCHEMES = %w(mailto tel).freeze
+
+    NO_SCHEME_PROBLEM = Problem.new(:error, 0, "Invalid URL", "URLs for external sites must start with 'http://' or 'https://'.", "Make sure to use a full URL. If you're linking to a heading on your page, use '#'.")
+    INVALID_URL_PROBLEM = Problem.new(:error, 0, "Invalid URL", "URL may be missing a forward slash at the beginning or be placeholder text.", "Double check to make sure your URL is correct.")
+    OTHER_SCHEME_PROBLEM = Problem.new(:warning, 0, "Contact details", "Link cannot be checked automatically.", "Check these are correct manually.")
+    UNUSUAL_URL_PROBLEM = Problem.new(:warning, 0, "Unusual URL", "Link cannot be checked automatically.", "Check this is meant to be here.")
   end
 end

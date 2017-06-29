@@ -17,13 +17,13 @@ module LinkChecker::UriChecker
 
     def call
       if uri.host.nil?
-        report.add_error("Invalid URL", "No host is given in the URL.")
+        report.add_problem(Problem.new(:error, 0, "Invalid URL", "No host is given in the URL.", "Double check your URLs"))
         return report
       end
 
       check_redirects
+      check_credentials_in_uri
       check_top_level_domain
-      check_credentials
 
       check_request
       return report if report.has_errors?
@@ -40,22 +40,34 @@ module LinkChecker::UriChecker
 
     attr_reader :response
 
+    def is_redirect?
+      redirect_history.any?
+    end
+
     def check_redirects
-      report.add_error("Too many redirects", "There are too many redirects set up on this url - it won't work. Find where the content is now hosted and link there instead.") if redirect_history.length >= REDIRECT_LIMIT
-      report.add_error("Circular redirect", "This page automatically sends users to another page, which automatically sends them back again. Neither page will load for the user.") if redirect_history.include?(uri)
-      report.add_warning("Slow page load", "Several redirects are set up on this URL - it will load slowly. Find where the content is now hosted and link to that instead.") if redirect_history.length == REDIRECT_WARNING
+      if redirect_history.length >= REDIRECT_LIMIT
+        report.add_problem(Problem.new(:error, -REDIRECT_LIMIT, "Too many redirects", "There are too many redirects set up on this url - it won't work.", "Find where the content is now hosted and link there instead."))
+      end
+
+      if redirect_history.include?(uri)
+        report.add_problem(Problem.new(:error, -REDIRECT_LIMIT, "Circular redirect", "This page automatically sends users to another page, which automatically sends them back again. Neither page will load for the user.", "Contact the site administrator to see if they have an issue that can be fixed."))
+      end
+
+      if redirect_history.length == REDIRECT_WARNING
+        report.add_problem(Problem.new(:warning, 0, "Slow page load", "Several redirects are set up on this URL - it will load slowly.", "Find where the content is now hosted and link to that instead."))
+      end
+    end
+
+    def check_credentials_in_uri
+      if uri.user.present? || uri.password.present?
+        report.add_problem(Problem.new(:warning, 1, "Login details in URL", "This URL contains login details", "Check it's ok for these to be public."))
+      end
     end
 
     def check_top_level_domain
       tld = uri.host.split(".").last
       if INVALID_TOP_LEVEL_DOMAINS.include?(tld)
-        report.add_warning("Suspicious URL", "This URL contains the word '#{tld}'. Check if it's appropriate to send users here.")
-      end
-    end
-
-    def check_credentials
-      if uri.user.present? || uri.password.present?
-        report.add_warning("Login details in URL", "Check it's ok for these to be public.")
+        report.add_problem(Problem.new(:warning, 2, "Suspicious URL", "This URL contains the word '#{tld}'.", "Check if it's appropriate to send users here."))
       end
     end
 
@@ -65,21 +77,23 @@ module LinkChecker::UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      report.add_warning("Slow page load", "Pages on this site take more than #{RESPONSE_TIME_WARNING} seconds to load - this may be frustrating for users.") if response_time > RESPONSE_TIME_WARNING
+      if response_time > RESPONSE_TIME_WARNING
+        report.add_problem(Problem.new(:warning, 3, "Slow page load", "Pages on this site take more than #{RESPONSE_TIME_WARNING} seconds to load - this may be frustrating for users.", "Contact the site administrator to see if they have an issue that can be fixed."))
+      end
 
       return response if report.has_errors?
 
       if response.status == 404 || response.status == 410
-        report.add_error("404 error (page not found)", "Received #{response.status} response from the server.")
+        report.add_problem(Problem.new(:error, 1, "404 error (page not found)", "Received #{response.status} response from the server.", "Find where the content is now hosted and link to that instead"))
       elsif response.status == 401 || response.status == 403
-        report.add_error("Access denied", "You need a password to access this site. If you gave a password, it wasn't correct.")
+        report.add_problem(Problem.new(:error, 1, "Access denied", "You need a password to access this site. If you gave a password, it wasn't correct.", "Contact the site administrator to see if they have an issue that can be fixed."))
       elsif response.status >= 400 && response.status < 500
-        report.add_error("Unusual response", "Speak to your technical team. Received #{response.status} response from the server.")
+        report.add_problem(Problem.new(:error, 1, "Unusual response", "Speak to your technical team. Received #{response.status} response from the server.", "Contact the site administrator to see if they have an issue that can be fixed."))
       elsif response.status >= 500 && response.status < 600
-        report.add_error("500 (server error)", "Received #{response.status} response from the server.")
+        report.add_problem(Problem.new(:error, 1, "500 (server error)", "Received #{response.status} response from the server.", "Contact the site administrator to see if they have an issue that can be fixed."))
       else
         unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
-          report.add_warning("Unusual response", "Speak to your technical team. Received #{response.status} response from the server.")
+          report.add_problem(Problem.new(:warning, 1, "Unusual response", "Received #{response.status} response from the server.", "Speak to your technical team."))
         end
       end
 
@@ -92,7 +106,7 @@ module LinkChecker::UriChecker
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")
       if %w(restricted mature).include?(rating)
-        report.add_warning("Possible adult content", "This site describes itself as '#{rating}'. Check if it's appropriate to send users here.")
+        report.add_problem(Problem.new(:warning, 2, "Possible adult content", "This site describes itself as '#{rating}'.", "Check if it's appropriate to send users here."))
       end
     end
 
@@ -119,7 +133,7 @@ module LinkChecker::UriChecker
       if response.status == 200
         data = JSON.parse(response.body)
         if data.include?("matches") && data["matches"]
-          report.add_warning("Flagged as dangerous", "This site has been flagged as dangerous by Google Safebrowsing API. Don't send users to this site.")
+          report.add_problem(Problem.new(:warning, 1, "Flagged as dangerous", "This site has been flagged as dangerous by Google Safebrowsing API. Don't send users to this site.", "Check if it's appropriate to send users here."))
         end
       else
         Airbrake.notify(
@@ -140,21 +154,21 @@ module LinkChecker::UriChecker
           subreport = ValidUri
             .new(redirect_history: redirect_history + [uri])
             .call(target_uri.to_s)
-          report.merge(subreport)
+          report.merge(subreport, with_priority: 1)
         end
 
         response
       rescue Faraday::ConnectionFailed
-        report.add_error("Connection failed", "Connection to the server could not be established.")
+        report.add_problem(Problem.new(:error, 1, "Connection failed", "Connection to the server could not be established.", "Speak to your technical team."))
         nil
       rescue Faraday::TimeoutError
-        report.add_error("Timeout error", "The connection to the server timed out.")
+        report.add_problem(Problem.new(:error, 1, "Timeout error", "The connection to the server timed out.", "Speak to your technical team."))
         nil
       rescue Faraday::SSLError
-        report.add_error("Unsafe link", "This site's SSL security certificate has expired - it might not be safe for users.")
+        report.add_problem(Problem.new(:error, 1, "Unsafe link", "This site's SSL security certificate has expired - it might not be safe for users.", "Speak to your technical team."))
         nil
       rescue Faraday::Error => e
-        report.add_error("Unknown issue", "Speak to your technical team: #{e}")
+        report.add_problem(Problem.new(:error, 1, "Unknown issue", "#{e}", "Speak to your technical team."))
         nil
       end
     end

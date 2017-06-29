@@ -31,6 +31,8 @@ class CheckWorker
     check.update!(
       link_errors: report.errors,
       link_warnings: report.warnings,
+      problem_summary: report.problem_summary,
+      suggested_fix: report.suggested_fix,
       completed_at: Time.now
     )
 

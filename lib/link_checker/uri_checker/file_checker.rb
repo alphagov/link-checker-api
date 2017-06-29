@@ -7,8 +7,12 @@ module LinkChecker::UriChecker
     end
 
     def call
-      report.add_error("Not available online", "This links to a file on your computer - users won't be able to access it online.")
+      report.add_problem(PROBLEM)
       report
     end
+
+  private
+
+    PROBLEM = Problem.new(:error, 0, "Not available online", "This links to a file on your computer - users won't be able to access it online.", "Find an online version of your file.")
   end
 end
