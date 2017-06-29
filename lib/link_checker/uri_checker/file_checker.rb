@@ -1,14 +1,7 @@
 module LinkChecker::UriChecker
-  class FileChecker
-    attr_reader :report
-
-    def initialize(_uri, _options = {})
-      @report = Report.new
-    end
-
+  class FileChecker < Checker
     def call
       report.add_problem(PROBLEM)
-      report
     end
 
   private

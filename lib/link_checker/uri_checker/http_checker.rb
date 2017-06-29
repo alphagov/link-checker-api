@@ -1,5 +1,5 @@
 module LinkChecker::UriChecker
-  class HttpChecker
+  class HttpChecker < Checker
     INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles).freeze
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
@@ -8,12 +8,6 @@ module LinkChecker::UriChecker
     RESPONSE_TIME_WARNING = 2.5
 
     attr_reader :uri, :redirect_history, :report
-
-    def initialize(uri, redirect_history: [])
-      @uri = uri
-      @redirect_history = redirect_history
-      @report = Report.new
-    end
 
     def call
       if uri.host.nil?
@@ -39,10 +33,6 @@ module LinkChecker::UriChecker
   private
 
     attr_reader :response
-
-    def is_redirect?
-      redirect_history.any?
-    end
 
     def check_redirects
       if redirect_history.length >= REDIRECT_LIMIT
