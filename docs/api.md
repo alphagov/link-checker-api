@@ -30,8 +30,10 @@ $ curl -s http://link-checker-api.dev.gov.uk/check\?uri\=https%3A%2F%2Fwww.gov.u
   "uri": "https://www.gov.uk/",
   "status": "pending",
   "checked": null,
-  "errors": {},
-  "warnings": {}
+  "errors": [],
+  "warnings": [],
+  "problem_summary": null,
+  "suggested_fix": null
 }
 ```
 
@@ -41,8 +43,10 @@ $ curl -s http://link-checker-api.dev.gov.uk/check\?uri\=https%3A%2F%2Fwww.gov.u
   "uri": "https://www.gov.uk/",
   "status": "ok",
   "checked": "2017-04-12T18:47:16Z",
-  "errors": {},
-  "warnings": {}
+  "errors": [],
+  "warnings": [],
+  "problem_summary": null,
+  "suggested_fix": null
 }
 ```
 
@@ -84,26 +88,30 @@ $ curl -s -H "Content-Type: application/json" -X POST -d '{"uris": ["https://www
       "uri": "https://www.gov.uk/",
       "status": "ok",
       "checked": "2017-04-12T18:47:16Z",
-      "errors": {},
-      "warnings": {}
+      "errors": [],
+      "warnings": [],
+      "problem_summary": null,
+      "suggested_fix": null
     },
     {
       "uri": "https://www.gov.uk/404",
       "status": "broken",
       "checked": "2017-04-12T16:30:39Z",
-      "errors": {
-        "404 error (page not found)": [
-          "Received 404 response from the server."
-        ]
-      },
-      "warnings": {}
+      "errors": [
+        "Received 404 response from the server."
+      ],
+      "warnings": [],
+      "problem_summary": "404 error (page not found)",
+      "suggested_fix": ""
     },
     {
       "uri": "https://www.gov.uk/search",
       "status": "pending",
       "checked": null,
-      "errors": {},
-      "warnings": {}
+      "errors": [],
+      "warnings": [],
+      "problem_summary": null,
+      "suggested_fix": null
     }
   ],
   "totals": {
@@ -161,26 +169,30 @@ $ curl -s http://link-checker-api.dev.gov.uk/batch/137125 | jq
       "uri": "https://www.gov.uk/",
       "status": "ok",
       "checked": "2017-04-12T18:47:16Z",
-      "errors": {},
-      "warnings": {}
+      "errors": [],
+      "warnings": [],
+      "problem_summary": null,
+      "suggested_fix": null
     },
     {
       "uri": "https://www.gov.uk/404",
       "status": "broken",
       "checked": "2017-04-12T16:30:39Z",
-      "errors": {
-        "404 error (page not found)": [
-          "Received 404 response from the server."
-        ]
-      },
-      "warnings": {}
+      "errors": [
+        "Received 404 response from the server."
+      ],
+      "warnings": [],
+      "problem_summary": "404 error (page not found)",
+      "suggested_fix": ""
     },
     {
       "uri": "https://www.gov.uk/search",
       "status": "ok",
       "checked": "2017-04-12T18:55:29Z",
-      "errors": {},
-      "warnings": {}
+      "errors": [],
+      "warnings": [],
+      "problem_summary": null,
+      "suggested_fix": null
     }
   ],
   "totals": {
@@ -243,8 +255,10 @@ And verify this matches the value in the header.
   "uri": "https://www.gov.uk/",
   "status": "ok",
   "checked": "2017-04-12T18:47:16Z",
-  "errors": {},
-  "warnings": {}
+  "errors": [],
+  "warnings": [],
+  "problem_summary": null,
+  "suggested_fix": null
 }
 ```
 
@@ -267,17 +281,16 @@ And verify this matches the value in the header.
   - An [RFC 3339][rfc-3339] formatted timestamp, will be `null` for a link with a
     `status` of "pending".
 - `errors`
- - An object of keys to arrays of strings.
- - A key represents the short description of the error, whereas the array of
-  strings details each individual problem found. Normally they'll be one value,
-  but there could be more for complicated links.
- - These are designed to be presentable to an end user.
+  - An array of strings with details of each error found.
 - `warnings`
- - An object of keys to arrays of strings.
- - A key represents the short description of the warning, whereas the array of
-  strings details each individual problem found. Normally they'll be one value,
-  but there could be more for complicated links.
- - These are designed to be presentable to an end user.
+  - An array of strings with details of each warning found.
+- `problem_summary`
+  - A short description of the most critical problem with the link.
+- `suggested_fix`
+  - Where possible, this provides a suggested fix to the user.
+
+`errors`, `warnings`, `problem_summary` and `suggested_fix` are all designed to
+be shown to the end user.
 
 ## BatchReport entity
 
@@ -293,26 +306,30 @@ And verify this matches the value in the header.
       "uri": "https://www.gov.uk/",
       "status": "ok",
       "checked": "2017-04-12T18:47:16Z",
-      "errors": {},
-      "warnings": {}
+      "errors": [],
+      "warnings": [],
+      "problem_summary": null,
+      "suggested_fix": null
     },
     {
       "uri": "https://www.gov.uk/404",
       "status": "broken",
       "checked": "2017-04-12T16:30:39Z",
-      "errors": {
-        "404 error (page not found)": [
-          "Received 404 response from the server."
-        ]
-      },
-      "warnings": {}
+      "errors": [
+        "Received 404 response from the server."
+      ],
+      "warnings": [],
+      "problem_summary": "404 error (page not found)",
+      "suggested_fix": ""
     },
     {
       "uri": "https://www.gov.uk/search",
       "status": "ok",
       "checked": "2017-04-12T18:55:29Z",
-      "errors": {},
-      "warnings": {}
+      "errors": [],
+      "warnings": [],
+      "problem_summary": null,
+      "suggested_fix": null
     }
   ],
   "totals": {
