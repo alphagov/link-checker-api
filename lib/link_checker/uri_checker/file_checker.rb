@@ -2,10 +2,10 @@ module LinkChecker::UriChecker
   class FileChecker < Checker
     def call
       add_error(
-        summary: "Not available online",
+        summary: I18n.t(:not_available_online),
         message: {
-          singular: "This links to a file on your computer and won't open for users",
-          redirect: "This redirects to an invalid link.",
+          singular: I18n.t("links_to_file_on_computer.singular"),
+          redirect: I18n.t("links_to_file_on_computer.redirect"),
         }
       )
     end

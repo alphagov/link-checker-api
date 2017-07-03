@@ -3,10 +3,10 @@ module LinkChecker::UriChecker
     def call
       if uri.host.nil?
         return add_error(
-          summary: "Invalid URL",
+          summary: I18n.t(:invalid_url),
           message: {
-            singular: "This is not a valid link.",
-            redirect: "This redirects to an invalid link.",
+            singular: I18n.t("is_not_valid_link.singular"),
+            redirect: I18n.t("is_not_valid_link.redirect"),
           }
         )
       end
@@ -40,28 +40,28 @@ module LinkChecker::UriChecker
     def check_redirects
       if redirect_history.length >= REDIRECT_LIMIT
         add_error(
-          summary: "Broken Redirect",
-          message: "This redirects too many times and browsers may not open it.",
+          summary: I18n.t(:broken_redirect),
+          message: I18n.t(:redirects_too_many_times),
           priority: -REDIRECT_LIMIT, # push it above problems of other redirects
-          suggested_fix: "Contact the site administrator to see if they have an issue that can be fixed.",
+          suggested_fix: I18n.t(:contact_site_administrator),
         )
       end
 
       if redirect_history.include?(uri)
         add_error(
-          summary: "Broken Redirect",
-          message: "This page has a redirect loop and won't open.",
+          summary: I18n.t(:broken_redirect),
+          message: I18n.t(:page_has_redirect_loop),
           priority: -REDIRECT_LIMIT, # push it above problems of other redirects
-          suggested_fix: "Contact the site administrator to see if they have an issue that can be fixed.",
+          suggested_fix: I18n.t(:contact_site_administrator),
         )
       end
 
       if redirect_history.length == REDIRECT_WARNING
         add_warning(
-          summary: "Bad Redirect",
-          message: "This redirects too many times and will open slowly",
+          summary: I18n.t(:bad_redirect),
+          message: I18n.t(:redirects_too_many_times_slowly),
           priority: 3,
-          suggested_fix: "Link directly to: #{uri}"
+          suggested_fix: I18n.t(:link_directly_to, uri: uri),
         )
       end
     end
@@ -70,9 +70,9 @@ module LinkChecker::UriChecker
       if uri.user.present? || uri.password.present?
         add_warning(
           priority: 2,
-          message: "This link contains login credentials which you may not want to share publicly.",
-          summary: "Login details in URL",
-          suggested_fix: "Link to an alternative location of this resource, which doesn't require credentials.",
+          message: I18n.t(:link_contains_login_credentials),
+          summary: I18n.t(:login_details_in_url),
+          suggested_fix: I18n.t(:link_to_alternative_resource),
         )
       end
     end
@@ -83,10 +83,10 @@ module LinkChecker::UriChecker
         add_warning(
           priority: 1,
           message: {
-            singular: "This link is hosted on a website meant for adult content.",
-            redirect: "This redirects to websites meant for adult content.",
+            singular: I18n.t("website_for_adults.singular"),
+            redirect: I18n.t("website_for_adults.redirect"),
           },
-          summary: "Suspicious destination"
+          summary: I18n.t(:suspicious_destination),
         )
       end
     end
@@ -101,11 +101,11 @@ module LinkChecker::UriChecker
         add_warning(
           priority: 4,
           message: {
-            singular: "This page is slow loading and may frustrate users.",
-            redirect: "This redirects to a slow loading page.",
+            singular: I18n.t("page_is_slow.singular"),
+            redirect: I18n.t("page_is_slow.redirect"),
           },
-          summary: "Slow page",
-          suggested_fix: "Contact the site administrator to see if they have an issue that can be fixed",
+          summary: I18n.t(:slow_page),
+          suggested_fix: I18n.t(:contact_site_administrator),
         )
       end
 
@@ -114,47 +114,47 @@ module LinkChecker::UriChecker
       if response.status == 404 || response.status == 410
         add_error(
           message: {
-            singular: "This page was not found (404).",
-            redirect: "This redirects to a page not found (404).",
+            singular: I18n.t("page_was_not_found.singular"),
+            redirect: I18n.t("page_was_not_found.redirect"),
           },
-          summary: "Page not found",
-          suggested_fix: "Find where the content is now hosted and link to that instead.",
+          summary: I18n.t(:page_not_found),
+          suggested_fix: I18n.t(:find_content_now),
         )
       elsif response.status == 401 || response.status == 403
         add_error(
-          summary: "Page requires login",
+          summary: I18n.t(:page_requires_login),
           message: {
-            singular: "A login is required to view this page.",
-            redirect: "This redirects to a page that requires a login.",
+            singular: I18n.t("login_required_to_view.singular"),
+            redirect: I18n.t("login_required_to_view.redirect"),
           },
         )
       elsif response.status >= 400 && response.status < 500
         add_error(
           message: {
-            singular: "This page is unavailable (#{response.status}).",
-            redirect: "This redirects to a page that is unavailable (#{response.status}).",
+            singular: I18n.t(:this_page_is_unavailable, status: response.status),
+            redirect: I18n.t(:this_page_is_unavailable, status: response.status),
           },
-          summary: "Page unavailable",
-          suggested_fix: "Contact the site administrator to see if they have an issue that can be fixed.",
+          summary: I18n.t(:page_unavailable),
+          suggested_fix: I18n.t(:contact_site_administrator),
         )
       elsif response.status >= 500 && response.status < 600
         add_error(
           message: {
-            singular: "This page is responding with an error (#{response.status}) and won't work for users.",
-            redirect: "This redirects to a page with an error.",
+            singular: I18n.t("page_is_responding_with_error.singular", status: response.status),
+            redirect: I18n.t("page_is_responding_with_error.redirect"),
           },
-          summary: "Page unavailable",
-          suggested_fix: "Contact the site administrator to see if they have an issue that can be fixed.",
+          summary: I18n.t(:page_unavailable),
+          suggested_fix: I18n.t(:contact_site_administrator),
         )
       else
         unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
           add_warning(
             message: {
-              singular: "This page is responding unusually (#{response.status}) and likely won't work for users.",
-              redirect: "This redirects to a page responding unusally (#{response.status}).",
+              singular: I18n.t("page_responding_unusually.singular", status: response.status),
+              redirect: I18n.t("page_responding_unusually.redirect", status: response.status),
             },
-            summary: "Page unavailable",
-            suggested_fix: "Contact the site administrator to see if they have an issue that can be fixed.",
+            summary: I18n.t(:page_unavailable),
+            suggested_fix: I18n.t(:contact_site_administrator),
           )
         end
       end
@@ -171,10 +171,10 @@ module LinkChecker::UriChecker
         add_warning(
           priority: 2,
           message: {
-            singular: "This page describes itself as '#{rating}' and may not be suitable to link to.",
-            redirect: "This redirects to a page that describes it's content as '#{rating}'.",
+            singular: I18n.t("page_has_a_rating.singular", rating: rating),
+            redirect: I18n.t("page_has_a_rating.redirect", rating: rating),
           },
-          summary: "Suspicious content",
+          summary: I18n.t(:suspicious_content),
         )
       end
     end
@@ -204,10 +204,10 @@ module LinkChecker::UriChecker
         if data.include?("matches") && data["matches"]
           add_warning(
             priority: 1,
-            summary: "Suspicious content",
+            summary: I18n.t(:suspicious_content),
             message: {
-              singular: "This page contains a threat and should not be linked to.",
-              redirect: "This redirects to a page with a threat",
+              singular: I18n.t("page_contains_a_threat.singular"),
+              redirect: I18n.t("page_contains_a_threat.redirect"),
             },
           )
         end
@@ -236,41 +236,42 @@ module LinkChecker::UriChecker
         response
       rescue Faraday::ConnectionFailed
         add_error(
-          summary: "Website unavailable",
+          summary: I18n.t(:website_unavailable),
           message: {
-            singular: "The website hosting this link is offline.",
-            redirect: "This redirects to a website that is offline.",
+            singular: I18n.t("website_host_offline.singular"),
+            redirect: I18n.t("website_host_offline.redirect"),
           },
-          suggested_fix: "Determine if this is a temporary issue or the website is no longer available.",
+          suggested_fix: I18n.t(:determine_if_temporary),
         )
         nil
       rescue Faraday::TimeoutError
         add_error(
-          summary: "Website unavailable",
+          summary: I18n.t(:website_unavailable),
           message: {
-            singular: "This page is not responding.",
-            redirect: "This redirects to a page that is not responding."
+            singular: I18n.t("page_is_not_responding.singular"),
+            redirect: I18n.t("page_is_not_responding.redirect"),
           },
-          suggested_fix: "Determine if this is a temporary issue or the resource is no longer available",
+          suggested_fix: I18n.t(:determine_if_temporary),
         )
         nil
       rescue Faraday::SSLError
         add_error(
-          summary: "Security Error",
+          summary: I18n.t(:security_error),
           message: {
-            singular: "This page has a security problem that users will be alerted to.",
-            redirect: "This redirects to a page with a security problem."
+            singular: I18n.t("page_has_security_problem.singular"),
+            redirect: I18n.t("page_has_security_problem.redirect"),
           },
+          suggested_fix: I18n.t(:determine_if_temporary),
         )
         nil
       rescue Faraday::Error => e
         add_error(
-          summary: "Page unavailable",
+          summary: I18n.t(:page_unavailable),
           message: {
-            singular: "This page is failing to load.",
-            redirect: "This redirects to a page that isn't loading.",
+            singular: I18n.t("page_failing_to_load.singular"),
+            redirect: I18n.t("page_failing_to_load.redirect"),
           },
-          suggested_fix: "Determine if this is a temporary issue or the website is no longer available",
+          suggested_fix: I18n.t(:determine_if_temporary),
         )
         nil
       end

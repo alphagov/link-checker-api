@@ -3,11 +3,12 @@ module LinkChecker::UriChecker
     def call
       if parsed_uri.scheme.nil?
         add_error(
-          summary: "Invalid URL",
+          summary: I18n.t(:invalid_url),
           message: {
-            singular: "This link is missing the scheme (http, ftp, mailto).",
-            redirect: "This redirects to an invalid link.",
-          }
+            singular: I18n.t("link_missing_scheme.singular"),
+            redirect: I18n.t("link_missing_scheme.redirect"),
+          },
+          suggested_fix: I18n.t(:check_correct_manually),
         )
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history).call)
@@ -15,30 +16,31 @@ module LinkChecker::UriChecker
         report.merge(FileChecker.new(parsed_uri, redirect_history: redirect_history).call)
       elsif CONTACT_SCHEMES.include?(parsed_uri.scheme)
         add_warning(
-          summary: "Contact details",
+          summary: I18n.t(:contact_details),
           message: {
-            singular: "This links to contact details which we don't support.",
-            redirect: "This redirects to contact details which we don't support.",
+            singular: I18n.t("links_to_contact_details.singular"),
+            redirect: I18n.t("links_to_contact_details.redirect"),
           },
-          suggested_fix: "Check this are correct manually."
+          suggested_fix: I18n.t(:check_correct_manually),
         )
       else
         add_warning(
-          summary: "Unusual URL",
+          summary: I18n.t(:unusual_url),
           message: {
-            singular: "This links to something which we don't support.",
-            redirect: "This redirects to something which we don't support.",
+            singular: I18n.t("link_is_unsupported.singular"),
+            redirect: I18n.t("link_is_unsupported.redirect"),
           },
-          suggested_fix: "Check this are correct manually."
+          suggested_fix: I18n.t(:check_correct_manually),
         )
       end
     rescue URI::InvalidURIError
       add_error(
-        summary: "Invalid URL",
+        summary: I18n.t(:invalid_url),
         message: {
-          singular: "This is not a valid link.",
-          redirect: "This redirects to an invalid link.",
-        }
+          singular: I18n.t("not_a_valid_link.singular"),
+          redirect: I18n.t("not_a_valid_link.redirect"),
+        },
+        suggested_fix: I18n.t(:check_correct_manually),
       )
     end
 

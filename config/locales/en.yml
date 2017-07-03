@@ -20,4 +20,112 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  not_available_online: Not available online
+  links_to_file_on_computer:
+    singular: This links to a file on your computer and won't open for users.
+    redirect: This redirects to an invalid link.
+
+  invalid_url: Invalid URL
+  is_not_valid_link:
+    singular: This is not a valid link.
+    redirect: This redirects to an invalid link.
+
+  broken_redirect: Broken Redirect
+  redirects_too_many_times: This redirects too many times and browsers may not open it.
+  page_has_redirect_loop: This page has a redirect loop and won't open.
+
+  contact_site_administrator: Contact the site administrator to see if they have an issue that can be fixed.
+
+  bad_redirect: Bad Redirect
+  redirects_too_many_times_slowly: This redirects too many times and will open slowly.
+  link_directly_to: "Link directly to: %{uri}"
+
+  login_details_in_url: Login details in URL
+  link_contains_login_credentials: This link contains login credentials which you may not want to share publicly.
+  link_to_alternative_resource: Link to an alternative location of this resource, which doesn't require credentials.
+
+  suspicious_destination: Suspicious Destination
+  website_for_adults:
+    singular: This link is hosted on a website meant for adult content.
+    redirect: This redirects to websites meant for adult content.
+
+  slow_page: Slow page
+  page_is_slow:
+    singular: This page is slow loading and may frustrate users.
+    redirect: This redirects to a slow loading page.
+
+  page_not_found: Page not found
+  page_was_not_found:
+    singular: This page was not found (404).
+    redirect: This redirects to a page not found (404).
+  find_content_now: Find where the content is now hosted and link to that instead.
+
+  page_requires_login: Page requires login
+  login_required_to_view:
+    singular: A login is required to view this page.
+    redirect: This redirects to a page that requires a login.
+
+  page_unavailable: Page unavailable
+  this_page_is_unavailable:
+    singular: This page is unavailable (%{status}).
+    redirect: This redirects to a page that is unavailable (%{status}).
+
+  page_is_responding_with_error:
+    singular: This page is responding with an error (%{status}) and won't work for users.
+    redirect: This redirects to a page with an error.
+
+  page_responding_unusually:
+    singular: This page is responding unusually (%{status}) and likely won't work for users.
+    redirect: This redirects to a page responding unusally (%{status}).
+
+  suspicious_content: Suspicious content
+
+  page_has_a_rating:
+    singular: This page describes itself as '%{rating}' and may not be suitable to link to.
+    redirect: This redirects to a page that describes it's content as '%{rating}'.
+
+  page_contains_a_threat:
+    singular: This page contains a threat and should not be linked to.
+    redirect: This redirects to a page with a threat.
+
+  website_unavailable: Website unavailable
+
+  website_host_offline:
+    singular: The website hosting this link is offline.
+    redirect: This redirects to a website that is offline.
+
+  page_is_not_responding:
+    singular: This page is not responding.
+    redirect: This redirects to a page that is not responding.
+
+  security_error: Security Error
+  page_has_security_problem:
+    singular: This page has a security problem that users will be alerted to.
+    redirect: This redirects to a page with a security problem.
+
+  page_failing_to_load:
+    singular: This page is failing to load.
+    redirect: This redirects to a page that isn't loading.
+
+  determine_if_temporary: Determine if this is a temporary issue or the resource is no longer available.
+
+  invalid_url: Invalid URL
+  link_missing_scheme:
+    singular: This link is missing the scheme (http, ftp, mailto).
+    redirect: This redirects to an invalid link.
+
+  contact_details: Contact details
+  links_to_contact_details:
+    singular: This links to contact details which we don't support.
+    redirect: This redirects to contact details which we don't support.
+
+  unusual_url: Unusual URL
+  link_is_unsupported:
+    singular: This links to something which we don't support.
+    redirect: This redirects to something which we don't support.
+
+  not_a_valid_link:
+    singular: This is not a valid link.
+    redirect: This redirects to an invalid link.
+
+  check_correct_manually: Check this are correct manually.

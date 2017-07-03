@@ -78,7 +78,7 @@ RSpec.describe LinkChecker do
     context "TLD is risky" do
       let(:uri) { "https://www.gov.xxx" }
       before { stub_request(:get, uri).to_return(status: 200) }
-      include_examples "has a problem summary", "Suspicious destination"
+      include_examples "has a problem summary", "Suspicious Destination"
       include_examples "has warnings"
       include_examples "has no errors"
     end
