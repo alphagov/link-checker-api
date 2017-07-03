@@ -26,12 +26,14 @@ module LinkChecker::UriChecker
       problems
         .select { |problem| problem.type == :warning }
         .map(&:message)
+        .uniq
     end
 
     def errors
       problems
         .select { |problem| problem.type == :error }
         .map(&:message)
+        .uniq
     end
 
     def problem_summary
