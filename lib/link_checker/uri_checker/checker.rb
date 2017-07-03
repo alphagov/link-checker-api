@@ -12,36 +12,45 @@ module LinkChecker::UriChecker
       redirect_history.any?
     end
 
-    def add_error(priority: 0, summary:, message:, suggested_fix: "")
-      add_problem(:error, priority, summary, message, suggested_fix)
+    def add_error(priority: 0, summary:, message:, suggested_fix: "", text_args: {})
+      add_problem(:error, priority, summary, message, suggested_fix, text_args)
     end
 
-    def add_warning(priority: 0, summary:, message:, suggested_fix: "")
-      add_problem(:warning, priority, summary, message, suggested_fix)
+    def add_warning(priority: 0, summary:, message:, suggested_fix: "", text_args: {})
+      add_problem(:warning, priority, summary, message, suggested_fix, text_args)
     end
 
   private
 
     attr_reader :redirect_history
 
-    def add_problem(type, priority, summary, message, suggested_fix)
+    def add_problem(type, priority, summary, message, suggested_fix, text_args)
       report.add_problem(
         Problem.new(
-          pick_singular_or_redirect(type),
-          pick_singular_or_redirect(priority),
-          pick_singular_or_redirect(summary),
-          pick_singular_or_redirect(message),
-          pick_singular_or_redirect(suggested_fix)
+          type, priority,
+          find_locale_string(summary, text_args),
+          find_locale_string(message, text_args),
+          find_locale_string(suggested_fix, text_args),
         )
       )
     end
 
-    def pick_singular_or_redirect(thing)
-      if thing.is_a?(Hash)
-        thing[from_redirect? ? :redirect : :singular]
-      else
-        thing
-      end
+    def find_locale_string(symbol, args)
+      return "" if symbol.empty?
+
+      symbols = [
+        :"#{symbol}.#{from_redirect? ? 'redirect' : 'singular'}",
+        symbol,
+      ]
+
+      string = symbols
+        .map { |symbol| I18n.t(symbol, args.merge(default: nil)) }
+        .compact
+        .first
+
+      raise "Invalid locale symbol." if string.nil?
+
+      string
     end
   end
 end

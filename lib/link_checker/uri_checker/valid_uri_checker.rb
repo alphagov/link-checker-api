@@ -3,12 +3,9 @@ module LinkChecker::UriChecker
     def call
       if parsed_uri.scheme.nil?
         add_error(
-          summary: I18n.t(:invalid_url),
-          message: {
-            singular: I18n.t("link_missing_scheme.singular"),
-            redirect: I18n.t("link_missing_scheme.redirect"),
-          },
-          suggested_fix: I18n.t(:check_correct_manually),
+          summary: :invalid_url,
+          message: :link_missing_scheme,
+          suggested_fix: :check_correct_manually,
         )
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history).call)
@@ -16,31 +13,22 @@ module LinkChecker::UriChecker
         report.merge(FileChecker.new(parsed_uri, redirect_history: redirect_history).call)
       elsif CONTACT_SCHEMES.include?(parsed_uri.scheme)
         add_warning(
-          summary: I18n.t(:contact_details),
-          message: {
-            singular: I18n.t("links_to_contact_details.singular"),
-            redirect: I18n.t("links_to_contact_details.redirect"),
-          },
-          suggested_fix: I18n.t(:check_correct_manually),
+          summary: :contact_details,
+          message: :links_to_contact_details,
+          suggested_fix: :check_correct_manually,
         )
       else
         add_warning(
-          summary: I18n.t(:unusual_url),
-          message: {
-            singular: I18n.t("link_is_unsupported.singular"),
-            redirect: I18n.t("link_is_unsupported.redirect"),
-          },
-          suggested_fix: I18n.t(:check_correct_manually),
+          summary: :unusual_url,
+          message: :link_is_unsupported,
+          suggested_fix: :check_correct_manually,
         )
       end
     rescue URI::InvalidURIError
       add_error(
-        summary: I18n.t(:invalid_url),
-        message: {
-          singular: I18n.t("not_a_valid_link.singular"),
-          redirect: I18n.t("not_a_valid_link.redirect"),
-        },
-        suggested_fix: I18n.t(:check_correct_manually),
+        summary: :invalid_url,
+        message: :not_a_valid_link,
+        suggested_fix: :check_correct_manually,
       )
     end
 
