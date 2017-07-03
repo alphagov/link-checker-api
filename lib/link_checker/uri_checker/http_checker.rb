@@ -1,11 +1,98 @@
 module LinkChecker::UriChecker
+  class NoHost < Error
+    def initialize(options = {})
+      super(summary: :invalid_url, message: :is_not_valid_link, **options)
+    end
+  end
+
+  class TooManyRedirects < Error
+    def initialize(options = {})
+      super(summary: :broken_redirect, message: :redirects_too_many_times, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
+  class RedirectLoop < Error
+    def initialize(options = {})
+      super(summary: :broken_redirect, message: :page_has_redirect_loop, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
+  class TooManyRedirectsSlowly < Warning
+    def initialize(options = {})
+      super(summary: :bad_redirect, message: :redirects_too_many_times_slowly, suggested_fix: :link_directly_to, **options)
+    end
+  end
+
+  class CredentialsInUri < Warning
+    def initialize(options = {})
+      super(summary: :login_details_in_url, message: :link_contains_login_credentials, suggested_fix: :link_to_alternative_resource, **options)
+    end
+  end
+
+  class SuspiciousTld < Warning
+    def initialize(options = {})
+      super(summary: :suspicious_destination, message: :website_for_adults, **options)
+    end
+  end
+
+  class SlowResponse < Warning
+    def initialize(options = {})
+      super(summary: :slow_page, message: :page_is_slow, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
+  class PageNotFound < Error
+    def initialize(options = {})
+      super(summary: :page_not_found, message: :page_was_not_found, suggested_fix: :find_content_now, **options)
+    end
+  end
+
+  class PageRequiresLogin < Error
+    def initialize(options = {})
+      super(summary: :page_requires_login, message: :login_required_to_view, **options)
+    end
+  end
+
+  class PageIsUnavailable < Error
+    def initialize(options = {})
+      super(summary: :page_unavailable, message: :this_page_is_unavailable, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
+  class PageRespondsWithError < Error
+    def initialize(options = {})
+      super(summary: :page_unavailable, message: :page_is_responding_with_error, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
+  class PageRespondsUnusually < Warning
+    def initialize(options = {})
+      super(summary: :page_unavailable, message: :page_responding_unusually, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
+  class PageWithRating < Warning
+    def initialize(options = {})
+      super(summary: :suspicious_content, message: :page_has_a_rating, **options)
+    end
+  end
+
+  class PageContainsThreat < Warning
+    def initialize(options = {})
+      super(summary: :suspicious_content, message: :page_contains_a_threat, **options)
+    end
+  end
+
+  class FaradayError < Error
+    def initialize(options = {})
+      super(suggested_fix: :determine_if_temporary, **options)
+    end
+  end
+
   class HttpChecker < Checker
     def call
       if uri.host.nil?
-        return add_error(
-          summary: :invalid_url,
-          message: :is_not_valid_link,
-        )
+        return add_problem(NoHost.new(from_redirect: from_redirect?))
       end
 
       check_redirects
@@ -35,54 +122,21 @@ module LinkChecker::UriChecker
     RESPONSE_TIME_WARNING = 2.5
 
     def check_redirects
-      if redirect_history.length >= REDIRECT_LIMIT
-        add_error(
-          summary: :broken_redirect,
-          message: :redirects_too_many_times,
-          priority: -REDIRECT_LIMIT, # push it above problems of other redirects
-          suggested_fix: :contact_site_administrator,
-        )
-      end
-
-      if redirect_history.include?(uri)
-        add_error(
-          summary: :broken_redirect,
-          message: :page_has_redirect_loop,
-          priority: -REDIRECT_LIMIT, # push it above problems of other redirects
-          suggested_fix: :contact_site_administrator,
-        )
-      end
-
-      if redirect_history.length == REDIRECT_WARNING
-        add_warning(
-          summary: :bad_redirect,
-          message: :redirects_too_many_times_slowly,
-          priority: 3,
-          suggested_fix: :link_directly_to,
-          text_args: { uri: uri },
-        )
-      end
+      add_problem(TooManyRedirects.new(from_redirect: from_redirect?)) if redirect_history.length >= REDIRECT_LIMIT
+      add_problem(RedirectLoop.new(from_redirect: from_redirect?)) if redirect_history.include?(uri)
+      add_problem(TooManyRedirectsSlowly.new(from_redirect: :from_redirect?, uri: uri)) if redirect_history.length == REDIRECT_WARNING
     end
 
     def check_credentials_in_uri
       if uri.user.present? || uri.password.present?
-        add_warning(
-          priority: 2,
-          message: :link_contains_login_credentials,
-          summary: :login_details_in_url,
-          suggested_fix: :link_to_alternative_resource,
-        )
+        add_problem(CredentialsInUri.new(from_redirect: from_redirect?))
       end
     end
 
     def check_top_level_domain
       tld = uri.host.split(".").last
       if INVALID_TOP_LEVEL_DOMAINS.include?(tld)
-        add_warning(
-          priority: 1,
-          message: :website_for_adults,
-          summary: :suspicious_destination,
-        )
+        add_problem(SuspiciousTld.new(from_redirect: from_redirect?))
       end
     end
 
@@ -92,50 +146,21 @@ module LinkChecker::UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      if response_time > RESPONSE_TIME_WARNING
-        add_warning(
-          priority: 4,
-          message: :page_is_slow,
-          summary: :slow_page,
-          suggested_fix: :contact_site_administrator,
-        )
-      end
+      add_problem(SlowResponse.new(from_redirect: from_redirect?)) if response_time > RESPONSE_TIME_WARNING
 
       return response if report.has_errors?
 
       if response.status == 404 || response.status == 410
-        add_error(
-          message: :page_was_not_found,
-          summary: :page_not_found,
-          suggested_fix: :find_content_now,
-        )
+        add_problem(PageNotFound.new(from_redirect: from_redirect?))
       elsif response.status == 401 || response.status == 403
-        add_error(
-          summary: :page_requires_login,
-          message: :login_required_to_view,
-        )
+        add_problem(PageRequiresLogin.new(from_redirect: from_redirect?))
       elsif response.status >= 400 && response.status < 500
-        add_error(
-          message: :this_page_is_unavailable,
-          summary: :page_unavailable,
-          suggested_fix: :contact_site_administrator,
-          text_args: { status: response.status },
-        )
+        add_problem(PageIsUnavailable.new(from_redirect: from_redirect?, status: response.status))
       elsif response.status >= 500 && response.status < 600
-        add_error(
-          message: :page_is_responding_with_error,
-          summary: :page_unavailable,
-          suggested_fix: :contact_site_administrator,
-          text_args: { status: response.status },
-        )
+        add_problem(PageRespondsWithError.new(from_redirect: from_redirect?, status: response.status))
       else
         unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
-          add_warning(
-            message: :page_responding_unusually,
-            summary: :page_unavailable,
-            suggested_fix: :contact_site_administrator,
-            text_args: { status: response.status },
-          )
+          add_problem(PageRespondsUnusually.new(from_redirect: from_redirect?, status: response.status))
         end
       end
 
@@ -148,12 +173,7 @@ module LinkChecker::UriChecker
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")
       if %w(restricted mature).include?(rating)
-        add_warning(
-          priority: 2,
-          message: :page_has_a_rating,
-          summary: :suspicious_content,
-          text_args: { rating: rating },
-        )
+        add_problem(PageWithRating.new(from_redirect: from_redirect?, rating: rating))
       end
     end
 
@@ -180,11 +200,7 @@ module LinkChecker::UriChecker
       if response.status == 200
         data = JSON.parse(response.body)
         if data.include?("matches") && data["matches"]
-          add_warning(
-            priority: 1,
-            summary: :suspicious_content,
-            message: :page_contains_a_threat,
-          )
+          add_problem(PageContainsThreat.new(from_redirect: from_redirect?))
         end
       else
         Airbrake.notify(
@@ -205,36 +221,44 @@ module LinkChecker::UriChecker
           subreport = ValidUriChecker
             .new(target_uri.to_s, redirect_history: redirect_history + [uri])
             .call
-          report.merge(subreport, with_priority: 1)
+          report.merge(subreport)
         end
 
         response
       rescue Faraday::ConnectionFailed
-        add_error(
-          summary: :website_unavailable,
-          message: :website_host_offline,
-          suggested_fix: :determine_if_temporary,
+        add_problem(
+          FaradayError.new(
+            summary: :website_unavailable,
+            message: :website_host_offline,
+            from_redirect: from_redirect?,
+          )
         )
         nil
       rescue Faraday::TimeoutError
-        add_error(
-          summary: :website_unavailable,
-          message: :page_is_not_responding,
-          suggested_fix: :determine_if_temporary,
+        add_problem(
+          FaradayError.new(
+            summary: :website_unavailable,
+            message: :page_is_not_responding,
+            from_redirect: from_redirect?,
+          )
         )
         nil
       rescue Faraday::SSLError
-        add_error(
-          summary: :security_error,
-          message: :page_has_security_problem,
-          suggested_fix: :determine_if_temporary,
+        add_problem(
+          FaradayError.new(
+            summary: :security_error,
+            message: :page_has_security_problem,
+            from_redirect: from_redirect?,
+          )
         )
         nil
       rescue Faraday::Error => e
-        add_error(
-          summary: :page_unavailable,
-          message: :page_failing_to_load,
-          suggested_fix: :determine_if_temporary,
+        add_problem(
+          FaradayError.new(
+            summary: :page_unavailable,
+            message: :page_failing_to_load,
+            from_redirect: from_redirect?,
+          )
         )
         nil
       end

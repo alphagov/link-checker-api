@@ -6,8 +6,8 @@ module LinkChecker::UriChecker
       @problems = problems || Array.new
     end
 
-    def merge(other, with_priority: 0)
-      @problems = problems + other.problems.map { |problem| problem.with_priority(with_priority) }
+    def merge(other)
+      @problems = problems + other.problems
       sort_problems!
       self
     end
