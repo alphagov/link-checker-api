@@ -41,7 +41,7 @@ module LinkChecker::UriChecker
     end
 
     def suggested_fix
-      problems.any? ? problems.first.suggested_fix : nil
+      problems.count == 1 ? problems.first.suggested_fix : nil
     end
 
   private

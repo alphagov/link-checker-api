@@ -90,6 +90,18 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
     end
 
+    context "with multiple problems" do
+      let(:uri) { "http://username:password@www.gov.uk/ok" }
+      before { stub_request(:get, "http://www.gov.uk/ok").to_return(body: lambda { |_| sleep 2.6; "" }) }
+      include_examples "has a problem summary", "Login details in URL"
+      include_examples "has warnings"
+      include_examples "has no errors"
+
+      it "has no suggested_fix" do
+        expect(subject.suggested_fix).to be_nil
+      end
+    end
+
     context "cannot connect to page" do
       let(:uri) { "http://www.not-gov.uk/connection_failed" }
       before { stub_request(:get, uri).to_raise(Faraday::ConnectionFailed) }
