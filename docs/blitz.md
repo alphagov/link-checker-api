@@ -87,6 +87,8 @@ We're also wondering whether rather than storing full messages we'd be more
 efficient to store the `problem_code` and the parameters used to generate the
 message.
 
+**A solution to this was found during the firebreak in July 2017.**
+
 ## A more modular approach to defining the link checking
 
 The approach we have taken to defining the checks on the links have quite a lot

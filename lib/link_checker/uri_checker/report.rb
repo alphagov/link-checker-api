@@ -1,30 +1,53 @@
 module LinkChecker::UriChecker
   class Report
-    attr_reader :errors, :warnings
+    attr_reader :problems
 
-    def initialize(errors: nil, warnings: nil)
-      @errors = errors || Hash.new { |hash, key| hash[key] = [] }
-      @warnings = warnings || Hash.new { |hash, key| hash[key] = [] }
+    def initialize(problems: nil)
+      @problems = problems || Array.new
     end
 
     def merge(other)
-      errors.merge!(other.errors) { |_, oldval, newval| oldval | newval }
-      warnings.merge!(other.warnings) { |_, oldval, newval| oldval | newval }
+      @problems = problems + other.problems
+      sort_problems!
       self
     end
 
-    def add_error(type, text)
-      errors[type] << text
-      self
-    end
-
-    def add_warning(type, text)
-      warnings[type] << text
+    def add_problem(problem)
+      @problems << problem
+      sort_problems!
       self
     end
 
     def has_errors?
       errors.any?
+    end
+
+    def warnings
+      problems
+        .select { |problem| problem.type == :warning }
+        .map(&:message)
+        .uniq
+    end
+
+    def errors
+      problems
+        .select { |problem| problem.type == :error }
+        .map(&:message)
+        .uniq
+    end
+
+    def problem_summary
+      problems.any? ? problems.first.summary : nil
+    end
+
+    def suggested_fix
+      problems.count == 1 ? problems.first.suggested_fix : nil
+    end
+
+  private
+
+    def sort_problems!
+      @problems.sort_by! { |problem| [problem.type == :error ? 0 : 1, problem.priority] }
     end
   end
 end

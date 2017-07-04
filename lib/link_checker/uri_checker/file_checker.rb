@@ -1,14 +1,13 @@
 module LinkChecker::UriChecker
-  class FileChecker
-    attr_reader :report
-
-    def initialize(_uri, _options = {})
-      @report = Report.new
+  class NotAvailableOnline < Error
+    def initialize(options = {})
+      super(summary: :not_available_online, message: :links_to_file_on_computer, **options)
     end
+  end
 
+  class FileChecker < Checker
     def call
-      report.add_error("Not available online", "This links to a file on your computer - users won't be able to access it online.")
-      report
+      add_problem(NotAvailableOnline.new(from_redirect: from_redirect?))
     end
   end
 end

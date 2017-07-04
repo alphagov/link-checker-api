@@ -1,11 +1,16 @@
 module RequestHelper
   def build_link_report(params)
+    status = params.fetch(:status, "pending")
+    ok_or_pending = %w(ok pending).include?(status)
+
     {
-      "uri"       => params.fetch(:uri, anything),
-      "status"    => params.fetch(:status, "pending"),
-      "checked"   => params.fetch(:checked, anything),
-      "errors"    => params.fetch(:errors, {}),
-      "warnings"  => params.fetch(:warnings, {}),
+      "uri"             => params.fetch(:uri, anything),
+      "status"          => status,
+      "checked"         => params.fetch(:checked, anything),
+      "problem_summary" => ok_or_pending ? nil : anything,
+      "errors"          => params.fetch(:errors, []),
+      "warnings"        => params.fetch(:warnings, []),
+      "suggested_fix"   => ok_or_pending ? nil : anything,
     }
   end
 

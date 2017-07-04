@@ -7,6 +7,6 @@ class LinkChecker
   end
 
   def call
-    report.merge(UriChecker::ValidUri.new.call(uri))
+    report.merge(UriChecker::ValidUriChecker.new(uri).call)
   end
 end
