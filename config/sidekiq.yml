@@ -2,9 +2,9 @@
 :concurrency: 4
 :logfile: ./log/sidekiq.json.log
 :queues:
+  - webhooks
   - default
   - checks_low
-  - webhooks
 :schedule:
   cleanup:
     every: 20m
