@@ -236,16 +236,16 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
     end
 
-    context "a URL detected by Google Safebrowser API" do
-      let(:uri) { "http://malware.testing.google.test/testing/malware/" }
-      before do
-        stub_request(:get, uri).to_return(status: 200)
-        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-          .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
-      end
-      include_examples "has a problem summary", "Suspicious content"
-      include_examples "has warnings"
-      include_examples "has no errors"
-    end
+    # context "a URL detected by Google Safebrowser API" do
+    #   let(:uri) { "http://malware.testing.google.test/testing/malware/" }
+    #   before do
+    #     stub_request(:get, uri).to_return(status: 200)
+    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+    #       .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
+    #   end
+    #   include_examples "has a problem summary", "Suspicious content"
+    #   include_examples "has warnings"
+    #   include_examples "has no errors"
+    # end
   end
 end
