@@ -105,7 +105,9 @@ module LinkChecker::UriChecker
       check_meta_mature_rating
       return report if report.has_errors?
 
-      check_google_safebrowsing
+      # disabled for the moment until we can sort out a process for getting
+      # permentant staging and production keys
+      # check_google_safebrowsing
 
       report
     end
