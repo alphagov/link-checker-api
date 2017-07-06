@@ -1,3 +1,6 @@
+class RestartWorkerException < RuntimeError
+end
+
 class WebhookWorker
   include Sidekiq::Worker
 
@@ -14,6 +17,8 @@ class WebhookWorker
       req.headers[SIGNATURE_HEADER] = generate_signature(body, secret_token) if secret_token
       req.body = body
     end
+  rescue Faraday::ClientError
+    raise RestartWorkerException.new
   end
 
   def connection
