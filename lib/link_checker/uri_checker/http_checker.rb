@@ -121,7 +121,7 @@ module LinkChecker::UriChecker
     REDIRECT_LIMIT = 8
     REDIRECT_WARNING = 2
     RESPONSE_TIME_LIMIT = 15
-    RESPONSE_TIME_WARNING = 2.5
+    RESPONSE_TIME_WARNING = 5
 
     def check_redirects
       add_problem(TooManyRedirects.new(from_redirect: from_redirect?)) if redirect_history.length >= REDIRECT_LIMIT
