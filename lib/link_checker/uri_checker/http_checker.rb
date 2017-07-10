@@ -148,9 +148,9 @@ module LinkChecker::UriChecker
       end_time = Time.now
       response_time = end_time - start_time
 
-      add_problem(SlowResponse.new(from_redirect: from_redirect?)) if response_time > RESPONSE_TIME_WARNING
-
       return response if report.has_errors?
+
+      add_problem(SlowResponse.new(from_redirect: from_redirect?)) if response_time > RESPONSE_TIME_WARNING
 
       if response.status == 404 || response.status == 410
         add_problem(PageNotFound.new(from_redirect: from_redirect?))
