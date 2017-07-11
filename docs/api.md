@@ -53,7 +53,7 @@ $ curl -s http://link-checker-api.dev.gov.uk/check\?uri\=https%3A%2F%2Fwww.gov.u
 </details>
 
 This endpoint is used to check a single link. If the link has been checked
-within a time specified (default 24 hours) it will return the results from
+within a time specified (default 4 hours) it will return the results from
 that check, otherwise it will queue a check and return a pending report. You
 can force it to return a completed check with the `synchronous` parameter.
 
@@ -61,7 +61,7 @@ can force it to return a completed check with the `synchronous` parameter.
 
 - `uri` *(required)*
   - The URI to the link to be checked
-- `checked_within` *(optional, defaults to 86400)*
+- `checked_within` *(optional, defaults to 14400)*
   - An integer value of the number of seconds in the past that checks for this
     link are valid.
   - Use 0 to ensure the link is checked again
@@ -135,7 +135,7 @@ the batch, as well as return the resource in the response of this request.
 
 - `uris` *(required)*
   - An array of URIs to be checked (max length: 5000)
-- `checked_within` *(optional, defaults to 86400)*
+- `checked_within` *(optional, defaults to 14400)*
   - An integer value of the number of seconds in the past that checks for links
     are valid.
   - Use 0 to ensure links are all checked again

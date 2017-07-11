@@ -11,7 +11,7 @@ class BatchController < ApplicationController
     def initialize(params)
       @params = params
       @uris = permitted_params[:uris]
-      @checked_within = (permitted_params[:checked_within] || 24.hours).to_i
+      @checked_within = (permitted_params[:checked_within] || 4.hours).to_i
       @priority = permitted_params.fetch(:priority, "high")
       @webhook_uri = permitted_params[:webhook_uri]
       @webhook_secret_token = permitted_params[:webhook_secret_token]

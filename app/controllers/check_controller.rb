@@ -13,7 +13,7 @@ class CheckController < ApplicationController
       @params = params
       @uri = permitted_params[:uri]
       @synchronous = permitted_params[:synchronous] == "true"
-      @checked_within = (permitted_params[:checked_within] || 24.hours).to_i
+      @checked_within = (permitted_params[:checked_within] || 4.hours).to_i
       @priority = permitted_params.fetch(:priority, "high")
     end
 
