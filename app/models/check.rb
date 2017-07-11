@@ -9,7 +9,7 @@ class Check < ApplicationRecord
   scope :created_within, -> (within) { where("created_at > ?", Time.now - within) }
   scope :requires_checking, -> { where(started_at: nil).or(Check.where(completed_at: nil).where("created_at < ?", RECHECK_THRESHOLD)) }
 
-  def self.fetch_all(links, within: 24.hours)
+  def self.fetch_all(links, within: 4.hours)
     existing_checks = Check
       .created_within(within)
       .where(link: links)

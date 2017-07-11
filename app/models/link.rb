@@ -15,7 +15,7 @@ class Link < ApplicationRecord
     existing_links + new_links.select { |link| import_result.ids.include?(link.id) }
   end
 
-  def find_check(within: 24.hours, completed: false)
+  def find_check(within: 4.hours, completed: false)
     scope = checks.created_within(within)
     scope = scope.where.not(completed_at: nil) if completed
     scope.order(:created_at).first
