@@ -14,8 +14,11 @@ class WebhookWorker
 
   SIGNATURE_HEADER = "X-LinkCheckerApi-Signature".freeze
 
-  def perform(report, uri, secret_token)
+  def perform(report, uri, secret_token, batch_id)
     body = report.to_json
+
+    batch = Batch.find(batch_id)
+    return if batch.webhook_triggered
 
     connection.post do |req|
       req.url uri
@@ -23,6 +26,8 @@ class WebhookWorker
       req.headers[SIGNATURE_HEADER] = generate_signature(body, secret_token) if secret_token
       req.body = body
     end
+
+    batch.update!(webhook_triggered: true)
   rescue Faraday::ClientError
     raise RestartWorkerException.new
   end

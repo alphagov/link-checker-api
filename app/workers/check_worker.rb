@@ -40,13 +40,7 @@ class CheckWorker
   end
 
   def trigger_callbacks(check)
-    check.batches.each do |batch|
-      WebhookWorker.perform_async(
-        BatchPresenter.new(batch).report,
-        batch.webhook_uri,
-        batch.webhook_secret_token,
-      ) if batch.webhook_uri && batch.completed?
-    end
+    check.batches.where(webhook_triggered: false).each(&:trigger_webhook)
   end
 
   def self.run(check_id, priority: "high", synchronous: false)

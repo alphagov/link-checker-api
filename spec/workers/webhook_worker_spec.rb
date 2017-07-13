@@ -5,6 +5,8 @@ RSpec.describe WebhookWorker do
     let(:report) { { some: "json" } }
     let(:webhook_uri) { "http://webhooks-rule.org/webhook" }
     let(:webhook_secret_token) { nil }
+    let(:batch) { FactoryGirl.create(:batch) }
+    let(:batch_id) { batch.id }
 
     context "with a secret key" do
       let(:webhook_secret_token) { "this is a secret key" }
@@ -15,13 +17,23 @@ RSpec.describe WebhookWorker do
       before do
         stub_request(:post, webhook_uri).to_return(status: 200)
 
-        subject.perform(report, webhook_uri, webhook_secret_token)
+        subject.perform(report, webhook_uri, webhook_secret_token, batch_id)
       end
 
       it "generates a valid signature" do
         expect(a_request(:post, webhook_uri)
           .with(headers: { "X-LinkCheckerApi-Signature": expected_signature }))
           .to have_been_requested
+      end
+    end
+
+    context "with an already triggered batch" do
+      before do
+        batch.update!(webhook_triggered: true)
+      end
+
+      it "doesn't make a request" do
+        subject.perform(report, webhook_uri, webhook_secret_token, batch_id)
       end
     end
   end
