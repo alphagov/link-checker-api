@@ -4,7 +4,7 @@ end
 class WebhookWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :webhooks, retry: 5
+  sidekiq_options queue: :webhooks, retry: 4
 
   sidekiq_retry_in do |count|
     # retry between 15-20 minutes first, then 30-40 minutes next, then 45-60 minutes next, etc
