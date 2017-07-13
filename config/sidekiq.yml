@@ -3,7 +3,7 @@
 :logfile: ./log/sidekiq.json.log
 :queues:
   - [webhooks, 1]
-  - [default, 50]
+  - [default, 20]  # remove this ratio when LLM is using a low priority queue and can cope with lots of requests
   - checks_low
 :schedule:
   cleanup:
