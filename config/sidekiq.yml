@@ -2,8 +2,8 @@
 :concurrency: 3
 :logfile: ./log/sidekiq.json.log
 :queues:
-  - webhooks
-  - default
+  - [webhooks, 1]
+  - [default, 50]
   - checks_low
 :schedule:
   cleanup:
