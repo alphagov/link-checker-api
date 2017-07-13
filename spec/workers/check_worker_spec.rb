@@ -36,7 +36,7 @@ RSpec.describe CheckWorker do
     end
 
     context "for links started a long time ago but not yet finished" do
-      let(:check) { FactoryGirl.create(:check, link: link, created_at: 1.hour.ago, started_at: 1.hour.ago) }
+      let(:check) { FactoryGirl.create(:check, link: link, created_at: 10.hour.ago, started_at: 9.hour.ago) }
       let(:link_checker) { double(:link_checker) }
 
       it "does perform a check" do

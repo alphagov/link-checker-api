@@ -17,4 +17,17 @@ class Batch < ApplicationRecord
   def status
     completed? ? :completed : :in_progress
   end
+
+  def trigger_webhook
+    return unless webhook_uri
+    return unless completed?
+    return if webhook_triggered
+
+    WebhookWorker.perform_async(
+      BatchPresenter.new(self).report,
+      webhook_uri,
+      webhook_secret_token,
+      id
+    )
+  end
 end

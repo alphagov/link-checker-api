@@ -1,5 +1,5 @@
 class Check < ApplicationRecord
-  RECHECK_THRESHOLD = 15.minutes.ago
+  RECHECK_THRESHOLD = 60.minutes.ago
 
   has_many :batch_checks
   has_many :batches, through: :batch_checks

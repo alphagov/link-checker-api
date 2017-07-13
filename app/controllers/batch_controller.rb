@@ -44,12 +44,7 @@ class BatchController < ApplicationController
     end
 
     if batch.completed?
-      WebhookWorker.perform_async(
-        batch_report(batch),
-        batch.webhook_uri,
-        batch.webhook_secret_token
-      ) if batch.webhook_uri
-
+      batch.trigger_webhook
       render(json: batch_report(batch), status: 201)
     else
       batch.checks.each do |check|
