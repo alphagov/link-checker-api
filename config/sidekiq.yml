@@ -7,5 +7,5 @@
   - checks_low
 :schedule:
   cleanup:
-    every: 20m
+    every: 60m
     class: CleanupWorker
