@@ -4,7 +4,11 @@ end
 class WebhookWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :webhooks, retry: 4
+  sidekiq_options queue: :webhooks, retry: 4, unique: :until_and_while_executing, unique_args: :unique_args
+
+  def self.unique_args(args)
+    [args[3]] # batch_id
+  end
 
   sidekiq_retry_in do |count|
     # retry between 15-20 minutes first, then 30-40 minutes next, then 45-60 minutes next, etc
