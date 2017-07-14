@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 20170713101143) do
     t.datetime "updated_at"
   end
 
-  add_foreign_key "batch_checks", "batches"
+  add_foreign_key "batch_checks", "batches", on_delete: :cascade
   add_foreign_key "batch_checks", "checks"
   add_foreign_key "checks", "links"
 end
