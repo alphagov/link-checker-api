@@ -205,7 +205,7 @@ module LinkChecker::UriChecker
           add_problem(PageContainsThreat.new(from_redirect: from_redirect?))
         end
       else
-        Airbrake.notify(
+        GovukError.notify(
           "Unable to talk to Google Safebrowsing API!",
           status: response.status,
           body: response.body,
