@@ -318,7 +318,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import (~> 0.17)
-  airbrake (~> 4)
   byebug
   database_cleaner
   deprecated_columns
