@@ -43,9 +43,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    airbrake (6.2.1)
-      airbrake-ruby (~> 2.3, >= 2.3.1)
-    airbrake-ruby (2.3.2)
     arel (7.1.4)
     ast (2.3.0)
     binding_of_caller (0.7.2)
@@ -99,8 +96,7 @@ GEM
     govuk_app_config (0.2.0)
       sentry-raven (~> 2.6.3)
       statsd-ruby (~> 1.4.0)
-    govuk_sidekiq (1.0.3)
-      airbrake (>= 3.1.0)
+    govuk_sidekiq (2.0.0)
       gds-api-adapters (>= 19.1.0)
       redis-namespace (~> 1.5.2)
       sidekiq (~> 4.2.8)
@@ -333,7 +329,7 @@ DEPENDENCIES
   gds-sso (~> 13.0)
   govuk-lint
   govuk_app_config (~> 0.2)
-  govuk_sidekiq (~> 1.0)
+  govuk_sidekiq (~> 2.0)
   listen
   logstasher (~> 0.6)
   pg

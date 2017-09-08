@@ -13,7 +13,7 @@ gem "govuk_app_config", "~> 0.2"
 
 gem "faraday", "~> 0.11"
 
-gem "govuk_sidekiq", "~> 1.0"
+gem "govuk_sidekiq", "~> 2.0"
 gem "sidekiq-scheduler", "~> 2.1"
 gem "sidekiq-unique-jobs", "~> 5.0"
 
