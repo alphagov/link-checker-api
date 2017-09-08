@@ -9,6 +9,8 @@ gem "gds-sso", "~> 13.0"
 gem "plek", "~> 1.12"
 gem "pg"
 
+gem "govuk_app_config", "~> 0.2"
+
 gem "faraday", "~> 0.11"
 
 gem "govuk_sidekiq", "~> 1.0"
