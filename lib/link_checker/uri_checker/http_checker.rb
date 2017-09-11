@@ -207,9 +207,11 @@ module LinkChecker::UriChecker
       else
         GovukError.notify(
           "Unable to talk to Google Safebrowsing API!",
-          status: response.status,
-          body: response.body,
-          headers: response.headers,
+          extra: {
+            status: response.status,
+            body: response.body,
+            headers: response.headers,
+          }
         )
       end
     end
