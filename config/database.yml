@@ -6,7 +6,7 @@ default: &default
 
 development:
   <<: *default
-  database: link_checker_development
+  database: link_checker_api_development
   url: <%= ENV["DATABASE_URL"]%>
 
 test:
