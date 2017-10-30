@@ -160,10 +160,8 @@ module LinkChecker::UriChecker
         add_problem(PageIsUnavailable.new(from_redirect: from_redirect?, status: response.status))
       elsif response.status >= 500 && response.status < 600
         add_problem(PageRespondsWithError.new(from_redirect: from_redirect?, status: response.status))
-      else
-        unless response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status)
-          add_problem(PageRespondsUnusually.new(from_redirect: from_redirect?, status: response.status))
-        end
+      elsif !(response.status == 200 || REDIRECT_STATUS_CODES.include?(response.status))
+        add_problem(PageRespondsUnusually.new(from_redirect: from_redirect?, status: response.status))
       end
 
       response
