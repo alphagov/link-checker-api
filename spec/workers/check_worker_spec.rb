@@ -24,6 +24,36 @@ RSpec.describe CheckWorker do
       end
     end
 
+    context 'only completed checks that are passed to HistoricalLinkChecker' do
+      let(:check) { FactoryGirl.create(:check, link: link) }
+      let(:completed_checks) do
+        [
+          FactoryGirl.create(:check, :with_error, link: link, created_at: 8.days.ago, completed_at: 8.days.ago),
+          FactoryGirl.create(:check, :with_error, link: link, created_at: 5.days.ago, completed_at: 5.days.ago),
+          FactoryGirl.create(:check, :with_error, link: link, created_at: 3.days.ago, completed_at: 3.days.ago),
+          FactoryGirl.create(:check, :with_error, link: link, created_at: 1.days.ago, completed_at: 1.days.ago)
+        ]
+      end
+      let(:persistent_error) { I18n.t(:recurring_error, problem: I18n.t(:page_not_found)) }
+      let(:report) do
+        LinkChecker::UriChecker::Report.new.add_problem(TestError::PageNotFound.new(from_redirect: false))
+      end
+
+      it 'should not pass in the current check' do
+        expect(HistoricalLinkChecker).to receive(:new)
+          .with(link.uri, completed_checks)
+          .and_call_original
+
+        subject.perform(check.id)
+      end
+
+      it 'should result in a RecurredForMoreThanOneWeekLinkError error message' do
+        completed_checks
+        subject.perform(check.id)
+        expect(check.reload.problem_summary).to eq(persistent_error)
+      end
+    end
+
     context "for previously checked links" do
       let(:check) { FactoryGirl.create(:check, link: link, created_at: 1.hour.ago, started_at: 1.hour.ago, completed_at: 50.minutes.ago) }
 
