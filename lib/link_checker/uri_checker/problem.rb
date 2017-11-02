@@ -45,6 +45,8 @@ module LinkChecker::UriChecker
       :UnusualUrl,
       :NotAvailableOnline,
       :NoHost,
+      :RecurredForMoreThanOneWeekLinkError,
+      :RecurredForMoreThanThreeDaysLinkError,
       :FaradayError,
       :PageNotFound,
       :PageRequiresLogin,

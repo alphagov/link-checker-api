@@ -217,6 +217,9 @@ GEM
     rspec-expectations (3.6.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.6.0)
+    rspec-its (1.0.1)
+      rspec-core (>= 2.99.0.beta1)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-mocks (3.6.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.6.0)
@@ -336,6 +339,7 @@ DEPENDENCIES
   plek (~> 1.12)
   pry
   rails (= 5.0.2)
+  rspec-its
   rspec-rails (~> 3.4)
   rspec-sidekiq (~> 3.0)
   sidekiq-scheduler (~> 2.1)
@@ -349,4 +353,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.14.5
+   1.15.1

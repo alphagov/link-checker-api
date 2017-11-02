@@ -3,6 +3,7 @@ require "byebug"
 require "webmock/rspec"
 require "timecop"
 require "govuk_sidekiq/testing"
+require 'rspec/its'
 
 Sidekiq::Testing.fake!
 
