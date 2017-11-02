@@ -26,7 +26,9 @@ class CheckWorker
 
     check.update!(started_at: Time.now)
 
-    report = LinkChecker.new(check.link.uri).call
+    previous_checks = check.link.checks.reject { |c| c == check }
+
+    report = HistoricalLinkChecker.new(check.link.uri, previous_checks).call
 
     check.update!(
       link_errors: report.errors,
