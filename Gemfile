@@ -34,6 +34,7 @@ end
 
 group :test do
   gem "rspec-sidekiq", "~> 3.0"
+  gem "rspec-its"
 end
 
 group :development do

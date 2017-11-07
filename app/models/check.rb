@@ -6,7 +6,7 @@ class Check < ApplicationRecord
 
   belongs_to :link
 
-  scope :created_within, -> (within) { where("created_at > ?", Time.now - within) }
+  scope :created_within, ->(within) { where("created_at > ?", Time.now - within) }
   scope :requires_checking, -> { where(started_at: nil).or(Check.where(completed_at: nil).where("created_at < ?", RECHECK_THRESHOLD)) }
 
   def self.fetch_all(links, within: 4.hours)
@@ -52,5 +52,33 @@ class Check < ApplicationRecord
     return :broken if has_errors?
     return :caution if has_warnings?
     :ok
+  end
+
+  def combined_errors
+    if link.monitor_link.present?
+      combine_link_history
+    else
+      link_errors
+    end
+  end
+
+private
+
+  def build_error_message(error)
+    error_history = link.monitor_link.link_errors.select { |link_error| link_error['message'] == error }
+
+    if error_history
+      "#{error_history[0]['message']} since #{error_history[0]['started_at']}"
+    else
+      error
+    end
+  end
+
+  def combine_link_history
+    link_errors.reduce([]) do |array, error|
+      array << build_error_message(error)
+
+      array
+    end
   end
 end
