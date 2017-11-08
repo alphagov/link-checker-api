@@ -9,3 +9,6 @@
   cleanup:
     every: 60m
     class: CleanupWorker
+  monitor:
+    cron: '0 1 * * *'
+    class: ScheduleResourceMonitorWorker
