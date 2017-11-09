@@ -129,3 +129,7 @@ en:
     redirect: This redirects to an invalid link.
 
   check_correct_manually: Check this are correct manually.
+
+  recurring_error: "Recurring %{problem}"
+  recurred_for_more_than_three_days: "This problem has been occurring for more than 3 days. %{problem_message}"
+  recurred_for_more_than_one_week: "This problem has been occurring for more than a week. %{problem_message}"
