@@ -1,5 +1,6 @@
 class Link < ApplicationRecord
   has_many :checks
+  has_one :monitor_link
 
   validates_presence_of :uri
 

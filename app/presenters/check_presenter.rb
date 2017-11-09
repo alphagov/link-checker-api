@@ -5,7 +5,7 @@ class CheckPresenter < SimpleDelegator
       status: status.to_s,
       checked: completed_at.try(:iso8601),
       problem_summary: problem_summary,
-      errors: link_errors,
+      errors: combined_errors,
       warnings: link_warnings,
       suggested_fix: suggested_fix,
     }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170713101143) do
+ActiveRecord::Schema.define(version: 20171107162204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,22 @@ ActiveRecord::Schema.define(version: 20170713101143) do
     t.string   "uri",        null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "monitor_links", force: :cascade do |t|
+    t.integer  "link_id"
+    t.integer  "resource_monitor_id"
+    t.datetime "last_checked_at"
+    t.json     "link_errors",         default: []
+    t.index ["link_id"], name: "index_monitor_links_on_link_id", using: :btree
+    t.index ["resource_monitor_id"], name: "index_monitor_links_on_resource_monitor_id", using: :btree
+  end
+
+  create_table "resource_monitors", force: :cascade do |t|
+    t.boolean  "enabled",    default: true
+    t.string   "service"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "users", force: :cascade do |t|
