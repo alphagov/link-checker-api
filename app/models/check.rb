@@ -67,7 +67,7 @@ private
   def build_error_message(error)
     error_history = link.monitor_link.link_errors.select { |link_error| link_error['message'] == error }
 
-    if error_history
+    if error_history.any?
       "#{error_history[0]['message']} since #{error_history[0]['started_at']}"
     else
       error
