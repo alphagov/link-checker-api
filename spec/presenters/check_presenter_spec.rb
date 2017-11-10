@@ -20,6 +20,15 @@ RSpec.describe CheckPresenter do
 
   it { is_expected.to eq(expected_link_report) }
 
+  context 'when the link has a monitored link but no historical checks yet' do
+    let(:check) { FactoryGirl.create(:check, :completed, :with_errors, link: link) }
+    let!(:monitor_link) { FactoryGirl.create(:monitor_link, link: link) }
+
+    let(:expected_message) { check.link_errors.first }
+
+    its([:errors]) { is_expected.to include(expected_message) }
+  end
+
   context 'when the link is monitored' do
     let(:monitor_link) { FactoryGirl.create(:monitor_link, link: link) }
 
