@@ -17,7 +17,9 @@ RSpec.describe "monitor path", type: :request do
     let(:params) do
       {
         links: ["https://example.com/a", "https://example.com/b"],
-        service: "govuk"
+        service: "govuk",
+        resource_type: "Test",
+        resource_id: 1
       }
     end
 
