@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe ResourceMonitor, type: :model do
   describe "validations" do
     let!(:resource_monitor) do
-      FactoryGirl.create(:resource_monitor, resource_type: "Test", resource_id: 1)
+      FactoryGirl.create(:resource_monitor, reference: "Test:1")
     end
 
     subject do
-      ResourceMonitor.create(resource_type: resource_monitor.resource_type, resource_id: resource_monitor.resource_id, service: "govuk")
+      ResourceMonitor.create(reference: resource_monitor.reference, app: "govuk")
     end
 
     it "validates the uniqueness of resource id and type" do

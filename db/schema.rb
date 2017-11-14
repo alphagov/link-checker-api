@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171113145621) do
+ActiveRecord::Schema.define(version: 20171115131344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,12 +60,11 @@ ActiveRecord::Schema.define(version: 20171113145621) do
   end
 
   create_table "resource_monitors", force: :cascade do |t|
-    t.boolean  "enabled",       default: true
-    t.string   "service"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.string   "resource_type"
-    t.integer  "resource_id"
+    t.boolean  "enabled",    default: true, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.string   "app",                       null: false
+    t.string   "reference",                 null: false
   end
 
   create_table "users", force: :cascade do |t|
