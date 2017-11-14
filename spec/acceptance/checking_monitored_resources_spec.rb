@@ -24,9 +24,11 @@ RSpec.describe "Check all links for a monitored resource" do
 
   context 'when another service monitors the same link' do
     let(:other_resource_monitor) do
-      LinkMonitor::CreateResourceMonitor.new(
+      LinkMonitor::UpsertResourceMonitor.new(
         links: resource_monitor.links.map(&:uri),
-        service: "local-link-manager"
+        service: "local-link-manager",
+        resource_type: "Test",
+        resource_id: 1
       ).call
     end
 
