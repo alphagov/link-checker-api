@@ -41,6 +41,7 @@ RSpec.describe "Create an enabled monitor" do
 
   context "when we create another resource monitor for an existing resource monitor" do
     let(:resource) { subject }
+    let(:out_of_use_link) { Link.find_by(uri: "http://example.com/a") }
 
     before do
       resource
@@ -69,6 +70,10 @@ RSpec.describe "Create an enabled monitor" do
 
     it "should not destroy links" do
       expect(Link.all.count).to eq(3)
+    end
+
+    it "should not update any existing links" do
+      expect(resource.links.first.id).not_to eq(out_of_use_link.id)
     end
   end
 end
