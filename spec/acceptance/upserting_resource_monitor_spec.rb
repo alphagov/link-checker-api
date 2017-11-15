@@ -2,7 +2,7 @@ require "rails_helper"
 # rubocop:disable BlockLength
 RSpec.describe "Create an enabled monitor" do
   subject do
-    LinkMonitor::UpsertResourceMonitor.new(links: links, service: service, resource_type: "Text", resource_id: 1).call
+    LinkMonitor::UpsertResourceMonitor.new(links: links, app: service, reference: "Text:1").call
   end
 
   let(:links) { ["http://example.com/a", "http://example.com/b"] }
@@ -26,7 +26,7 @@ RSpec.describe "Create an enabled monitor" do
 
   context "when another monitor exists" do
     before do
-      LinkMonitor::UpsertResourceMonitor.new(links: links, service: "gov-uk", resource_type: "Text", resource_id: 2).call
+      LinkMonitor::UpsertResourceMonitor.new(links: links, app: "gov-uk", reference: "Text:2").call
       subject
     end
 
@@ -47,7 +47,7 @@ RSpec.describe "Create an enabled monitor" do
 
       links << "http://example.com/c"
       links.delete("http://example.com/a")
-      LinkMonitor::UpsertResourceMonitor.new(links: links, service: resource.service, resource_type: resource.resource_type, resource_id: resource.resource_id).call
+      LinkMonitor::UpsertResourceMonitor.new(links: links, app: resource.app, reference: resource.reference).call
       resource.reload
     end
 

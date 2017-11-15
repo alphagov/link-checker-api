@@ -1,14 +1,13 @@
 module LinkMonitor
   class UpsertResourceMonitor
-    def initialize(links:, service:, resource_type:, resource_id:)
+    def initialize(links:, app:, reference:)
       @links = links
-      @service = service
-      @resource_type = resource_type
-      @resource_id = resource_id
+      @app = app
+      @reference = reference
     end
 
     def call
-      monitor = ResourceMonitor.find_or_create_by(service: service, resource_type: resource_type, resource_id: resource_id)
+      monitor = ResourceMonitor.find_or_create_by(app: app, reference: reference)
 
       manage_links(monitor) if monitor.valid?
 
@@ -17,7 +16,7 @@ module LinkMonitor
 
   private
 
-    attr_reader :links, :service, :resource_type, :resource_id
+    attr_reader :links, :app, :reference
 
     def create_links(monitor)
       links.each do |link|

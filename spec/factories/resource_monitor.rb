@@ -1,8 +1,7 @@
 FactoryGirl.define do
   factory :resource_monitor do
-    service "govuk"
-    resource_type "Test"
-    resource_id 1
+    app "govuk"
+    reference "Test:1"
 
     transient do
       number_of_links 3
