@@ -76,5 +76,33 @@ RSpec.describe "Create an enabled monitor" do
       expect(resource.links.first.id).not_to eq(out_of_use_link.id)
     end
   end
+
+  context "when we supply an organisation" do
+    subject do
+      LinkMonitor::UpsertResourceMonitor.new(
+        links: links,
+        app: service,
+        reference: "Text:1",
+        organisation: "testorg"
+      ).call
+    end
+
+    its(:organisation) { is_expected.to eq("testorg") }
+  end
+
+  context "when we update the organisation" do
+    let!(:resource_monitor) { FactoryGirl.create(:resource_monitor, organisation: 'testorg2') }
+
+    subject do
+      LinkMonitor::UpsertResourceMonitor.new(
+        links: links,
+        app: resource_monitor.app,
+        reference: resource_monitor.reference,
+        organisation: "test_org"
+      ).call
+    end
+
+    its(:organisation) { is_expected.to eq("test_org") }
+  end
 end
 # rubocop:enable BlockLength

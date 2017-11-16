@@ -7,7 +7,7 @@ RSpec.describe ResourceMonitor, type: :model do
     end
 
     subject do
-      ResourceMonitor.create(reference: resource_monitor.reference, app: "govuk")
+      ResourceMonitor.create(reference: resource_monitor.reference, app: "govuk", organisation: "Testorganisation")
     end
 
     it "validates the uniqueness of resource id and type" do
