@@ -14,23 +14,29 @@ RSpec.describe "monitor path", type: :request do
   end
 
   describe "POST /monitor" do
+    let(:organisation) { "testorg" }
     let(:params) do
       {
         links: ["https://example.com/a", "https://example.com/b"],
         app: "govuk",
-        reference: "test:1"
+        reference: "test:1",
+        organisation: organisation
       }
     end
 
-    context 'when valid' do
+    context "when valid" do
       before do
         post "/monitor", params: params.to_json, headers: { "Content-Type" => "application/json" }
       end
 
       include_examples "returns a report"
+
+      it "should create a ResourceMonitor with a organisation" do
+        expect(ResourceMonitor.last.organisation).to eq(organisation)
+      end
     end
 
-    context 'when invalid' do
+    context "when invalid" do
       subject do
         post "/monitor", params: params.to_json, headers: { "Content-Type" => "application/json" }
       end

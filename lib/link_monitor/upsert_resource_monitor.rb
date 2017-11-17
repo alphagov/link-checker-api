@@ -1,14 +1,15 @@
 module LinkMonitor
   class UpsertResourceMonitor
-    def initialize(links:, app:, reference:)
+    def initialize(links:, app:, reference:, organisation: nil)
       @links = links
       @app = app
       @reference = reference
+      @organisation = organisation
     end
 
     def call
       monitor = ResourceMonitor.find_or_create_by(app: app, reference: reference)
-
+      monitor.update(organisation: organisation)
       manage_links(monitor) if monitor.valid?
 
       monitor
@@ -16,7 +17,7 @@ module LinkMonitor
 
   private
 
-    attr_reader :links, :app, :reference
+    attr_reader :links, :app, :reference, :organisation
 
     def create_links(monitor)
       links.each do |link|

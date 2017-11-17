@@ -2,7 +2,8 @@ class MonitorController < ApplicationController
   def create
     monitor = LinkMonitor::UpsertResourceMonitor.new(
       links: permitted_params[:links],
-      app: permitted_params[:app], reference: permitted_params[:reference]
+      app: permitted_params[:app], reference: permitted_params[:reference],
+      organisation: permitted_params[:organisation]
     ).call
 
     monitor.validate!
@@ -13,7 +14,7 @@ class MonitorController < ApplicationController
 private
 
   def permitted_params
-    params.permit(:app, :reference, links: [])
+    params.permit(:organisation, :app, :reference, links: [])
   end
 
   def monitor_report(monitor)
