@@ -72,7 +72,6 @@ ActiveRecord::Schema.define(version: 20171121120032) do
     t.datetime "updated_at",                  null: false
     t.string   "app",                         null: false
     t.string   "reference",                   null: false
-    t.string   "organisation"
   end
 
   create_table "users", force: :cascade do |t|
