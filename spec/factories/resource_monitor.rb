@@ -8,7 +8,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |resource, evaluator|
-      resource.links << create_list(:link, evaluator.number_of_links, :with_history)
+      resource.links << create_list(:link, evaluator.number_of_links)
     end
   end
 end
