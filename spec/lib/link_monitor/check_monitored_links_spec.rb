@@ -32,7 +32,7 @@ RSpec.describe LinkMonitor::CheckMonitoredLinks do
 
     # rubocop:disable AmbiguousBlockAssociation
     it 'should update the monitored link' do
-      expect { subject }.to change { resource_monitor.links.first.link_history.updated_at }
+      expect { subject }.to change { resource_monitor.monitor_links.first.last_checked_at }
     end
     # rubocop:enable AmbiguousBlockAssociation
   end
@@ -52,8 +52,8 @@ RSpec.describe LinkMonitor::CheckMonitoredLinks do
       expect { subject }.not_to change { resource_monitor.links.first.checks.count }
     end
 
-    it 'should not update the link_history' do
-      expect { subject }.not_to change { resource_monitor.links.first.link_history.updated_at }
+    it 'should update the monitored link' do
+      expect { subject }.to change { resource_monitor.monitor_links.first.last_checked_at }
     end
     # rubocop:enable AmbiguousBlockAssociation
   end
@@ -61,30 +61,30 @@ RSpec.describe LinkMonitor::CheckMonitoredLinks do
   context 'when there is an existing error' do
     context 'and the report comes back ok' do
       it 'should remove the error history' do
-        expect(resource_monitor.links.first.link_history.link_errors).to be_empty
+        expect(resource_monitor.monitor_links.first.errors).to be_empty
       end
     end
 
     context 'and the report comes with another error' do
       before do
-        resource_monitor.links.first.link_history.add_error('SSL expired')
+        resource_monitor.monitor_links.first.add_error('SSL expired')
       end
 
       it 'should update the error history' do
         subject
-        expect(resource_monitor.links.first.link_history.link_errors.last['message']).to include(report.errors.first)
+        expect(resource_monitor.monitor_links.first.link_errors.last['message']).to include(report.errors.first)
       end
     end
 
     context 'and the report comes with another error' do
       before do
-        resource_monitor.links.first.link_history.add_error('SSL expired')
+        resource_monitor.monitor_links.first.add_error('SSL expired')
       end
 
       it 'should update the error history' do
         subject
-        expect(resource_monitor.links.first.link_history.link_errors.count).to eq(1)
-        expect(resource_monitor.links.first.link_history.link_errors.last['message']).to eq(report.errors.first)
+        expect(resource_monitor.monitor_links.first.link_errors.count).to eq(1)
+        expect(resource_monitor.monitor_links.first.link_errors.last['message']).to eq(report.errors.first)
       end
     end
 
@@ -93,13 +93,13 @@ RSpec.describe LinkMonitor::CheckMonitoredLinks do
 
       before do
         allow_any_instance_of(LinkChecker).to receive(:call).and_return(report)
-        resource_monitor.links.first.link_history.add_error('SSL expired')
+        resource_monitor.monitor_links.first.add_error('SSL expired')
       end
 
       it 'should update the error history' do
         subject
         resource_monitor.reload
-        expect(resource_monitor.links.first.link_history.link_errors).to be_empty
+        expect(resource_monitor.monitor_links.first.link_errors).to be_empty
       end
     end
   end

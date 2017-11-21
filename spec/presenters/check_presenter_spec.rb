@@ -20,9 +20,9 @@ RSpec.describe CheckPresenter do
 
   it { is_expected.to eq(expected_link_report) }
 
-  context 'when the link has a history but no historical checks yet' do
+  context 'when the link has a monitored link but no historical checks yet' do
     let(:check) { FactoryGirl.create(:check, :completed, :with_errors, link: link) }
-    let!(:link_history) { FactoryGirl.create(:link_history, link: link) }
+    let!(:monitor_link) { FactoryGirl.create(:monitor_link, link: link) }
 
     let(:expected_message) { check.link_errors.first }
 
@@ -36,9 +36,9 @@ RSpec.describe CheckPresenter do
 
     context 'and when the link has a persistent error' do
       let(:check) { FactoryGirl.create(:check, :completed, :with_errors, link: link) }
-      let!(:link_history) { FactoryGirl.create(:link_history, :with_history, link: link) }
+      let!(:monitor_link) { FactoryGirl.create(:monitor_link, :with_history, link: link) }
 
-      let(:expected_message) { "#{link_history.link_errors.first['message']} since #{link_history.link_errors.first['started_at']}" }
+      let(:expected_message) { "#{monitor_link.link_errors.first['message']} since #{monitor_link.link_errors.first['started_at']}" }
 
       its([:errors]) { is_expected.to include(expected_message) }
     end

@@ -55,7 +55,7 @@ class Check < ApplicationRecord
   end
 
   def combined_errors
-    if link&.link_history&.link_errors.present?
+    if link.monitor_links.any?
       combine_link_history
     else
       link_errors
@@ -65,7 +65,7 @@ class Check < ApplicationRecord
 private
 
   def build_error_message(error)
-    error_history = link.link_history.link_errors.select { |link_error| link_error['message'] == error }
+    error_history = link.monitor_links.first.link_errors.select { |link_error| link_error['message'] == error }
 
     if error_history.any?
       "#{error_history[0]['message']} since #{error_history[0]['started_at']}"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171121120032) do
+ActiveRecord::Schema.define(version: 20171115131344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,14 +44,6 @@ ActiveRecord::Schema.define(version: 20171121120032) do
     t.index ["link_id"], name: "index_checks_on_link_id", using: :btree
   end
 
-  create_table "link_histories", force: :cascade do |t|
-    t.json     "link_errors", default: []
-    t.integer  "link_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.index ["link_id"], name: "index_link_histories_on_link_id", using: :btree
-  end
-
   create_table "links", force: :cascade do |t|
     t.string   "uri",        null: false
     t.datetime "created_at", null: false
@@ -62,17 +54,17 @@ ActiveRecord::Schema.define(version: 20171121120032) do
     t.integer  "link_id"
     t.integer  "resource_monitor_id"
     t.datetime "last_checked_at"
+    t.json     "link_errors",         default: []
     t.index ["link_id"], name: "index_monitor_links_on_link_id", using: :btree
     t.index ["resource_monitor_id"], name: "index_monitor_links_on_resource_monitor_id", using: :btree
   end
 
   create_table "resource_monitors", force: :cascade do |t|
-    t.boolean  "enabled",      default: true, null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.string   "app",                         null: false
-    t.string   "reference",                   null: false
-    t.string   "organisation"
+    t.boolean  "enabled",    default: true, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.string   "app",                       null: false
+    t.string   "reference",                 null: false
   end
 
   create_table "users", force: :cascade do |t|

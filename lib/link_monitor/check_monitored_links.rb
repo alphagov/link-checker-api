@@ -5,7 +5,7 @@ module LinkMonitor
     end
 
     def call
-      resource_monitor.links.includes(:checks, :link_history).each { |link| check_link(link) }
+      resource_monitor.links.includes(:checks).each { |link| check_link(link) }
     end
 
   private
@@ -17,17 +17,19 @@ module LinkMonitor
         create_check(link)
       end
 
-      update_link_history(link)
+      update_monitor_link(link)
     end
 
-    def update_link_history(link)
-      link_history = link.link_history ||= link.create_link_history
+    def update_monitor_link(link)
+      monitor_link = resource_monitor.monitor_links.find_by(link_id: link.id)
       check = link.checks.order(completed_at: :desc).first
 
+      monitor_link.touch(:last_checked_at)
+
       if check.link_errors.any?
-        link_history.add_errors(check.link_errors)
+        monitor_link.add_errors(check.link_errors)
       else
-        link_history.clear_errors
+        monitor_link.clear_errors
       end
     end
 
