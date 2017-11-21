@@ -3,7 +3,11 @@ require "rails_helper"
 RSpec.describe "Check all links for a monitored resource" do
   let(:resource_monitor) { FactoryGirl.create(:resource_monitor, number_of_links: 1) }
 
-  let(:report) { LinkChecker::UriChecker::Report.new }
+  let(:report) do
+    LinkChecker::UriChecker::Report.new.add_problem(
+      TestError::PageNotFound.new(from_redirect: false)
+    )
+  end
 
   before do
     allow_any_instance_of(LinkChecker).to receive(:call).and_return(report)
@@ -13,8 +17,8 @@ RSpec.describe "Check all links for a monitored resource" do
     LinkMonitor::CheckMonitoredLinks.new(resource_monitor: resource_monitor).call
   end
   # rubocop:disable AmbiguousBlockAssociation
-  it 'should update last_checked_at for monitor link' do
-    expect { subject }.to change { resource_monitor.monitor_links.first.last_checked_at }
+  it 'should not change updated_at for link history' do
+    expect { subject }.to change { resource_monitor.links.first.link_history.updated_at }
   end
 
   it 'should add another check to a link' do
@@ -35,8 +39,8 @@ RSpec.describe "Check all links for a monitored resource" do
       LinkMonitor::CheckMonitoredLinks.new(resource_monitor: other_resource_monitor).call
     end
     # rubocop:disable AmbiguousBlockAssociation
-    it 'should update last_checked_at for monitor link' do
-      expect { subject }.to change { resource_monitor.monitor_links.first.last_checked_at }
+    it 'should update updated_at for the link_history' do
+      expect { subject }.not_to change { resource_monitor.links.first.link_history.updated_at }
     end
 
     it 'should not add another check to a link' do
