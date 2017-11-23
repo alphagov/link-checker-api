@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171115131344) do
+ActiveRecord::Schema.define(version: 20171123105000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,14 @@ ActiveRecord::Schema.define(version: 20171115131344) do
     t.index ["link_id"], name: "index_checks_on_link_id", using: :btree
   end
 
+  create_table "link_histories", force: :cascade do |t|
+    t.json     "link_errors", default: [], null: false
+    t.integer  "link_id",                  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["link_id"], name: "index_link_histories_on_link_id", using: :btree
+  end
+
   create_table "links", force: :cascade do |t|
     t.string   "uri",        null: false
     t.datetime "created_at", null: false
@@ -51,10 +59,8 @@ ActiveRecord::Schema.define(version: 20171115131344) do
   end
 
   create_table "monitor_links", force: :cascade do |t|
-    t.integer  "link_id"
-    t.integer  "resource_monitor_id"
-    t.datetime "last_checked_at"
-    t.json     "link_errors",         default: []
+    t.integer "link_id"
+    t.integer "resource_monitor_id"
     t.index ["link_id"], name: "index_monitor_links_on_link_id", using: :btree
     t.index ["resource_monitor_id"], name: "index_monitor_links_on_resource_monitor_id", using: :btree
   end
@@ -84,4 +90,5 @@ ActiveRecord::Schema.define(version: 20171115131344) do
   add_foreign_key "batch_checks", "batches", on_delete: :cascade
   add_foreign_key "batch_checks", "checks"
   add_foreign_key "checks", "links"
+  add_foreign_key "link_histories", "links"
 end
