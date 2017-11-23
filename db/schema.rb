@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171121120032) do
+ActiveRecord::Schema.define(version: 20171123105000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,9 +59,8 @@ ActiveRecord::Schema.define(version: 20171121120032) do
   end
 
   create_table "monitor_links", force: :cascade do |t|
-    t.integer  "link_id"
-    t.integer  "resource_monitor_id"
-    t.datetime "last_checked_at"
+    t.integer "link_id"
+    t.integer "resource_monitor_id"
     t.index ["link_id"], name: "index_monitor_links_on_link_id", using: :btree
     t.index ["resource_monitor_id"], name: "index_monitor_links_on_resource_monitor_id", using: :btree
   end
