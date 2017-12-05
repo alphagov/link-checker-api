@@ -11,13 +11,13 @@ module LinkChecker::UriChecker
     end
   end
 
-  class ContactDetails < Warning
+  class ContactDetails < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :contact_details, message: :links_to_contact_details, suggested_fix: :check_correct_manually, **options)
     end
   end
 
-  class UnusualUrl < Warning
+  class UnusualUrl < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :unusual_url, message: :link_is_unsupported, suggested_fix: :check_correct_manually, **options)
     end
