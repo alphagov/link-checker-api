@@ -17,25 +17,25 @@ module LinkChecker::UriChecker
     end
   end
 
-  class TooManyRedirectsSlowly < Warning
+  class TooManyRedirectsSlowly < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :bad_redirect, message: :redirects_too_many_times_slowly, suggested_fix: :link_directly_to, **options)
     end
   end
 
-  class CredentialsInUri < Warning
+  class CredentialsInUri < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :login_details_in_url, message: :link_contains_login_credentials, suggested_fix: :link_to_alternative_resource, **options)
     end
   end
 
-  class SuspiciousTld < Warning
+  class SuspiciousTld < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :suspicious_destination, message: :website_for_adults, **options)
     end
   end
 
-  class SlowResponse < Warning
+  class SlowResponse < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :slow_page, message: :page_is_slow, suggested_fix: :contact_site_administrator, **options)
     end
@@ -65,19 +65,19 @@ module LinkChecker::UriChecker
     end
   end
 
-  class PageRespondsUnusually < Warning
+  class PageRespondsUnusually < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :page_unavailable, message: :page_responding_unusually, suggested_fix: :contact_site_administrator, **options)
     end
   end
 
-  class PageWithRating < Warning
+  class PageWithRating < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :suspicious_content, message: :page_has_a_rating, **options)
     end
   end
 
-  class PageContainsThreat < Warning
+  class PageContainsThreat < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :suspicious_content, message: :page_contains_a_threat, **options)
     end
