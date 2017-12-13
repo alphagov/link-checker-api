@@ -90,6 +90,13 @@ module LinkChecker::UriChecker
   end
 
   class HttpChecker < Checker
+    def self.connection
+      @connection ||= Faraday.new(headers: { accept_encoding: "none" }) do |faraday|
+        faraday.use :cookie_jar
+        faraday.adapter Faraday.default_adapter
+      end
+    end
+
     def call
       if uri.host.nil?
         return add_problem(NoHost.new(from_redirect: from_redirect?))
@@ -119,13 +126,14 @@ module LinkChecker::UriChecker
     INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles).freeze
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
+    REDIRECT_LOOP_LIMIT = 2
     REDIRECT_WARNING = 2
     RESPONSE_TIME_LIMIT = 15
     RESPONSE_TIME_WARNING = 5
 
     def check_redirects
       add_problem(TooManyRedirects.new(from_redirect: from_redirect?)) if redirect_history.length >= REDIRECT_LIMIT
-      add_problem(RedirectLoop.new(from_redirect: from_redirect?)) if redirect_history.include?(uri)
+      add_problem(RedirectLoop.new(from_redirect: from_redirect?)) if redirect_history.count(uri) >= REDIRECT_LOOP_LIMIT
       add_problem(TooManyRedirectsSlowly.new(from_redirect: :from_redirect?, uri: uri)) if redirect_history.length == REDIRECT_WARNING
     end
 
@@ -267,15 +275,9 @@ module LinkChecker::UriChecker
     end
 
     def run_connection_request(method)
-      connection.run_request(method, uri, nil, nil) do |request|
+      self.class.connection.run_request(method, uri, nil, nil) do |request|
         request.options[:timeout] = RESPONSE_TIME_LIMIT
         request.options[:open_timeout] = RESPONSE_TIME_LIMIT
-      end
-    end
-
-    def connection
-      @connection ||= Faraday.new(headers: { accept_encoding: "none" }) do |faraday|
-        faraday.adapter Faraday.default_adapter
       end
     end
   end

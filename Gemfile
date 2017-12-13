@@ -12,6 +12,7 @@ gem "pg"
 gem "govuk_app_config", "~> 0.2"
 
 gem "faraday", "~> 0.11"
+gem "faraday-cookie_jar", "~>0.0.6"
 
 gem "govuk_sidekiq", "~> 2.0"
 gem "sidekiq-scheduler", "~> 2.1"
