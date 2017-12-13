@@ -45,8 +45,7 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     arel (7.1.4)
     ast (2.3.0)
-    binding_of_caller (0.7.3)
-      debug_inspector (>= 0.0.1)
+    bindex (0.5.0)
     builder (3.2.3)
     byebug (9.1.0)
     coderay (1.1.2)
@@ -56,7 +55,6 @@ GEM
       safe_yaml (~> 1.0.0)
     crass (1.0.3)
     database_cleaner (1.6.2)
-    debug_inspector (0.0.3)
     deprecated_columns (0.1.1)
       rails (>= 4.0)
     diff-lcs (1.3)
@@ -318,11 +316,11 @@ GEM
       rack (>= 1.0)
     warden-oauth2 (0.0.1)
       warden
-    web-console (2.3.0)
-      activemodel (>= 4.0)
-      binding_of_caller (>= 0.7.2)
-      railties (>= 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
+    web-console (3.5.1)
+      actionview (>= 5.0)
+      activemodel (>= 5.0)
+      bindex (>= 0.4.0)
+      railties (>= 5.0)
     webmock (3.1.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -362,7 +360,7 @@ DEPENDENCIES
   sqlite3
   timecop
   unicorn (~> 5.1)
-  web-console (~> 2.0)
+  web-console (~> 3.5)
   webmock
 
 BUNDLED WITH
