@@ -126,7 +126,7 @@ module LinkChecker::UriChecker
     INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles).freeze
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
-    REDIRECT_LOOP_LIMIT = 2
+    REDIRECT_LOOP_LIMIT = 5
     REDIRECT_WARNING = 2
     RESPONSE_TIME_LIMIT = 15
     RESPONSE_TIME_WARNING = 5
