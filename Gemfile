@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "5.0.2"
 gem "unicorn", "~> 5.1"
-gem "logstasher", "~> 0.6"
+gem "logstasher", "~> 1.2"
 gem "database_cleaner"
 gem "deprecated_columns"
 gem "gds-sso", "~> 13.0"
