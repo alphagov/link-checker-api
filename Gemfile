@@ -6,7 +6,7 @@ gem "logstasher", "~> 0.6"
 gem "database_cleaner"
 gem "deprecated_columns"
 gem "gds-sso", "~> 13.0"
-gem "plek", "~> 1.12"
+gem "plek", "~> 2.0"
 gem "pg"
 
 gem "govuk_app_config", "~> 0.2"
