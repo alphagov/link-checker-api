@@ -275,10 +275,20 @@ module LinkChecker::UriChecker
     end
 
     def run_connection_request(method)
-      self.class.connection.run_request(method, uri, nil, nil) do |request|
+      self.class.connection.run_request(method, uri, nil, additional_connection_headers) do |request|
         request.options[:timeout] = RESPONSE_TIME_LIMIT
         request.options[:open_timeout] = RESPONSE_TIME_LIMIT
       end
+    end
+
+    def gov_uk_uri?
+      Plek.new.website_root.include?(uri.host)
+    end
+
+    def additional_connection_headers
+      return nil unless gov_uk_uri?
+
+      { 'Rate-Limit-Token': Rails.application.secrets.rate_limit_token }
     end
   end
 end
