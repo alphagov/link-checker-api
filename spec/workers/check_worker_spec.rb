@@ -52,7 +52,7 @@ RSpec.describe CheckWorker do
 
     context "when it is unable to check the link" do
       let(:check) { FactoryGirl.create(:check, link: link, created_at: 1.hour.ago, started_at: 1.hour.ago) }
-      let(:msg) { { "args" => [check] } }
+      let(:msg) { { "args" => [check.id] } }
 
       it "sets the check to a warning" do
         described_class.within_sidekiq_retries_exhausted_block(msg) {}

@@ -6,7 +6,7 @@ class CheckWorker
 
   sidekiq_retries_exhausted do |msg|
     Check.connection_pool.with_connection do |_|
-      check = msg["args"].first
+      check = Check.find(msg["args"].first)
       check.update!(
         problem_summary: "Check failed",
         suggested_fix: "Speak to your system administrator.",
