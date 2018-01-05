@@ -48,6 +48,14 @@ Start the sidekiq worker with:
 
 `bundle exec rspec`
 
+### Report rake task
+
+```bash
+$ bundle exec rake report[links.csv]
+```
+
+This will produce a report of all broken links stored in the link checker and when they were last checked.
+
 ### Example API output
 
 ```
