@@ -30,9 +30,9 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "ok") }
 
     before do
-      FactoryGirl.create(
+      create(
         :check,
-        link: FactoryGirl.create(:link, uri: uri),
+        link: create(:link, uri: uri),
         completed_at: 1.minute.ago,
       )
 
@@ -55,9 +55,9 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "caution", warnings: warnings) }
 
     before do
-      FactoryGirl.create(
+      create(
         :check,
-        link: FactoryGirl.create(:link, uri: uri),
+        link: create(:link, uri: uri),
         link_warnings: warnings,
         completed_at: 1.minute.ago,
       )
@@ -73,9 +73,9 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "broken", errors: errors) }
 
     before do
-      FactoryGirl.create(
+      create(
         :check,
-        link: FactoryGirl.create(:link, uri: uri),
+        link: create(:link, uri: uri),
         link_errors: errors,
         completed_at: 1.minute.ago,
       )
@@ -90,9 +90,9 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "pending") }
 
     before do
-      FactoryGirl.create(
+      create(
         :check,
-        link: FactoryGirl.create(:link, uri: uri),
+        link: create(:link, uri: uri),
         completed_at: 10.minute.ago,
         created_at: 11.minute.ago,
       )
@@ -123,7 +123,7 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "ok") }
 
     before do
-      FactoryGirl.create(:check, link: FactoryGirl.create(:link, uri: uri),)
+      create(:check, link: create(:link, uri: uri),)
 
       stub_request(:get, uri).to_return(status: 200)
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")

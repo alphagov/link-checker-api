@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ResourceMonitor, type: :model do
   describe "validations" do
     let!(:resource_monitor) do
-      FactoryGirl.create(:resource_monitor, reference: "Test:1")
+      create(:resource_monitor, reference: "Test:1")
     end
 
     subject do

@@ -5,7 +5,7 @@ RSpec.describe WebhookWorker do
     let(:report) { { some: "json" } }
     let(:webhook_uri) { "http://webhooks-rule.org/webhook" }
     let(:webhook_secret_token) { nil }
-    let(:batch) { FactoryGirl.create(:batch) }
+    let(:batch) { create(:batch) }
     let(:batch_id) { batch.id }
 
     context "with a secret key" do

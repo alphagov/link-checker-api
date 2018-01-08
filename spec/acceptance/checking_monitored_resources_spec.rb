@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Check all links for a monitored resource" do
 
   let(:page_not_found) { TestError::PageNotFound.new(from_redirect: false) }
-  let(:resource_monitor) { FactoryGirl.create(:resource_monitor, number_of_links: 1) }
+  let(:resource_monitor) { create(:resource_monitor, number_of_links: 1) }
   let(:report) { LinkChecker::UriChecker::Report.new }
 
   before do

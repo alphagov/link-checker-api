@@ -107,9 +107,9 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        FactoryGirl.create(
+        create(
           :check,
-          link: FactoryGirl.create(:link, uri: uri_a),
+          link: create(:link, uri: uri_a),
           completed_at: 1.minute.ago,
         )
 
@@ -135,15 +135,15 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        FactoryGirl.create(
+        create(
           :check,
-          link: FactoryGirl.create(:link, uri: uri_a),
+          link: create(:link, uri: uri_a),
           completed_at: 1.minute.ago,
         )
 
-        FactoryGirl.create(
+        create(
           :check,
-          link: FactoryGirl.create(:link, uri: uri_b),
+          link: create(:link, uri: uri_b),
           completed_at: 1.minute.ago,
         )
 
@@ -193,16 +193,16 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        FactoryGirl.create(
+        create(
           :check,
-          link: FactoryGirl.create(:link, uri: uri_a),
+          link: create(:link, uri: uri_a),
           completed_at: 5.minute.ago,
           created_at: 5.minute.ago,
         )
 
-        FactoryGirl.create(
+        create(
           :check,
-          link: FactoryGirl.create(:link, uri: uri_b),
+          link: create(:link, uri: uri_b),
           completed_at: 20.minute.ago,
           created_at: 20.minute.ago,
         )
@@ -238,15 +238,15 @@ RSpec.describe "/batch endpoint" do
         end
 
         before do
-          FactoryGirl.create(
+          create(
             :check,
-            link: FactoryGirl.create(:link, uri: uri_a),
+            link: create(:link, uri: uri_a),
             completed_at: 1.minute.ago,
           )
 
-          FactoryGirl.create(
+          create(
             :check,
-            link: FactoryGirl.create(:link, uri: uri_b),
+            link: create(:link, uri: uri_b),
             completed_at: 1.minute.ago,
           )
 
@@ -297,18 +297,18 @@ RSpec.describe "/batch endpoint" do
       let(:uri_b) { "http://example.com/b" }
 
       before do
-        FactoryGirl.create(
+        create(
           :batch,
           id: batch_id,
           checks: [
-            FactoryGirl.create(
+            create(
               :check,
-              link: FactoryGirl.create(:link, uri: uri_a),
+              link: create(:link, uri: uri_a),
               completed_at: 1.minute.ago
             ),
-            FactoryGirl.create(
+            create(
               :check,
-              link: FactoryGirl.create(:link, uri: uri_b),
+              link: create(:link, uri: uri_b),
               completed_at: 1.minute.ago
             ),
           ],
@@ -337,17 +337,17 @@ RSpec.describe "/batch endpoint" do
       let(:uri_b) { "http://example.com/b" }
 
       before do
-        FactoryGirl.create(
+        create(
           :batch,
           id: batch_id,
           checks: [
-            FactoryGirl.create(
+            create(
               :check,
-              link: FactoryGirl.create(:link, uri: uri_a),
+              link: create(:link, uri: uri_a),
             ),
-            FactoryGirl.create(
+            create(
               :check,
-              link: FactoryGirl.create(:link, uri: uri_b),
+              link: create(:link, uri: uri_b),
             ),
           ],
         )

@@ -5,15 +5,15 @@ RSpec.describe ReportGeneratorService do
     before do
       # completed broken links
       5.times do |i|
-        link = FactoryGirl.create(:link, uri: "https://www.example.org/#{i}")
-        FactoryGirl.create(:check, :completed, :with_errors, link: link)
+        link = create(:link, uri: "https://www.example.org/#{i}")
+        create(:check, :completed, :with_errors, link: link)
       end
 
       # uncompleted broken link
-      FactoryGirl.create(:check, :with_errors, link: FactoryGirl.create(:link, uri: "https://www.example.org/checking"))
+      create(:check, :with_errors, link: create(:link, uri: "https://www.example.org/checking"))
 
       # completed ok link
-      FactoryGirl.create(:check, :completed, link: FactoryGirl.create(:link))
+      create(:check, :completed, link: create(:link))
     end
 
     it "creates a CSV file" do
