@@ -1,5 +1,5 @@
 require "rails_helper"
-# rubocop:disable BlockLength
+
 RSpec.describe "Check all links for a monitored resource" do
 
   let(:page_not_found) { TestError::PageNotFound.new(from_redirect: false) }
