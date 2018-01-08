@@ -25,7 +25,7 @@ group :development, :test do
   gem "simplecov", "~> 0.11", require: false
   gem "govuk-lint"
   gem "sqlite3" # Remove this when you choose a production database
-  gem "factory_girl_rails", "~> 4.7"
+  gem "factory_bot_rails", "~> 4.7"
   gem "timecop"
   gem "webmock"
   gem "rspec-rails", "~> 3.4"

@@ -34,7 +34,7 @@ RSpec.configure do |config|
   config.include AuthenticationHelper::RequestMixin, type: :request
   config.include AuthenticationHelper::ControllerMixin, type: :controller
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.after do
     GDS::SSO.test_user = nil

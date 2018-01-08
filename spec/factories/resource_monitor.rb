@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :resource_monitor do
     app "govuk"
     reference "Test:1"
