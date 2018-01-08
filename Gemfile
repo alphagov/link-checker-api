@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "rails", "5.1.4"
-gem "unicorn", "~> 5.1"
 gem "logstasher", "~> 1.2"
 gem "database_cleaner"
 gem "deprecated_columns"
@@ -9,7 +8,7 @@ gem "gds-sso", "~> 13.0"
 gem "plek", "~> 2.0"
 gem "pg"
 
-gem "govuk_app_config", "~> 0.2"
+gem "govuk_app_config", "~> 1.2"
 
 gem "faraday", "~> 0.11"
 gem "faraday-cookie_jar", "~>0.0.6"

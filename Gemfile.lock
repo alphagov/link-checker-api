@@ -96,9 +96,11 @@ GEM
       rubocop (~> 0.51.0)
       rubocop-rspec (~> 1.19.0)
       scss_lint
-    govuk_app_config (0.3.0)
-      sentry-raven (~> 2.6.3)
+    govuk_app_config (1.2.0)
+      logstasher (~> 1.2.2)
+      sentry-raven (~> 2.7.1)
       statsd-ruby (~> 1.4.0)
+      unicorn (~> 5.4.0)
     govuk_sidekiq (2.0.0)
       gds-api-adapters (>= 19.1.0)
       redis-namespace (~> 1.5.2)
@@ -113,7 +115,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.1.0)
     jwt (1.5.6)
-    kgio (2.11.0)
+    kgio (2.11.1)
     link_header (0.0.8)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -261,7 +263,7 @@ GEM
     scss_lint (0.56.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5.3)
-    sentry-raven (2.6.3)
+    sentry-raven (2.7.1)
       faraday (>= 0.7.6, < 1.0)
     sidekiq (4.2.10)
       concurrent-ruby (~> 1.0)
@@ -308,7 +310,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.4)
     unicode-display_width (1.3.0)
-    unicorn (5.3.1)
+    unicorn (5.4.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     warden (1.2.7)
@@ -341,7 +343,7 @@ DEPENDENCIES
   faraday-cookie_jar (~> 0.0.6)
   gds-sso (~> 13.0)
   govuk-lint
-  govuk_app_config (~> 0.2)
+  govuk_app_config (~> 1.2)
   govuk_sidekiq (~> 2.0)
   listen
   logstasher (~> 1.2)
@@ -358,7 +360,6 @@ DEPENDENCIES
   simplecov-rcov (~> 0.2)
   sqlite3
   timecop
-  unicorn (~> 5.1)
   web-console (~> 3.5)
   webmock
 
