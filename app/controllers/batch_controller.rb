@@ -28,7 +28,7 @@ class BatchController < ApplicationController
 
     batch = create_batch(create_params)
 
-    head :unprocessable_entity && return unless batch
+    return head :unprocessable_entity unless batch
 
     if batch.completed?
       batch.trigger_webhook
@@ -50,12 +50,12 @@ class BatchController < ApplicationController
 private
 
   def create_batch(create_params)
-    batch = Batch.create!(
-      webhook_uri: create_params.webhook_uri,
-      webhook_secret_token: create_params.webhook_secret_token
-    )
+    ActiveRecord::Base.transaction do
+      batch = Batch.create!(
+        webhook_uri: create_params.webhook_uri,
+        webhook_secret_token: create_params.webhook_secret_token
+      )
 
-    success = ActiveRecord::Base.transaction do
       links = Link.fetch_all(create_params.uris)
       checks = Check.fetch_all(links, within: create_params.checked_within)
 
@@ -65,14 +65,7 @@ private
 
       BatchCheck.import(batch_checks)
 
-      true
-    end
-
-    if success
       batch
-    else
-      batch.destroy
-      false
     end
   end
 

@@ -299,7 +299,7 @@ RSpec.describe "/batch endpoint" do
       end
 
       before do
-        allow(Link).to receive(:fetch_all).and_raise(ActiveRecord::RecordInvalid)
+        allow(Link).to receive(:fetch_all).and_raise(ActiveRecord::Rollback)
         post "/batch", params: batch_request.to_json, headers: { "Content-Type" => "application/json" }
       end
 
