@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe CheckPresenter do
-  let(:link) { FactoryGirl.create(:link) }
-  let(:check) { FactoryGirl.create(:check, :completed, link: link) }
+  let(:link) { create(:link) }
+  let(:check) { create(:check, :completed, link: link) }
 
   subject { described_class.new(check).link_report }
 
@@ -21,8 +21,8 @@ RSpec.describe CheckPresenter do
   it { is_expected.to eq(expected_link_report) }
 
   context 'when the link has a history but no historical checks yet' do
-    let(:check) { FactoryGirl.create(:check, :completed, :with_errors, link: link) }
-    let!(:link_history) { FactoryGirl.create(:link_history, link: link) }
+    let(:check) { create(:check, :completed, :with_errors, link: link) }
+    let!(:link_history) { create(:link_history, link: link) }
 
     let(:expected_message) { check.link_errors.first }
 
@@ -30,13 +30,13 @@ RSpec.describe CheckPresenter do
   end
 
   context 'when the link is monitored' do
-    let(:monitor_link) { FactoryGirl.create(:monitor_link, link: link) }
+    let(:monitor_link) { create(:monitor_link, link: link) }
 
     it { is_expected.to eq(expected_link_report) }
 
     context 'and when the link has a persistent error' do
-      let(:check) { FactoryGirl.create(:check, :completed, :with_errors, link: link) }
-      let!(:link_history) { FactoryGirl.create(:link_history, :with_history, link: link) }
+      let(:check) { create(:check, :completed, :with_errors, link: link) }
+      let!(:link_history) { create(:link_history, :with_history, link: link) }
 
       let(:expected_message) { "#{link_history.link_errors.first['message']} since #{link_history.link_errors.first['started_at']}" }
 

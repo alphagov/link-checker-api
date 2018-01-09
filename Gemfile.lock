@@ -64,10 +64,10 @@ GEM
     erubi (1.7.0)
     et-orbi (1.0.8)
       tzinfo
-    factory_girl (4.9.0)
+    factory_bot (4.8.2)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
+    factory_bot_rails (4.8.2)
+      factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
@@ -75,7 +75,7 @@ GEM
       faraday (>= 0.7.4)
       http-cookie (~> 1.0.0)
     ffi (1.9.18)
-    gds-api-adapters (50.3.0)
+    gds-api-adapters (50.8.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -96,13 +96,16 @@ GEM
       rubocop (~> 0.51.0)
       rubocop-rspec (~> 1.19.0)
       scss_lint
-    govuk_app_config (0.3.0)
-      sentry-raven (~> 2.6.3)
+    govuk_app_config (1.2.0)
+      logstasher (~> 1.2.2)
+      sentry-raven (~> 2.7.1)
       statsd-ruby (~> 1.4.0)
-    govuk_sidekiq (2.0.0)
+      unicorn (~> 5.4.0)
+    govuk_sidekiq (3.0.0)
       gds-api-adapters (>= 19.1.0)
-      redis-namespace (~> 1.5.2)
-      sidekiq (~> 4.2.8)
+      govuk_app_config (>= 1.1)
+      redis-namespace (~> 1.6)
+      sidekiq (>= 5, < 6)
       sidekiq-logging-json (~> 0.0)
       sidekiq-statsd (~> 0.1)
     hashdiff (0.3.7)
@@ -113,7 +116,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.1.0)
     jwt (1.5.6)
-    kgio (2.11.0)
+    kgio (2.11.1)
     link_header (0.0.8)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -208,9 +211,9 @@ GEM
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    redis (3.3.5)
-    redis-namespace (1.5.3)
-      redis (~> 3.0, >= 3.0.4)
+    redis (4.0.1)
+    redis-namespace (1.6.0)
+      redis (>= 3.0.4)
     request_store (1.3.2)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
@@ -261,13 +264,13 @@ GEM
     scss_lint (0.56.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5.3)
-    sentry-raven (2.6.3)
+    sentry-raven (2.7.1)
       faraday (>= 0.7.6, < 1.0)
-    sidekiq (4.2.10)
+    sidekiq (5.0.5)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
-      redis (~> 3.2, >= 3.2.1)
+      redis (>= 3.3.4, < 5)
     sidekiq-logging-json (0.0.18)
       sidekiq (>= 3)
     sidekiq-scheduler (2.1.10)
@@ -308,7 +311,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.4)
     unicode-display_width (1.3.0)
-    unicorn (5.3.1)
+    unicorn (5.4.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     warden (1.2.7)
@@ -336,13 +339,13 @@ DEPENDENCIES
   byebug
   database_cleaner
   deprecated_columns
-  factory_girl_rails (~> 4.7)
+  factory_bot_rails (~> 4.7)
   faraday (~> 0.11)
   faraday-cookie_jar (~> 0.0.6)
   gds-sso (~> 13.0)
   govuk-lint
-  govuk_app_config (~> 0.2)
-  govuk_sidekiq (~> 2.0)
+  govuk_app_config (~> 1.2)
+  govuk_sidekiq (~> 3.0)
   listen
   logstasher (~> 1.2)
   pg
@@ -358,7 +361,6 @@ DEPENDENCIES
   simplecov-rcov (~> 0.2)
   sqlite3
   timecop
-  unicorn (~> 5.1)
   web-console (~> 3.5)
   webmock
 

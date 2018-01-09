@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe LinkHistory, type: :model do
   describe "#update_errors" do
-    let(:link_history) { FactoryGirl.create(:link_history, :with_link) }
+    let(:link_history) { create(:link_history, :with_link) }
     let(:errors) do
       ["an error"]
     end

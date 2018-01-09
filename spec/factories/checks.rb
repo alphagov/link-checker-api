@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :check do
     started_at nil
     completed_at nil

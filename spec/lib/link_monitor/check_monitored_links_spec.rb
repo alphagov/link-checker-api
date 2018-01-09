@@ -1,7 +1,7 @@
 require "rails_helper"
-# rubocop:disable BlockLength
+
 RSpec.describe LinkMonitor::CheckMonitoredLinks do
-  let(:resource_monitor) { FactoryGirl.create(:resource_monitor, number_of_links: 1) }
+  let(:resource_monitor) { create(:resource_monitor, number_of_links: 1) }
 
   subject { described_class.new(resource_monitor: resource_monitor).call }
 
