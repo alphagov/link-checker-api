@@ -282,6 +282,35 @@ RSpec.describe "/batch endpoint" do
         include_examples "returns batch report"
       end
     end
+
+    context "when creating a batch and an error is thrown" do
+      let(:uri_a) { "http://example.com/a" }
+      let(:uri_b) { "http://example.com/b" }
+
+      let(:batch_request) { build_batch_request(uris: [uri_a, uri_b]) }
+      let(:batch_report) do
+        build_batch_report(
+          status: "in_progress",
+          links: [
+            { uri: uri_a, status: "pending" },
+            { uri: uri_b, status: "pending" },
+          ]
+        )
+      end
+
+      before do
+        allow(Link).to receive(:fetch_all).and_raise(ActiveRecord::RecordInvalid)
+        post "/batch", params: batch_request.to_json, headers: { "Content-Type" => "application/json" }
+      end
+
+      it "returns 422" do
+        expect(response).to have_http_status(422)
+      end
+
+      it "should not create a batch" do
+        expect(Batch.all.empty?).to be true
+      end
+    end
   end
 
   describe "GET /batch/:id" do

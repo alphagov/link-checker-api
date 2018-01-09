@@ -26,22 +26,9 @@ class BatchController < ApplicationController
     create_params = CreateParams.new(params)
     create_params.validate!
 
-    batch = ActiveRecord::Base.transaction do
-      links = Link.fetch_all(create_params.uris)
-      checks = Check.fetch_all(links, within: create_params.checked_within)
-      batch = Batch.create!(
-        webhook_uri: create_params.webhook_uri,
-        webhook_secret_token: create_params.webhook_secret_token
-      )
+    batch = create_batch(create_params)
 
-      batch_checks = checks.each_with_index.map do |check, i|
-        BatchCheck.new(batch_id: batch.id, check_id: check.id, order: i)
-      end
-
-      BatchCheck.import(batch_checks)
-
-      batch
-    end
+    head :unprocessable_entity && return unless batch
 
     if batch.completed?
       batch.trigger_webhook
@@ -61,6 +48,33 @@ class BatchController < ApplicationController
   end
 
 private
+
+  def create_batch(create_params)
+    batch = Batch.create!(
+      webhook_uri: create_params.webhook_uri,
+      webhook_secret_token: create_params.webhook_secret_token
+    )
+
+    success = ActiveRecord::Base.transaction do
+      links = Link.fetch_all(create_params.uris)
+      checks = Check.fetch_all(links, within: create_params.checked_within)
+
+      batch_checks = checks.each_with_index.map do |check, i|
+        BatchCheck.new(batch_id: batch.id, check_id: check.id, order: i)
+      end
+
+      BatchCheck.import(batch_checks)
+
+      true
+    end
+
+    if success
+      batch
+    else
+      batch.destroy
+      false
+    end
+  end
 
   def batch_report(batch)
     BatchPresenter.new(batch).report
