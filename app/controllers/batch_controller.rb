@@ -32,7 +32,7 @@ class BatchController < ApplicationController
       batch = Batch.create!(
         webhook_uri: create_params.webhook_uri,
         webhook_secret_token: create_params.webhook_secret_token
-      )
+      ).lock!
 
       batch_checks = checks.each_with_index.map do |check, i|
         BatchCheck.new(batch_id: batch.id, check_id: check.id, order: i)
