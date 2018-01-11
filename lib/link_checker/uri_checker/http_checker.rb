@@ -105,9 +105,7 @@ module LinkChecker::UriChecker
       check_meta_mature_rating
       return report if report.has_errors?
 
-      # disabled for the moment until we can sort out a process for getting
-      # permentant staging and production keys
-      # check_google_safebrowsing
+      check_google_safebrowsing if use_google_safebrowsing?
 
       report
     end
@@ -180,7 +178,8 @@ module LinkChecker::UriChecker
 
     def check_google_safebrowsing
       api_key = Rails.application.secrets.google_api_key
-      return unless api_key
+
+      raise "Missing API key" unless api_key
 
       response = Faraday.post do |req|
         req.url "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=#{api_key}"
@@ -289,6 +288,10 @@ module LinkChecker::UriChecker
       return nil unless gov_uk_uri?
 
       { 'Rate-Limit-Token': Rails.application.secrets.rate_limit_token }
+    end
+
+    def use_google_safebrowsing?
+      Rails.env.production? || Rails.application.secrets.google_api_key
     end
   end
 end
