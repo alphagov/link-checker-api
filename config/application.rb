@@ -17,6 +17,9 @@ require "rails/test_unit/railtie"
 Bundler.require(*Rails.groups)
 
 module LinkCheckerApi
+  mattr_accessor :hosts_with_basic_authorization
+  self.hosts_with_basic_authorization = {}
+
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
