@@ -281,7 +281,11 @@ module LinkChecker::UriChecker
     end
 
     def gov_uk_uri?
-      Plek.new.website_root.include?(uri.host)
+      @gov_uk_uri ||= Plek.new.website_root.include?(uri.host)
+    end
+
+    def gov_uk_upload_uri?
+      uri.path.starts_with? "/government/uploads"
     end
 
     def additional_connection_headers
@@ -291,6 +295,8 @@ module LinkChecker::UriChecker
     end
 
     def use_google_safebrowsing?
+      return false if gov_uk_uri? && !gov_uk_upload_uri?
+
       Rails.env.production? || Rails.application.secrets.google_api_key
     end
   end

@@ -256,16 +256,72 @@ RSpec.describe LinkChecker do
       end
     end
 
-    # context "a URL detected by Google Safebrowser API" do
-    #   let(:uri) { "http://malware.testing.google.test/testing/malware/" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #       .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
-    #   end
-    #   include_examples "has a problem summary", "Suspicious content"
-    #   include_examples "has warnings"
-    #   include_examples "has no errors"
-    # end
+    context "a URL detected by Google Safebrowser API" do
+      let(:uri) { "http://malware.testing.google.test/testing/malware/" }
+      before do
+        stub_request(:get, uri).to_return(status: 200)
+        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+          .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
+      end
+      include_examples "has a problem summary", "Suspicious content"
+      include_examples "has warnings"
+      include_examples "has no errors"
+    end
+
+    context "Google Safebrowser API on a gov.uk url" do
+      let(:uri) { "http://www.dev.gov.uk/malware.testing.google.test/testing/malware/" }
+      before do
+        stub_request(:get, uri).to_return(status: 200)
+      end
+      let(:request) do
+        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+      end
+
+      include_examples "has no warnings"
+      include_examples "has no errors"
+      it "should not make a request" do
+        subject
+
+        expect(request).to_not have_been_requested
+      end
+    end
+
+    context "Google Safebrowser API on a gov.uk upload url" do
+      let(:uri) { "http://www.dev.gov.uk/government/uploads" }
+      before do
+        stub_request(:get, uri).to_return(status: 200)
+      end
+      let(:request) do
+        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+          .to_return(status: 200, body: "{}")
+      end
+
+      include_examples "has no warnings"
+      include_examples "has no errors"
+      it "should make a request" do
+        subject
+
+        expect(request).to have_been_requested
+      end
+    end
+
+    context "Google Safebrowser API on an asset-manager upload url" do
+      let(:uri) { "https://assets.publishing.service.gov.uk/media/" }
+      before do
+        stub_request(:get, uri).to_return(status: 200)
+      end
+      let(:request) do
+        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+          .to_return(status: 200, body: "{}")
+      end
+
+      include_examples "has no warnings"
+      include_examples "has no errors"
+      it "should make a request" do
+        subject
+
+        expect(request).to have_been_requested
+      end
+    end
   end
 end
