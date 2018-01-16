@@ -290,7 +290,7 @@ module LinkChecker::UriChecker
 
     def rate_limit_header
       return {} unless gov_uk_uri?
-      { "Rate-Limit-Token": Rails.application.secrets.rate_limit_token }
+      { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token }
     end
 
     def basic_authorization_header
