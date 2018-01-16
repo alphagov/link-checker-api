@@ -323,5 +323,25 @@ RSpec.describe LinkChecker do
         expect(request).to have_been_requested
       end
     end
+
+    context "when calling a url that requires authentication" do
+      let(:host) { "www.needsauthentication.co.uk" }
+      let(:uri) { "http://#{host}/a/page" }
+      let!(:request) do
+        stub_request(:get, uri).
+          with(headers: { "Authorization": "Basic #{Base64.encode64(Rails.application.secrets.govuk_basic_auth_credentials)}".strip }).
+          to_return(status: 200)
+      end
+
+      before do
+        LinkCheckerApi.hosts_with_basic_authorization[host.to_s] = Rails.application.secrets.govuk_basic_auth_credentials
+      end
+
+      it "should add basic auth" do
+        subject
+
+        expect(request).to have_been_requested
+      end
+    end
   end
 end
