@@ -288,16 +288,30 @@ module LinkChecker::UriChecker
       uri.path.starts_with? "/government/uploads"
     end
 
-    def additional_connection_headers
-      return nil unless gov_uk_uri?
+    def rate_limit_header
+      return {} unless gov_uk_uri?
+      { "Rate-Limit-Token": Rails.application.secrets.rate_limit_token }
+    end
 
-      { 'Rate-Limit-Token': Rails.application.secrets.rate_limit_token }
+    def basic_authorization_header
+      return {} unless LinkCheckerApi.hosts_with_basic_authorization.include?(uri.host)
+      { "Authorization": "Basic #{base64_encode_authorization(uri.host)}" }
+    end
+
+    def additional_connection_headers
+      Hash.new
+        .merge(rate_limit_header)
+        .merge(basic_authorization_header)
     end
 
     def use_google_safebrowsing?
       return false if gov_uk_uri? && !gov_uk_upload_uri?
 
       Rails.env.production? || Rails.application.secrets.google_api_key
+    end
+
+    def base64_encode_authorization(host)
+      Base64.encode64(LinkCheckerApi.hosts_with_basic_authorization[host])
     end
   end
 end
