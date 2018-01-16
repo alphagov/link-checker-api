@@ -236,10 +236,10 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
     end
 
-    context "bypassing the GOV.uk rate limiter" do
+    context "bypassing the GOV.UK rate limiter" do
       before do
         stub_request(:get, uri).
-          with(headers: { "Rate-Limit-Token": Rails.application.secrets.rate_limit_token, "Accept-Encoding": "none" }).
+          with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" }).
           to_return(status: 200)
       end
 
@@ -252,7 +252,7 @@ RSpec.describe LinkChecker do
         subject
 
         expect(WebMock).to have_requested(:get, uri).
-          with(headers: { "Rate-Limit-Token": Rails.application.secrets.rate_limit_token, "Accept-Encoding": "none" })
+          with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
       end
     end
 
