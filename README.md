@@ -35,18 +35,24 @@ The HTTP API is defined in [docs/api.md](docs/api.md).
 
 Start the web app with:
 
-`./startup.sh`
+```bash
+$ ./startup.sh
+```
 
 Application will be available on port 3208 - http://localhost:3208 or if you
 are using the development VM http://link-checker-api.dev.gov.uk
 
 Start the sidekiq worker with:
 
-`bundle exec sidekiq -C config/sidekiq.yml`
+```bash
+$ bundle exec sidekiq -C config/sidekiq.yml
+```
 
 ### Running the test suite
 
-`bundle exec rspec`
+```bash
+$ bundle exec rspec
+```
 
 ### Report rake task
 
