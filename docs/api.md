@@ -9,6 +9,7 @@ specific entities.
 - [`GET /check`](#get-check)
 - [`POST /batch`](#post-batch)
 - [`GET /batch/:id`](#get-batchid)
+- [`POST /monitor`](#post-monitor)
 
 ## Webhook
 
@@ -219,6 +220,36 @@ a completed batch
 ### Returns
 
 A [`BatchReport`](#batchreport-entity)
+
+## `POST /monitor`
+
+<details>
+  <summary>Example usage</summary>
+
+```
+$ curl -s -H "Content-Type: application/json" -X POST -d '{"links": ["https://www.gov.uk/", "https://www.gov.uk/search", "https://www.gov.uk/404"], "app": "whitehall", "reference": "test-monitoring' http://link-checker-api.dev.gov.uk/monitor | jq
+{
+  id: 1
+}
+```
+
+</details>
+
+This endpoint is used to register a collection of links to be monitored nightly, and build up historic data about that link that will persist long than 4 weeks.
+
+### JSON Attributes
+
+- `links` *(required)*
+  - An array of URIs to be checked (max length: 5000)
+- `app` *(required)*
+  - A string value for the application calling the endpoint. e.g. `whitehall`
+- `reference` *(required)*
+  - A unique reference for the collection of links
+  - This reference should be unique to the application calling it.
+
+### Returns
+
+The id of the created monitor
 
 ## Batch complete webhook
 
