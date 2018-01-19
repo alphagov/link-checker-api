@@ -28,9 +28,9 @@ module LinkChecker::UriChecker
       if parsed_uri.scheme.nil?
         add_problem(MissingUriScheme.new(from_redirect: from_redirect?))
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
-        report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history).call)
+        report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history, http_client: http_client).call)
       elsif FILE_URI_SCHEMES.include?(parsed_uri.scheme)
-        report.merge(FileChecker.new(parsed_uri, redirect_history: redirect_history).call)
+        report.merge(FileChecker.new(parsed_uri, redirect_history: redirect_history, http_client: http_client).call)
       elsif CONTACT_SCHEMES.include?(parsed_uri.scheme)
         add_problem(ContactDetails.new(from_redirect: from_redirect?))
       else

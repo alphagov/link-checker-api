@@ -90,13 +90,6 @@ module LinkChecker::UriChecker
   end
 
   class HttpChecker < Checker
-    def self.connection
-      @connection ||= Faraday.new(headers: { accept_encoding: "none" }) do |faraday|
-        faraday.use :cookie_jar
-        faraday.adapter Faraday.default_adapter
-      end
-    end
-
     def call
       if uri.host.nil?
         return add_problem(NoHost.new(from_redirect: from_redirect?))
@@ -228,7 +221,7 @@ module LinkChecker::UriChecker
         if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
           target_uri = uri + response.headers["location"]
           subreport = ValidUriChecker
-            .new(target_uri.to_s, redirect_history: redirect_history + [uri])
+            .new(target_uri.to_s, redirect_history: redirect_history + [uri], http_client: http_client)
             .call
           report.merge(subreport)
         end
@@ -274,7 +267,7 @@ module LinkChecker::UriChecker
     end
 
     def run_connection_request(method)
-      self.class.connection.run_request(method, uri, nil, additional_connection_headers) do |request|
+      http_client.run_request(method, uri, nil, additional_connection_headers) do |request|
         request.options[:timeout] = RESPONSE_TIME_LIMIT
         request.options[:open_timeout] = RESPONSE_TIME_LIMIT
       end
