@@ -324,6 +324,54 @@ RSpec.describe LinkChecker do
       end
     end
 
+    context "Google Safebrowser API returns an error" do
+      let(:uri) { "http://www.gov.uk/government/uploads" }
+      before do
+        stub_request(:get, uri).to_return(status: 200)
+      end
+      let!(:request) do
+        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+          .to_return(status: 500, body: "an error", headers: { 'X-Foo' => 'bar' })
+      end
+
+      include_examples "has no warnings"
+      include_examples "has no errors"
+      it "should log the error to Sentry" do
+        expect(GovukError).to receive(:notify)
+          .with("Unable to talk to Google Safebrowsing API!",
+            extra: {
+              status: 500,
+              body: 'an error',
+              headers: { 'X-Foo' => 'bar' },
+            })
+
+        subject
+
+        expect(request).to have_been_requested
+      end
+    end
+
+    context "Google Safebrowser API rate limits the request" do
+      let(:uri) { "http://www.gov.uk/government/uploads" }
+      before do
+        stub_request(:get, uri).to_return(status: 200)
+      end
+      let!(:request) do
+        stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
+          .to_return(status: 429, body: "an error", headers: { 'X-Foo' => 'bar' })
+      end
+
+      include_examples "has no warnings"
+      include_examples "has no errors"
+      it "should increment the counter in statsd" do
+        expect(GovukStatsd).to receive(:increment).with("safebrowsing.rate_limited")
+
+        subject
+
+        expect(request).to have_been_requested
+      end
+    end
+
     context "when calling a url that requires authentication" do
       let(:host) { "www.needsauthentication.co.uk" }
       let(:uri) { "http://#{host}/a/page" }
