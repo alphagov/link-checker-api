@@ -14,7 +14,7 @@ gem "faraday", "~> 0.11"
 gem "faraday-cookie_jar", "~> 0.0.6"
 
 gem "govuk_sidekiq", "~> 3.0"
-gem "sidekiq-scheduler", "~> 2.1"
+gem "sidekiq-scheduler", "~> 2.2"
 gem "sidekiq-unique-jobs", "~> 5.0"
 
 gem "activerecord-import", "~> 0.17"
