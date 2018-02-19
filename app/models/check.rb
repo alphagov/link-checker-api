@@ -53,32 +53,4 @@ class Check < ApplicationRecord
     return :caution if has_warnings?
     :ok
   end
-
-  def combined_errors
-    if link&.link_history&.link_errors.present?
-      combine_link_history
-    else
-      link_errors
-    end
-  end
-
-private
-
-  def build_error_message(error)
-    error_history = link.link_history.link_errors.select { |link_error| link_error['message'] == error }
-
-    if error_history.any?
-      "#{error_history[0]['message']} since #{error_history[0]['started_at']}"
-    else
-      error
-    end
-  end
-
-  def combine_link_history
-    link_errors.reduce([]) do |array, error|
-      array << build_error_message(error)
-
-      array
-    end
-  end
 end
