@@ -4,7 +4,7 @@ gem "rails", "5.1.4"
 gem "logstasher", "~> 1.2"
 gem "database_cleaner"
 gem "deprecated_columns"
-gem "gds-sso", "~> 13.0"
+gem "gds-sso", "~> 13.6"
 gem "plek", "~> 2.1"
 gem "pg"
 
