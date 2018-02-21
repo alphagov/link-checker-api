@@ -17,7 +17,7 @@ gem "govuk_sidekiq", "~> 3.0"
 gem "sidekiq-scheduler", "~> 2.2"
 gem "sidekiq-unique-jobs", "~> 5.0"
 
-gem "activerecord-import", "~> 0.17"
+gem "activerecord-import", "~> 0.22"
 
 group :development, :test do
   gem "pry"
