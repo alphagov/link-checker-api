@@ -34,7 +34,7 @@ GEM
       activemodel (= 5.1.5)
       activesupport (= 5.1.5)
       arel (~> 8.0)
-    activerecord-import (0.21.0)
+    activerecord-import (0.22.0)
       activerecord (>= 3.2)
     activesupport (5.1.5)
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -335,7 +335,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-import (~> 0.17)
+  activerecord-import (~> 0.22)
   byebug
   database_cleaner
   deprecated_columns
