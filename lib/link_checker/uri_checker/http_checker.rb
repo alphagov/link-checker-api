@@ -105,7 +105,8 @@ module LinkChecker::UriChecker
       check_meta_mature_rating
       return report if report.has_errors?
 
-      check_google_safebrowsing if use_google_safebrowsing?
+      # FIXME once a key has been correctly configured in integration, staging and production
+      # check_google_safebrowsing if use_google_safebrowsing?
 
       report
     end
