@@ -8,7 +8,7 @@ gem "gds-sso", "~> 13.6"
 gem "plek", "~> 2.1"
 gem "pg"
 
-gem "govuk_app_config", "~> 1.3"
+gem "govuk_app_config", "~> 1.4"
 
 gem "faraday", "~> 0.11"
 gem "faraday-cookie_jar", "~> 0.0.6"
