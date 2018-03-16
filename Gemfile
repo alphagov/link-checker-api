@@ -25,7 +25,7 @@ gem "activerecord-import", "~> 0.22"
 group :development, :test do
   gem "pry"
   gem "simplecov-rcov", "~> 0.2", require: false
-  gem "simplecov", "~> 0.11", require: false
+  gem "simplecov", "~> 0.16", require: false
   gem "govuk-lint"
   gem "sqlite3" # Remove this when you choose a production database
   gem "factory_bot_rails", "~> 4.7"
