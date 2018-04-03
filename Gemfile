@@ -18,7 +18,7 @@ gem "sidekiq-scheduler", "~> 2.2"
 # We can't use v5 of this because it requires redis 3 and we use 2.8
 # We use our own fork because the latest 4.x release has a bug with
 # removing jobs from the uniquejobs hash in redis
-gem "sidekiq-unique-jobs", git: "https://github.com/alphagov/sidekiq-unique-jobs", branch: 'fix-for-upstream-195-backported-to-4-x-branch', require: false
+gem "sidekiq-unique-jobs", git: "https://github.com/alphagov/sidekiq-unique-jobs", branch: 'fix-for-upstream-195-backported-to-4-x-branch'
 
 gem "activerecord-import", "~> 0.22"
 

@@ -25,6 +25,18 @@ RSpec.describe WebhookWorker do
           .with(headers: { "X-LinkCheckerApi-Signature": expected_signature }))
           .to have_been_requested
       end
+
+      context "when creating the job multiple times for the same batch" do
+        before do
+          10.times do
+            described_class.perform_async(report, webhook_uri, webhook_secret_token, batch_id)
+          end
+        end
+
+        it "should only put one job on the queue" do
+          expect(WebhookWorker.jobs.size).to eq(1)
+        end
+      end
     end
 
     context "with an already triggered batch" do
