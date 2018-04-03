@@ -14,6 +14,7 @@ require "spec_helper"
 require "database_cleaner"
 require "rspec/rails"
 require "govuk_sidekiq/testing"
+require "sidekiq_unique_jobs/testing"
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
