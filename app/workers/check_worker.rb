@@ -2,7 +2,7 @@ class CheckWorker
   include Sidekiq::Worker
   include PerformAsyncInQueue
 
-  sidekiq_options retry: 3
+  sidekiq_options retry: 3, unique: :until_and_while_executing, unique_args: :unique_args
 
   sidekiq_retries_exhausted do |msg|
     Check.connection_pool.with_connection do |_|
@@ -17,6 +17,10 @@ class CheckWorker
         completed_at: Time.now,
       )
     end
+  end
+
+  def self.unique_args(args)
+    [args.first] # check_id
   end
 
   def perform(check_id)
