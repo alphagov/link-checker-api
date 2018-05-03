@@ -25,6 +25,6 @@ private
   end
 
   def old_batches
-    Batch.where(id: [BatchCheck.where(check: [old_checks]).pluck(:batch_id)])
+    Batch.where(id: BatchCheck.select(:batch_id).where(check: old_checks))
   end
 end
