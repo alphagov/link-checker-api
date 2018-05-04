@@ -43,7 +43,7 @@ GEM
       activemodel (= 5.2.0)
       activesupport (= 5.2.0)
       arel (>= 9.0)
-    activerecord-import (0.22.0)
+    activerecord-import (0.23.0)
       activerecord (>= 3.2)
     activestorage (5.2.0)
       actionpack (= 5.2.0)
@@ -349,7 +349,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-import (~> 0.22)
+  activerecord-import (~> 0.23)
   byebug
   database_cleaner
   deprecated_columns
