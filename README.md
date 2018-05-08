@@ -1,12 +1,7 @@
 # Link Checker API
 
-**⚠️ This service is in Alpha ⚠️**
-
 A web service that takes an input of URIs. It performs a number of checks on
 them to determine whether these are things that should be linked to.
-
-This service was created in the GOV.UK 2 week blitz of April 2017, thoughts on
-next steps are documented in [docs/blitz.md](docs/blitz.md).
 
 ## Nomenclature
 
@@ -24,7 +19,7 @@ API. The majority of link checking is done through a background worker than
 uses Sidekiq. There is a webhook functionality for applications to receive
 notifications when link checking is complete.
 
-The HTTP API is defined in [docs/api.md](docs/api.md).
+📖 The HTTP API is defined in [docs/api.md](docs/api.md).
 
 ### Dependencies
 
@@ -42,7 +37,7 @@ $ ./startup.sh
 Application will be available on port 3208 - http://localhost:3208 or if you
 are using the development VM http://link-checker-api.dev.gov.uk
 
-Start the sidekiq worker with:
+Start the Sidekiq worker with:
 
 ```bash
 $ bundle exec sidekiq -C config/sidekiq.yml
@@ -57,23 +52,10 @@ $ bundle exec rspec
 ### Report rake task
 
 ```bash
-$ bundle exec rake report[links.csv]
+$ bundle exec rake report[<output-filename>.csv]
 ```
 
 This will produce a report of all broken links stored in the link checker and when they were last checked.
-
-### Example API output
-
-```
-$ curl -s http://link-checker-api.dev.gov.uk/check\?uri\=https%3A%2F%2Fwww.gov.uk%2F\&synchronous\=true | jq
-{
-  "uri": "https://www.gov.uk/",
-  "status": "ok",
-  "checked": "2017-04-12T18:47:16Z",
-  "errors": {},
-  "warnings": {}
-}
-```
 
 ## Licence
 
