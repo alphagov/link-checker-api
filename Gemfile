@@ -20,7 +20,7 @@ gem "sidekiq-scheduler", "~> 2.2"
 # removing jobs from the uniquejobs hash in redis
 gem "sidekiq-unique-jobs", git: "https://github.com/alphagov/sidekiq-unique-jobs", branch: 'fix-for-upstream-195-backported-to-4-x-branch'
 
-gem "activerecord-import", "~> 0.22"
+gem "activerecord-import", "~> 0.23"
 
 group :development, :test do
   gem "pry"
