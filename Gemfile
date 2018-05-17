@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "rails", "5.2.0"
-gem "logstasher", "~> 1.2"
 gem "database_cleaner"
 gem "deprecated_columns"
 gem "gds-sso", "~> 13.6"

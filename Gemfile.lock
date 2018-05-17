@@ -364,7 +364,6 @@ DEPENDENCIES
   govuk_app_config (~> 1.5)
   govuk_sidekiq (~> 3.0)
   listen
-  logstasher (~> 1.2)
   pg
   plek (~> 2.1)
   pry
