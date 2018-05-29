@@ -19,7 +19,7 @@ gem "sidekiq-unique-jobs", git: "https://github.com/alphagov/sidekiq-unique-jobs
 
 group :development, :test do
   gem "byebug" # Comes standard with Rails
-  gem "factory_bot_rails", "~> 4.7"
+  gem "factory_bot_rails", "~> 4.10"
   gem "govuk-lint"
   gem "pry"
   gem "rspec-rails", "~> 3.4"
