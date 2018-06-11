@@ -11,7 +11,7 @@ gem "govuk_sidekiq", "~> 3.0"
 gem "pg"
 gem "plek", "~> 2.1"
 gem "rails", "5.2.0"
-gem "sidekiq-scheduler", "~> 2.2"
+gem "sidekiq-scheduler", "~> 3.0"
 # We can't use v5 of this because it requires redis 3 and we use 2.8
 # We use our own fork because the latest 4.x release has a bug with
 # removing jobs from the uniquejobs hash in redis
