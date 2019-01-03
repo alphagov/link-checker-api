@@ -63,6 +63,7 @@ GEM
     bindex (0.5.0)
     builder (3.2.3)
     byebug (10.0.2)
+    climate_control (0.2.0)
     coderay (1.1.2)
     concurrent-ruby (1.1.4)
     connection_pool (2.2.2)
@@ -361,6 +362,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import (~> 0.27)
   byebug
+  climate_control (~> 0.2.0)
   database_cleaner
   deprecated_columns
   factory_bot_rails (~> 4.11)
@@ -387,4 +389,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
