@@ -1,4 +1,6 @@
 class CheckController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:check]
+
   class CheckParams
     include ActiveModel::Validations
 
