@@ -11,7 +11,6 @@ require File.expand_path("../../config/environment", __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
 require "spec_helper"
-require "database_cleaner"
 require "rspec/rails"
 require "govuk_sidekiq/testing"
 require "sidekiq_unique_jobs/testing"
@@ -20,19 +19,7 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.around(:each) do |example|
-    if example.metadata[:skip_cleaning]
-      example.run
-    else
-      DatabaseCleaner.cleaning { example.run }
-    end
-  end
+  config.use_transactional_fixtures = true
 
   config.infer_spec_type_from_file_location!
 end

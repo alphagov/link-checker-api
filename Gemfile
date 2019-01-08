@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "activerecord-import", "~> 0.27"
-gem "database_cleaner"
 gem "deprecated_columns"
 gem "faraday", "~> 0.15"
 gem "faraday-cookie_jar", "~> 0.0.6"
