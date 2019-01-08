@@ -34,7 +34,7 @@ RSpec.describe "/batch endpoint" do
       before do
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type" => "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type" => "application/json" }
       end
 
       include_examples "returns batch report"
@@ -54,7 +54,7 @@ RSpec.describe "/batch endpoint" do
       before do
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type" => "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type" => "application/json" }
       end
 
       it "creates a batch with a secret key" do
@@ -79,7 +79,7 @@ RSpec.describe "/batch endpoint" do
       before do
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type" => "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type" => "application/json" }
       end
 
       include_examples "returns batch report"
@@ -101,7 +101,7 @@ RSpec.describe "/batch endpoint" do
       before do
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type" => "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type" => "application/json" }
       end
 
       include_examples "returns batch report"
@@ -131,7 +131,7 @@ RSpec.describe "/batch endpoint" do
 
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type": "application/json" }
       end
 
       include_examples "returns batch report"
@@ -167,7 +167,7 @@ RSpec.describe "/batch endpoint" do
 
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type": "application/json" }
       end
 
       include_examples "returns batch report", 201
@@ -177,7 +177,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) { build_batch_request(uris: []) }
 
       it "returns 400" do
-        expect { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" } }
+        expect { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
           .to raise_error(ActiveModel::ValidationError)
       end
     end
@@ -186,7 +186,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) { build_batch_request(uris: ["http://example.com"] * 5001) }
 
       it "returns 400" do
-        expect { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" } }
+        expect { post "/batch", params: batch_request.to_json, headers: { "Content-Type": "application/json" } }
           .to raise_error(ActiveModel::ValidationError)
       end
     end
@@ -229,7 +229,7 @@ RSpec.describe "/batch endpoint" do
 
         post "/batch",
              params: batch_request.to_json,
-             headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" }
+             headers: { "Content-Type": "application/json" }
       end
 
       include_examples "returns batch report"
@@ -275,7 +275,7 @@ RSpec.describe "/batch endpoint" do
           Sidekiq::Testing.inline! do
             post "/batch",
                  params: batch_request.to_json,
-                 headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" }
+                 headers: { "Content-Type": "application/json" }
           end
         end
 
@@ -300,7 +300,7 @@ RSpec.describe "/batch endpoint" do
         before do
           post "/batch",
                params: batch_request.to_json,
-               headers: { "Content-Type": "application/json", "Authorization" => "Bearer Token123" }
+               headers: { "Content-Type": "application/json" }
         end
 
         it "doesn't post a request to the webhook_uri" do
@@ -326,7 +326,7 @@ RSpec.describe "/batch endpoint" do
   describe "GET /batch/:id" do
     context "when requesting a batch that doesn't exist" do
       it "returns 404" do
-        expect { get "/batch/432", headers: { "Authorization" => "Bearer Token123" } }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { get "/batch/432" }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -353,7 +353,7 @@ RSpec.describe "/batch endpoint" do
           ],
         )
 
-        get "/batch/#{batch_id}", headers: { "Authorization" => "Bearer Token123" }
+        get "/batch/#{batch_id}"
       end
 
       let(:batch_report) do
@@ -391,7 +391,7 @@ RSpec.describe "/batch endpoint" do
           ],
         )
 
-        get "/batch/#{batch_id}", headers: { "Authorization" => "Bearer Token123" }
+        get "/batch/#{batch_id}"
       end
 
       let(:batch_report) do
