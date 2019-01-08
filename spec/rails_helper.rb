@@ -21,5 +21,9 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.use_transactional_fixtures = true
 
+  config.before :suite do
+    Rails.application.load_seed
+  end
+
   config.infer_spec_type_from_file_location!
 end
