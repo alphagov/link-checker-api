@@ -326,7 +326,7 @@ RSpec.describe "/batch endpoint" do
   describe "GET /batch/:id" do
     context "when requesting a batch that doesn't exist" do
       it "returns 404" do
-        expect { get "/batch/432" }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { get "/batch/432", headers: { "Authorization" => "Bearer Token123" } }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -353,7 +353,7 @@ RSpec.describe "/batch endpoint" do
           ],
         )
 
-        get "/batch/#{batch_id}"
+        get "/batch/#{batch_id}", headers: { "Authorization" => "Bearer Token123" }
       end
 
       let(:batch_report) do
@@ -391,7 +391,7 @@ RSpec.describe "/batch endpoint" do
           ],
         )
 
-        get "/batch/#{batch_id}"
+        get "/batch/#{batch_id}", headers: { "Authorization" => "Bearer Token123" }
       end
 
       let(:batch_report) do
@@ -406,6 +406,17 @@ RSpec.describe "/batch endpoint" do
       end
 
       include_examples "returns batch report", 200
+    end
+
+    context "when the user is not authenticated" do
+      around do |example|
+        ClimateControl.modify(GDS_SSO_MOCK_INVALID: "1") { example.run }
+      end
+
+      it "returns an unauthorized response" do
+        get '/batch/123', params: {}.to_json
+        expect(response).to be_unauthorized
+      end
     end
   end
 end
