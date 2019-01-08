@@ -22,7 +22,7 @@ RSpec.describe "check path", type: :request do
 
   context "when no uri is requested" do
     it "raises a validation error" do
-      expect { get check_link_path }.to raise_error(ActiveModel::ValidationError)
+      expect { get check_link_path, headers: { "Authorization" => "Bearer Token123" } }.to raise_error(ActiveModel::ValidationError)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe "check path", type: :request do
         completed_at: 1.minute.ago,
       )
 
-      get check_link_path(uri: uri)
+      get check_link_path(uri: uri), headers: { "Authorization" => "Bearer Token123" }
     end
 
     include_examples "returns link report"
@@ -45,7 +45,7 @@ RSpec.describe "check path", type: :request do
   context "when an unchecked uri is requested" do
     let(:link_report) { build_link_report(uri: uri, status: "pending") }
 
-    before { get check_link_path(uri: uri) }
+    before { get check_link_path(uri: uri), headers: { "Authorization" => "Bearer Token123" } }
 
     include_examples "returns link report"
   end
@@ -62,7 +62,7 @@ RSpec.describe "check path", type: :request do
         completed_at: 1.minute.ago,
       )
 
-      get check_link_path(uri: uri)
+      get check_link_path(uri: uri), headers: { "Authorization" => "Bearer Token123" }
     end
 
     include_examples "returns link report"
@@ -80,7 +80,7 @@ RSpec.describe "check path", type: :request do
         completed_at: 1.minute.ago,
       )
 
-      get check_link_path(uri: uri)
+      get check_link_path(uri: uri), headers: { "Authorization" => "Bearer Token123" }
     end
 
     include_examples "returns link report"
@@ -97,7 +97,7 @@ RSpec.describe "check path", type: :request do
         created_at: 11.minute.ago,
       )
 
-      get check_link_path(uri: uri, checked_within: 5.minutes.to_i)
+      get check_link_path(uri: uri, checked_within: 5.minutes.to_i), headers: { "Authorization" => "Bearer Token123" }
     end
 
     include_examples "returns link report"
@@ -112,7 +112,7 @@ RSpec.describe "check path", type: :request do
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
         .to_return(status: 200, body: "{}")
 
-      get check_link_path(uri: uri, synchronous: "true")
+      get check_link_path(uri: uri, synchronous: "true"), headers: { "Authorization" => "Bearer Token123" }
     end
 
     include_examples "returns link report"
@@ -129,9 +129,20 @@ RSpec.describe "check path", type: :request do
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
         .to_return(status: 200, body: "{}")
 
-      get check_link_path(uri: uri, synchronous: true)
+      get check_link_path(uri: uri, synchronous: true), headers: { "Authorization" => "Bearer Token123" }
     end
 
     include_examples "returns link report"
+  end
+
+  context "when the user is not authenticated" do
+    around do |example|
+      ClimateControl.modify(GDS_SSO_MOCK_INVALID: "1") { example.run }
+    end
+
+    it "returns an unauthorized response" do
+      get check_link_path(uri: "http://www.example.com/page", synchronous: true)
+      expect(response).to be_unauthorized
+    end
   end
 end
