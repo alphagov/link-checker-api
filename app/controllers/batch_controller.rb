@@ -1,6 +1,4 @@
 class BatchController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:show]
-
   class CreateParams
     include ActiveModel::Validations
 
