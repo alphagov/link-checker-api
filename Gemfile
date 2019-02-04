@@ -19,7 +19,7 @@ gem "sidekiq-unique-jobs", git: "https://github.com/alphagov/sidekiq-unique-jobs
 group :development, :test do
   gem "byebug" # Comes standard with Rails
   gem "climate_control", "~> 0.2.0"
-  gem "factory_bot_rails", "~> 4.11"
+  gem "factory_bot_rails", "~> 5.0"
   gem "govuk-lint"
   gem "pry"
   gem "rspec-rails", "~> 3.8"
