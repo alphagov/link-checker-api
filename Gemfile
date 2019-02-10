@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+ruby File.read(".ruby-version").chomp
+
 gem "activerecord-import", "~> 0.28"
 gem "deprecated_columns"
 gem "faraday", "~> 0.15"
