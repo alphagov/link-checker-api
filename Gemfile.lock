@@ -113,7 +113,7 @@ GEM
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
-    govuk_app_config (1.13.1)
+    govuk_app_config (1.14.0)
       aws-xray-sdk (~> 0.10.0)
       logstasher (~> 1.2.2)
       sentry-raven (~> 2.7.1)
@@ -196,7 +196,7 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (3.0.3)
     raabro (1.1.5)
-    rack (2.0.6)
+    rack (2.0.7)
     rack-cache (1.9.0)
       rack (>= 0.4)
     rack-protection (2.0.5)
@@ -364,7 +364,7 @@ DEPENDENCIES
   faraday-cookie_jar (~> 0.0.6)
   gds-sso (~> 14.0)
   govuk-lint
-  govuk_app_config (~> 1.13)
+  govuk_app_config (~> 1.14)
   govuk_sidekiq (~> 3.0)
   listen
   pg
