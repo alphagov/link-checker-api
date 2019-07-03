@@ -23,7 +23,7 @@ group :development, :test do
   gem "govuk-lint"
   gem "pry"
   gem "rspec-rails", "~> 3.8"
-  gem "simplecov", "~> 0.16", require: false
+  gem "simplecov", "~> 0.17", require: false
   gem "simplecov-rcov", "~> 0.2", require: false
   gem "timecop"
   gem "webmock"
