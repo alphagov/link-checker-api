@@ -46,4 +46,6 @@ Rails.application.configure do
 
   # Return debugging information in the format of the request
   config.debug_exception_response_format = :api
+
+  config.hosts << "link-checker-api.dev.gov.uk"
 end
