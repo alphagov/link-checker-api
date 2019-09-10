@@ -70,7 +70,7 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.0)
-    bindex (0.5.0)
+    bindex (0.8.1)
     builder (3.2.3)
     byebug (11.0.1)
     climate_control (0.2.0)
@@ -351,11 +351,11 @@ GEM
       rack (>= 2.0.6)
     warden-oauth2 (0.0.1)
       warden
-    web-console (3.7.0)
-      actionview (>= 5.0)
-      activemodel (>= 5.0)
+    web-console (4.0.1)
+      actionview (>= 6.0.0)
+      activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
-      railties (>= 5.0)
+      railties (>= 6.0.0)
     webmock (3.7.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -393,7 +393,7 @@ DEPENDENCIES
   simplecov (~> 0.17)
   simplecov-rcov (~> 0.2)
   timecop
-  web-console (~> 3.7)
+  web-console (~> 4.0)
   webmock
 
 BUNDLED WITH
