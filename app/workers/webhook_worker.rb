@@ -27,6 +27,7 @@ class WebhookWorker
     connection.post do |req|
       req.url uri
       req.headers["Content-Type"] = "application/json"
+      req.headers["User-Agent"] = "#{ENV.fetch('GOVUK_APP_NAME', 'link-checker-api')} (webhook-worker)"
       req.headers[SIGNATURE_HEADER] = generate_signature(body, secret_token) if secret_token
       req.body = body
     end
