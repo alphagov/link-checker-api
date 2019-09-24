@@ -12,7 +12,7 @@ class CheckWorker
         suggested_fix: "Speak to your system administrator.",
         link_errors: [],
         link_warnings: [
-          "Could not complete the check."
+          "Could not complete the check.",
         ],
         completed_at: Time.now,
       )
