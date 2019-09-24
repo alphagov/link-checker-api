@@ -204,7 +204,7 @@ module LinkChecker::UriChecker
           add_problem(PageContainsThreat.new(from_redirect: from_redirect?))
         end
       elsif response.status == 429
-        GovukStatsd.increment 'safebrowsing.rate_limited'
+        GovukStatsd.increment "safebrowsing.rate_limited"
       else
         GovukError.notify(
           "Unable to talk to Google Safebrowsing API!",

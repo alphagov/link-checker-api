@@ -317,7 +317,7 @@ RSpec.describe "/batch endpoint" do
       end
 
       it "returns an unauthorized response" do
-        post '/batch', params: {}.to_json
+        post "/batch", params: {}.to_json
         expect(response).to be_unauthorized
       end
     end
@@ -414,7 +414,7 @@ RSpec.describe "/batch endpoint" do
       end
 
       it "returns an unauthorized response" do
-        get '/batch/123', params: {}.to_json
+        get "/batch/123", params: {}.to_json
         expect(response).to be_unauthorized
       end
     end

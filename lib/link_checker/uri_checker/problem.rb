@@ -24,7 +24,7 @@ module LinkChecker::UriChecker
       return nil if symbol.nil?
 
       symbols = [
-        :"#{symbol}.#{from_redirect ? 'redirect' : 'singular'}",
+        :"#{symbol}.#{from_redirect ? "redirect" : "singular"}",
         symbol,
       ]
 
