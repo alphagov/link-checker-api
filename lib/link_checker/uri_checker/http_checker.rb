@@ -257,7 +257,7 @@ module LinkChecker::UriChecker
           ),
         )
         nil
-      rescue Faraday::Error => e
+      rescue Faraday::Error
         add_problem(
           FaradayError.new(
             summary: :page_unavailable,
