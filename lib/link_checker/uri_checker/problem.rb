@@ -38,27 +38,27 @@ module LinkChecker::UriChecker
       string
     end
 
-    PRIORITIES = [
-      :MissingUriScheme,
-      :InvalidUri,
-      :ContactDetails,
-      :UnusualUrl,
-      :NotAvailableOnline,
-      :NoHost,
-      :FaradayError,
-      :PageNotFound,
-      :PageRequiresLogin,
-      :PageIsUnavailable,
-      :PageRespondsWithError,
-      :PageRespondsUnusually,
-      :TooManyRedirects,
-      :RedirectLoop,
-      :TooManyRedirectsSlowly,
-      :CredentialsInUri,
-      :SuspiciousTld,
-      :SlowResponse,
-      :PageWithRating,
-      :PageContainsThreat,
+    PRIORITIES = %i[
+      MissingUriScheme
+      InvalidUri
+      ContactDetails
+      UnusualUrl
+      NotAvailableOnline
+      NoHost
+      FaradayError
+      PageNotFound
+      PageRequiresLogin
+      PageIsUnavailable
+      PageRespondsWithError
+      PageRespondsUnusually
+      TooManyRedirects
+      RedirectLoop
+      TooManyRedirectsSlowly
+      CredentialsInUri
+      SuspiciousTld
+      SlowResponse
+      PageWithRating
+      PageContainsThreat
     ].freeze
   end
 end
