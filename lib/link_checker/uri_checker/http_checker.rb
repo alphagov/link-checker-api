@@ -193,8 +193,8 @@ module LinkChecker::UriChecker
             threatTypes: %w(THREAT_TYPE_UNSPECIFIED MALWARE SOCIAL_ENGINEERING UNWANTED_SOFTWARE POTENTIALLY_HARMFUL_APPLICATION),
             platformTypes: %w(ANY_PLATFORM),
             threatEntryTypes: %w(URL),
-            threatEntries: [{ url: uri.to_s }]
-          }
+            threatEntries: [{ url: uri.to_s }],
+          },
         }.to_json
       end
 
