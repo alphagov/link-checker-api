@@ -51,6 +51,7 @@ class Check < ApplicationRecord
     return :pending if is_pending?
     return :broken if has_errors?
     return :caution if has_warnings?
+
     :ok
   end
 end

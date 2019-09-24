@@ -286,11 +286,13 @@ module LinkChecker::UriChecker
 
     def rate_limit_header
       return {} unless gov_uk_uri?
+
       { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token }
     end
 
     def basic_authorization_header
       return {} unless LinkCheckerApi.hosts_with_basic_authorization.include?(uri.host)
+
       { "Authorization": "Basic #{base64_encode_authorization(uri.host)}" }
     end
 
