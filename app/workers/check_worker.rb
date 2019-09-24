@@ -37,7 +37,7 @@ class CheckWorker
       link_warnings: report.warnings,
       problem_summary: report.problem_summary,
       suggested_fix: report.suggested_fix,
-      completed_at: Time.now
+      completed_at: Time.now,
     )
 
     trigger_callbacks(check)

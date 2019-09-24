@@ -212,7 +212,7 @@ module LinkChecker::UriChecker
             status: response.status,
             body: response.body,
             headers: response.headers,
-          }
+          },
         )
       end
     end
@@ -236,7 +236,7 @@ module LinkChecker::UriChecker
             summary: :website_unavailable,
             message: :website_host_offline,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       rescue Faraday::TimeoutError
@@ -245,7 +245,7 @@ module LinkChecker::UriChecker
             summary: :website_unavailable,
             message: :page_is_not_responding,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       rescue Faraday::SSLError
@@ -254,7 +254,7 @@ module LinkChecker::UriChecker
             summary: :security_error,
             message: :page_has_security_problem,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       rescue Faraday::Error => e
@@ -263,7 +263,7 @@ module LinkChecker::UriChecker
             summary: :page_unavailable,
             message: :page_failing_to_load,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       end

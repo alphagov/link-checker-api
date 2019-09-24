@@ -226,7 +226,7 @@ RSpec.describe LinkChecker do
           .to_return(
             status: 200,
             body: "<meta name=rating value=mature>",
-            headers: { "Content-Type" => "text/html" }
+            headers: { "Content-Type" => "text/html" },
           )
       end
 

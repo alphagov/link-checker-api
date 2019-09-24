@@ -31,7 +31,7 @@ class BatchController < ApplicationController
       checks = Check.fetch_all(links, within: create_params.checked_within)
       batch = Batch.create!(
         webhook_uri: create_params.webhook_uri,
-        webhook_secret_token: create_params.webhook_secret_token
+        webhook_secret_token: create_params.webhook_secret_token,
       )
 
       batch_checks = checks.each_with_index.map do |check, i|
