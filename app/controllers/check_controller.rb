@@ -29,7 +29,7 @@ class CheckController < ApplicationController
     link = Link.find_or_create_by!(uri: check_params.uri)
     check = link.find_check(
       within: check_params.checked_within,
-      completed: check_params.synchronous
+      completed: check_params.synchronous,
     )
 
     return render(json: link_report(check)) if check
@@ -39,7 +39,7 @@ class CheckController < ApplicationController
     CheckWorker.run(
       check.id,
       priority: check_params.priority,
-      synchronous: check_params.synchronous
+      synchronous: check_params.synchronous,
     )
 
     render(json: link_report(check.reload))

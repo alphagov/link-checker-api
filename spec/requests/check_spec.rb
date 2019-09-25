@@ -123,7 +123,7 @@ RSpec.describe "check path", type: :request do
     let(:link_report) { build_link_report(uri: uri, status: "ok") }
 
     before do
-      create(:check, link: create(:link, uri: uri),)
+      create(:check, link: create(:link, uri: uri))
 
       stub_request(:get, uri).to_return(status: 200)
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")

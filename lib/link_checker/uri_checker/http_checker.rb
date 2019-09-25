@@ -193,8 +193,8 @@ module LinkChecker::UriChecker
             threatTypes: %w(THREAT_TYPE_UNSPECIFIED MALWARE SOCIAL_ENGINEERING UNWANTED_SOFTWARE POTENTIALLY_HARMFUL_APPLICATION),
             platformTypes: %w(ANY_PLATFORM),
             threatEntryTypes: %w(URL),
-            threatEntries: [{ url: uri.to_s }]
-          }
+            threatEntries: [{ url: uri.to_s }],
+          },
         }.to_json
       end
 
@@ -204,7 +204,7 @@ module LinkChecker::UriChecker
           add_problem(PageContainsThreat.new(from_redirect: from_redirect?))
         end
       elsif response.status == 429
-        GovukStatsd.increment 'safebrowsing.rate_limited'
+        GovukStatsd.increment "safebrowsing.rate_limited"
       else
         GovukError.notify(
           "Unable to talk to Google Safebrowsing API!",
@@ -212,7 +212,7 @@ module LinkChecker::UriChecker
             status: response.status,
             body: response.body,
             headers: response.headers,
-          }
+          },
         )
       end
     end
@@ -236,7 +236,7 @@ module LinkChecker::UriChecker
             summary: :website_unavailable,
             message: :website_host_offline,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       rescue Faraday::TimeoutError
@@ -245,7 +245,7 @@ module LinkChecker::UriChecker
             summary: :website_unavailable,
             message: :page_is_not_responding,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       rescue Faraday::SSLError
@@ -254,16 +254,16 @@ module LinkChecker::UriChecker
             summary: :security_error,
             message: :page_has_security_problem,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
-      rescue Faraday::Error => e
+      rescue Faraday::Error
         add_problem(
           FaradayError.new(
             summary: :page_unavailable,
             message: :page_failing_to_load,
             from_redirect: from_redirect?,
-          )
+          ),
         )
         nil
       end
@@ -286,11 +286,13 @@ module LinkChecker::UriChecker
 
     def rate_limit_header
       return {} unless gov_uk_uri?
+
       { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token }
     end
 
     def basic_authorization_header
       return {} unless LinkCheckerApi.hosts_with_basic_authorization.include?(uri.host)
+
       { "Authorization": "Basic #{base64_encode_authorization(uri.host)}" }
     end
 

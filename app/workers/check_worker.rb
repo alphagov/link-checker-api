@@ -12,7 +12,7 @@ class CheckWorker
         suggested_fix: "Speak to your system administrator.",
         link_errors: [],
         link_warnings: [
-          "Could not complete the check."
+          "Could not complete the check.",
         ],
         completed_at: Time.now,
       )
@@ -37,7 +37,7 @@ class CheckWorker
       link_warnings: report.warnings,
       problem_summary: report.problem_summary,
       suggested_fix: report.suggested_fix,
-      completed_at: Time.now
+      completed_at: Time.now,
     )
 
     trigger_callbacks(check)

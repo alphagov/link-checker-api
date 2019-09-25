@@ -27,7 +27,7 @@ RSpec.describe "/batch endpoint" do
           links: [
             { uri: uri_a, status: "pending" },
             { uri: uri_b, status: "pending" },
-          ]
+          ],
         )
       end
 
@@ -72,7 +72,7 @@ RSpec.describe "/batch endpoint" do
           status: "in_progress",
           links: [
             { uri: uri_b, status: "pending" },
-          ]
+          ],
         )
       end
 
@@ -94,7 +94,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_report) do
         build_batch_report(
           status: "in_progress",
-          links: uris.map { |uri| { uri: uri, status: "pending" } }
+          links: uris.map { |uri| { uri: uri, status: "pending" } },
         )
       end
 
@@ -118,7 +118,7 @@ RSpec.describe "/batch endpoint" do
           links: [
             { uri: uri_a, status: "ok" },
             { uri: uri_b, status: "pending" },
-          ]
+          ],
         )
       end
 
@@ -148,7 +148,7 @@ RSpec.describe "/batch endpoint" do
           links: [
             { uri: uri_a, status: "ok" },
             { uri: uri_b, status: "ok" },
-          ]
+          ],
         )
       end
 
@@ -208,7 +208,7 @@ RSpec.describe "/batch endpoint" do
           links: [
             { uri: uri_a, status: "ok" },
             { uri: uri_b, status: "pending" },
-          ]
+          ],
         )
       end
 
@@ -255,7 +255,7 @@ RSpec.describe "/batch endpoint" do
             links: [
               { uri: uri_a, status: "ok" },
               { uri: uri_b, status: "ok" },
-            ]
+            ],
           )
         end
 
@@ -293,7 +293,7 @@ RSpec.describe "/batch endpoint" do
             links: [
               { uri: uri_a, status: "pending" },
               { uri: uri_b, status: "pending" },
-            ]
+            ],
           )
         end
 
@@ -317,7 +317,7 @@ RSpec.describe "/batch endpoint" do
       end
 
       it "returns an unauthorized response" do
-        post '/batch', params: {}.to_json
+        post "/batch", params: {}.to_json
         expect(response).to be_unauthorized
       end
     end
@@ -343,12 +343,12 @@ RSpec.describe "/batch endpoint" do
             create(
               :check,
               link: create(:link, uri: uri_a),
-              completed_at: 1.minute.ago
+              completed_at: 1.minute.ago,
             ),
             create(
               :check,
               link: create(:link, uri: uri_b),
-              completed_at: 1.minute.ago
+              completed_at: 1.minute.ago,
             ),
           ],
         )
@@ -363,7 +363,7 @@ RSpec.describe "/batch endpoint" do
           links: [
             { uri: uri_a, status: "ok" },
             { uri: uri_b, status: "ok" },
-          ]
+          ],
         )
       end
 
@@ -401,7 +401,7 @@ RSpec.describe "/batch endpoint" do
           links: [
             { uri: uri_a, status: "pending" },
             { uri: uri_b, status: "pending" },
-          ]
+          ],
         )
       end
 
@@ -414,7 +414,7 @@ RSpec.describe "/batch endpoint" do
       end
 
       it "returns an unauthorized response" do
-        get '/batch/123', params: {}.to_json
+        get "/batch/123", params: {}.to_json
         expect(response).to be_unauthorized
       end
     end

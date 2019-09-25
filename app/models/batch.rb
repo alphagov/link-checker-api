@@ -27,7 +27,7 @@ class Batch < ApplicationRecord
       BatchPresenter.new(self).report,
       webhook_uri,
       webhook_secret_token,
-      id
+      id,
     )
   end
 end

@@ -226,7 +226,7 @@ RSpec.describe LinkChecker do
           .to_return(
             status: 200,
             body: "<meta name=rating value=mature>",
-            headers: { "Content-Type" => "text/html" }
+            headers: { "Content-Type" => "text/html" },
           )
       end
 
@@ -248,7 +248,7 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
       include_examples "has no warnings"
 
-      it 'should set a Rate-Limit-Token' do
+      it "should set a Rate-Limit-Token" do
         subject
 
         expect(WebMock).to have_requested(:get, uri).
