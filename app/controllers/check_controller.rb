@@ -6,7 +6,7 @@ class CheckController < ApplicationController
 
     validates :uri, presence: true, allow_blank: false
     validates :synchronous, inclusion: { in: [true, false] }
-    validates :checked_within, numericality: { greater_than: 0 }
+    validates :checked_within, numericality: { greater_than_or_equal_to: 0 }
     validates :priority, inclusion: { in: %w(low high) }
 
     def initialize(params)
