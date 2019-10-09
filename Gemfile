@@ -22,7 +22,7 @@ group :development, :test do
   gem "factory_bot_rails", "~> 5.1"
   gem "govuk-lint"
   gem "pry"
-  gem "rspec-rails", "~> 3.8"
+  gem "rspec-rails", "~> 3.9"
   gem "simplecov", "~> 0.17", require: false
   gem "simplecov-rcov", "~> 0.2", require: false
   gem "timecop"
