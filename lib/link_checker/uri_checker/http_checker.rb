@@ -83,6 +83,12 @@ module LinkChecker::UriChecker
     end
   end
 
+  class SecurityProblem < LinkChecker::UriChecker::Warning
+    def initialize(options = {})
+      super(summary: :security_problem, message: :page_has_security_problem, suggested_fix: :contact_site_administrator, **options)
+    end
+  end
+
   class FaradayError < Error
     def initialize(options = {})
       super(suggested_fix: :determine_if_temporary, **options)
@@ -217,9 +223,9 @@ module LinkChecker::UriChecker
       end
     end
 
-    def make_request(method)
+    def make_request(method, check_ssl: true)
       begin
-        response = run_connection_request(method)
+        response = run_connection_request(method, check_ssl: check_ssl)
 
         if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
           target_uri = uri + response.headers["location"]
@@ -249,14 +255,18 @@ module LinkChecker::UriChecker
         )
         nil
       rescue Faraday::SSLError
+        # if we've ended up here again, just abort
+        return nil unless check_ssl
+
         add_problem(
-          FaradayError.new(
-            summary: :security_error,
-            message: :page_has_security_problem,
+          SecurityProblem.new(
             from_redirect: from_redirect?,
           ),
         )
-        nil
+
+        # retry the request with lenient handling of SSL errors, as
+        # the page might have other problems.
+        make_request(method, check_ssl: false)
       rescue Faraday::Error
         add_problem(
           FaradayError.new(
@@ -269,8 +279,9 @@ module LinkChecker::UriChecker
       end
     end
 
-    def run_connection_request(method)
-      http_client.run_request(method, uri, nil, additional_connection_headers) do |request|
+    def run_connection_request(method, check_ssl: true)
+      client = check_ssl ? http_client : insecure_http_client
+      client.run_request(method, uri, nil, additional_connection_headers) do |request|
         request.options[:timeout] = RESPONSE_TIME_LIMIT
         request.options[:open_timeout] = RESPONSE_TIME_LIMIT
       end

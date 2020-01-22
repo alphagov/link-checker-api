@@ -59,6 +59,7 @@ module LinkChecker::UriChecker
       SlowResponse
       PageWithRating
       PageContainsThreat
+      SecurityProblem
     ].freeze
   end
 end

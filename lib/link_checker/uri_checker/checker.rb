@@ -2,11 +2,12 @@ module LinkChecker::UriChecker
   class Checker
     attr_reader :uri, :report
 
-    def initialize(uri, redirect_history: [], http_client: nil)
+    def initialize(uri, redirect_history: [], http_client: nil, insecure_http_client: nil)
       @uri = uri
       @redirect_history = redirect_history
       @report = Report.new
       @http_client = http_client
+      @insecure_http_client = insecure_http_client
     end
 
     def from_redirect?
@@ -18,14 +19,23 @@ module LinkChecker::UriChecker
     end
 
     def http_client
-      @http_client ||= Faraday.new(headers: { accept_encoding: "none" }) do |faraday|
-        faraday.use :cookie_jar
-        faraday.adapter Faraday.default_adapter
-      end
+      @http_client ||= client
+    end
+
+    def insecure_http_client
+      @insecure_http_client ||= client(ssl: { verify: false })
     end
 
   private
 
     attr_reader :redirect_history
+
+    def client(options = {})
+      default_options = { headers: { accept_encoding: "none" } }
+      Faraday.new(default_options.merge(options)) do |faraday|
+        faraday.use :cookie_jar
+        faraday.adapter Faraday.default_adapter
+      end
+    end
   end
 end
