@@ -98,9 +98,9 @@ en:
     singular: This page is not responding.
     redirect: This redirects to a page that is not responding.
 
-  security_error: Security Error
+  security_problem: Security problem
   page_has_security_problem:
-    singular: This page has a security problem that users will be alerted to.
+    singular: This page has a security problem that users may be alerted to.
     redirect: This redirects to a page with a security problem.
 
   page_failing_to_load:

@@ -112,10 +112,16 @@ RSpec.describe LinkChecker do
 
     context "SSL error" do
       let(:uri) { "http://www.not-gov.uk/ssl_error" }
-      before { stub_request(:get, uri).to_raise(Faraday::SSLError) }
-      include_examples "has a problem summary", "Security Error"
+      before do
+        stub_request(:get, uri).
+          to_raise(Faraday::SSLError).then.
+          to_return(status: 404)
+      end
+      # 404 has a higher priority than SSL error, so it'll be the
+      # displayed problem summary.
+      include_examples "has a problem summary", "Page not found"
       include_examples "has errors"
-      include_examples "has no warnings"
+      include_examples "has warnings"
     end
 
     context "slow response" do
