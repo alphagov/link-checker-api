@@ -145,7 +145,6 @@ GEM
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
-    json (2.2.0)
     jwt (2.2.1)
     kgio (2.11.3)
     link_header (0.0.8)
@@ -317,11 +316,10 @@ GEM
     sidekiq-statsd (2.1.0)
       activesupport
       sidekiq (>= 3.3.1)
-    simplecov (0.17.1)
+    simplecov (0.18.1)
       docile (~> 1.1)
-      json (>= 1.8, < 3)
-      simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.2)
+      simplecov-html (~> 0.11.0)
+    simplecov-html (0.11.0)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
     sprockets (4.0.0)
@@ -388,7 +386,7 @@ DEPENDENCIES
   rspec-sidekiq (~> 3.0)
   sidekiq-scheduler (~> 3.0)
   sidekiq-unique-jobs!
-  simplecov (~> 0.17)
+  simplecov (~> 0.18)
   simplecov-rcov (~> 0.2)
   timecop
   web-console (~> 4.0)
