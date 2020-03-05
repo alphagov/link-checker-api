@@ -15,7 +15,7 @@ require "rspec/rails"
 require "govuk_sidekiq/testing"
 require "sidekiq_unique_jobs/testing"
 
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
