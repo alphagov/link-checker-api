@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20180116135123) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,8 +18,8 @@ ActiveRecord::Schema.define(version: 20180116135123) do
     t.integer "batch_id", null: false
     t.integer "check_id", null: false
     t.integer "order", default: 0, null: false
-    t.index ["batch_id"], name: "index_batch_checks_on_batch_id"
-    t.index ["check_id"], name: "index_batch_checks_on_check_id"
+    t.index %w[batch_id], name: "index_batch_checks_on_batch_id"
+    t.index %w[check_id], name: "index_batch_checks_on_check_id"
   end
 
   create_table "batches", id: :serial, force: :cascade do |t|
@@ -41,7 +40,7 @@ ActiveRecord::Schema.define(version: 20180116135123) do
     t.integer "link_id", null: false
     t.string "problem_summary"
     t.string "suggested_fix"
-    t.index ["link_id"], name: "index_checks_on_link_id"
+    t.index %w[link_id], name: "index_checks_on_link_id"
   end
 
   create_table "links", id: :serial, force: :cascade do |t|
