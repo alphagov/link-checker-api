@@ -21,7 +21,7 @@ group :development, :test do
   gem "climate_control", "~> 0.2.0"
   gem "factory_bot_rails", "~> 5.1"
   gem "pry"
-  gem "rspec-rails", "~> 3.9"
+  gem "rspec-rails", "~> 4.0"
   gem "rubocop-govuk"
   gem "simplecov", "~> 0.18", require: false
   gem "simplecov-rcov", "~> 0.2", require: false
