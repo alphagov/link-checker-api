@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "activerecord-import", "~> 1.0"
 gem "deprecated_columns"
-gem "faraday", "~> 0.17"
+gem "faraday", "~> 1.0"
 gem "faraday-cookie_jar", "~> 0.0.6"
 gem "gds-sso", "~> 14.3"
 gem "govuk_app_config", "~> 2.1"
