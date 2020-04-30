@@ -113,9 +113,9 @@ RSpec.describe LinkChecker do
     context "SSL error" do
       let(:uri) { "http://www.not-gov.uk/ssl_error" }
       before do
-        stub_request(:get, uri).
-          to_raise(Faraday::SSLError).then.
-          to_return(status: 404)
+        stub_request(:get, uri)
+          .to_raise(Faraday::SSLError).then
+          .to_return(status: 404)
       end
       # 404 has a higher priority than SSL error, so it'll be the
       # displayed problem summary.
@@ -244,9 +244,9 @@ RSpec.describe LinkChecker do
 
     context "bypassing the GOV.UK rate limiter" do
       before do
-        stub_request(:get, uri).
-          with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" }).
-          to_return(status: 200)
+        stub_request(:get, uri)
+          .with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
+          .to_return(status: 200)
       end
 
       let(:uri) { "#{Plek.new.website_root}/government/document" }
@@ -257,8 +257,8 @@ RSpec.describe LinkChecker do
       it "should set a Rate-Limit-Token" do
         subject
 
-        expect(WebMock).to have_requested(:get, uri).
-          with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
+        expect(WebMock).to have_requested(:get, uri)
+          .with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
       end
     end
 
@@ -387,9 +387,9 @@ RSpec.describe LinkChecker do
       let(:host) { "www.needsauthentication.co.uk" }
       let(:uri) { "http://#{host}/a/page" }
       let!(:request) do
-        stub_request(:get, uri).
-          with(headers: { "Authorization": "Basic #{Base64.encode64(Rails.application.secrets.govuk_basic_auth_credentials)}".strip }).
-          to_return(status: 200)
+        stub_request(:get, uri)
+          .with(headers: { "Authorization": "Basic #{Base64.encode64(Rails.application.secrets.govuk_basic_auth_credentials)}".strip })
+          .to_return(status: 200)
       end
 
       before do

@@ -3,7 +3,7 @@ module LinkChecker::UriChecker
     attr_reader :problems
 
     def initialize(problems: nil)
-      @problems = problems || Array.new
+      @problems = problems || []
     end
 
     def merge(other)

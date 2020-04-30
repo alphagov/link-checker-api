@@ -32,6 +32,6 @@ private
   end
 
   def csv_headings
-    %w(uri last_checked)
+    %w[uri last_checked]
   end
 end

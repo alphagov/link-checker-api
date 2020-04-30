@@ -6,7 +6,7 @@ class BatchController < ApplicationController
 
     validates :uris, presence: true, length: { maximum: 5000 }
     validates :checked_within, numericality: { greater_than_or_equal_to: 0 }
-    validates :priority, inclusion: { in: %w(low high) }
+    validates :priority, inclusion: { in: %w[low high] }
 
     def initialize(params)
       @params = params

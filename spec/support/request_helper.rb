@@ -1,16 +1,16 @@
 module RequestHelper
   def build_link_report(params)
     status = params.fetch(:status, "pending")
-    ok_or_pending = %w(ok pending).include?(status)
+    ok_or_pending = %w[ok pending].include?(status)
 
     {
-      "uri"             => params.fetch(:uri, anything),
-      "status"          => status,
-      "checked"         => params.fetch(:checked, anything),
+      "uri" => params.fetch(:uri, anything),
+      "status" => status,
+      "checked" => params.fetch(:checked, anything),
       "problem_summary" => ok_or_pending ? nil : anything,
-      "errors"          => params.fetch(:errors, []),
-      "warnings"        => params.fetch(:warnings, []),
-      "suggested_fix"   => ok_or_pending ? nil : anything,
+      "errors" => params.fetch(:errors, []),
+      "warnings" => params.fetch(:warnings, []),
+      "suggested_fix" => ok_or_pending ? nil : anything,
     }
   end
 
@@ -28,19 +28,19 @@ module RequestHelper
       .map { |link| build_link_report(link) }
 
     totals = {
-      "links"   => links.count,
-      "ok"      => links.count { |link| link["status"] == "ok" },
+      "links" => links.count,
+      "ok" => links.count { |link| link["status"] == "ok" },
       "caution" => links.count { |link| link["status"] == "caution" },
-      "broken"  => links.count { |link| link["status"] == "broken" },
+      "broken" => links.count { |link| link["status"] == "broken" },
       "pending" => links.count { |link| link["status"] == "pending" },
     }
 
     {
-      "id"           => params.fetch(:id, kind_of(Integer)),
-      "status"       => params.fetch(:status, "in_progress"),
+      "id" => params.fetch(:id, kind_of(Integer)),
+      "status" => params.fetch(:status, "in_progress"),
       "completed_at" => params.fetch(:completed_at, anything),
-      "totals"       => totals,
-      "links"        => links,
+      "totals" => totals,
+      "links" => links,
     }
   end
 end

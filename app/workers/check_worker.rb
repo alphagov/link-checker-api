@@ -49,10 +49,10 @@ class CheckWorker
 
   def self.run(check_id, priority: "high", synchronous: false)
     if synchronous
-      self.new.perform(check_id)
+      new.perform(check_id)
     else
       queue = priority == "low" ? "checks_low" : "default"
-      self.perform_async_in_queue(queue, check_id)
+      perform_async_in_queue(queue, check_id)
     end
   end
 end
