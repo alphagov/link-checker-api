@@ -92,7 +92,16 @@ RSpec.describe LinkChecker do
 
     context "with multiple problems" do
       let(:uri) { "http://username:password@www.gov.uk/ok" }
-      before { stub_request(:get, "http://www.gov.uk/ok").to_return(body: lambda { |_| sleep 5.1; "" }) }
+
+      before do
+        stub_request(:get, "http://www.gov.uk/ok").to_return(
+          body: (lambda do |_|
+            sleep 5.1
+            ""
+          end),
+        )
+      end
+
       include_examples "has a problem summary", "Login details in URL"
       include_examples "has warnings"
       include_examples "has no errors"
@@ -126,7 +135,16 @@ RSpec.describe LinkChecker do
 
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
-      before { stub_request(:get, uri).to_return(body: lambda { |_| sleep 5.1; "" }) }
+
+      before do
+        stub_request(:get, uri).to_return(
+          body: (lambda do |_|
+            sleep 5.1
+            ""
+          end),
+        )
+      end
+
       include_examples "has a problem summary", "Slow page"
       include_examples "has warnings"
       include_examples "has no errors"
