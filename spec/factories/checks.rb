@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :check do
     started_at { nil }
     completed_at { nil }
-    link_warnings { Array.new }
-    link_errors { Array.new }
+    link_warnings { [] }
+    link_errors { [] }
 
     trait :completed do
       started_at { 10.minutes.ago }

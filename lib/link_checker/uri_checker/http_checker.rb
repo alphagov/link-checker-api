@@ -111,7 +111,7 @@ module LinkChecker::UriChecker
       check_meta_mature_rating
       return report if report.has_errors?
 
-      # FIXME once a key has been correctly configured in integration, staging and production
+      # FIXME: once a key has been correctly configured in integration, staging and production
       # check_google_safebrowsing if use_google_safebrowsing?
 
       report
@@ -121,7 +121,7 @@ module LinkChecker::UriChecker
 
     attr_reader :response
 
-    INVALID_TOP_LEVEL_DOMAINS = %w(xxx adult dating porn sex sexy singles).freeze
+    INVALID_TOP_LEVEL_DOMAINS = %w[xxx adult dating porn sex sexy singles].freeze
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
     REDIRECT_LOOP_LIMIT = 5
@@ -178,7 +178,7 @@ module LinkChecker::UriChecker
 
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")
-      if %w(restricted mature).include?(rating)
+      if %w[restricted mature].include?(rating)
         add_problem(PageWithRating.new(from_redirect: from_redirect?, rating: rating))
       end
     end
@@ -196,9 +196,9 @@ module LinkChecker::UriChecker
             clientId: "gds-link-checker", clientVersion: "0.1.0"
           },
           threatInfo: {
-            threatTypes: %w(THREAT_TYPE_UNSPECIFIED MALWARE SOCIAL_ENGINEERING UNWANTED_SOFTWARE POTENTIALLY_HARMFUL_APPLICATION),
-            platformTypes: %w(ANY_PLATFORM),
-            threatEntryTypes: %w(URL),
+            threatTypes: %w[THREAT_TYPE_UNSPECIFIED MALWARE SOCIAL_ENGINEERING UNWANTED_SOFTWARE POTENTIALLY_HARMFUL_APPLICATION],
+            platformTypes: %w[ANY_PLATFORM],
+            threatEntryTypes: %w[URL],
             threatEntries: [{ url: uri.to_s }],
           },
         }.to_json
@@ -224,59 +224,57 @@ module LinkChecker::UriChecker
     end
 
     def make_request(method, check_ssl: true)
-      begin
-        response = run_connection_request(method, check_ssl: check_ssl)
+      response = run_connection_request(method, check_ssl: check_ssl)
 
-        if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
-          target_uri = uri + response.headers["location"]
-          subreport = ValidUriChecker
-            .new(target_uri.to_s, redirect_history: redirect_history + [uri], http_client: http_client)
-            .call
-          report.merge(subreport)
-        end
-
-        response
-      rescue Faraday::ConnectionFailed
-        add_problem(
-          FaradayError.new(
-            summary: :website_unavailable,
-            message: :website_host_offline,
-            from_redirect: from_redirect?,
-          ),
-        )
-        nil
-      rescue Faraday::TimeoutError
-        add_problem(
-          FaradayError.new(
-            summary: :website_unavailable,
-            message: :page_is_not_responding,
-            from_redirect: from_redirect?,
-          ),
-        )
-        nil
-      rescue Faraday::SSLError
-        # if we've ended up here again, just abort
-        return nil unless check_ssl
-
-        add_problem(
-          SecurityProblem.new(
-            from_redirect: from_redirect?,
-          ),
-        )
-
-        # retry the request with lenient handling of SSL errors, as
-        # the page might have other problems.
-        make_request(method, check_ssl: false)
-      rescue Faraday::Error
-        add_problem(
-          FaradayError.new(
-            summary: :page_unavailable,
-            message: :page_failing_to_load,
-            from_redirect: from_redirect?,
-          ),
-        )
-        nil
+      if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
+        target_uri = uri + response.headers["location"]
+        subreport = ValidUriChecker
+          .new(target_uri.to_s, redirect_history: redirect_history + [uri], http_client: http_client)
+          .call
+        report.merge(subreport)
       end
+
+      response
+    rescue Faraday::ConnectionFailed
+      add_problem(
+        FaradayError.new(
+          summary: :website_unavailable,
+          message: :website_host_offline,
+          from_redirect: from_redirect?,
+        ),
+      )
+      nil
+    rescue Faraday::TimeoutError
+      add_problem(
+        FaradayError.new(
+          summary: :website_unavailable,
+          message: :page_is_not_responding,
+          from_redirect: from_redirect?,
+        ),
+      )
+      nil
+    rescue Faraday::SSLError
+      # if we've ended up here again, just abort
+      return nil unless check_ssl
+
+      add_problem(
+        SecurityProblem.new(
+          from_redirect: from_redirect?,
+        ),
+      )
+
+      # retry the request with lenient handling of SSL errors, as
+      # the page might have other problems.
+      make_request(method, check_ssl: false)
+    rescue Faraday::Error
+      add_problem(
+        FaradayError.new(
+          summary: :page_unavailable,
+          message: :page_failing_to_load,
+          from_redirect: from_redirect?,
+        ),
+      )
+      nil
     end
 
     def run_connection_request(method, check_ssl: true)
@@ -308,7 +306,7 @@ module LinkChecker::UriChecker
     end
 
     def additional_connection_headers
-      Hash.new
+      {}
         .merge(rate_limit_header)
         .merge(basic_authorization_header)
     end

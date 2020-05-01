@@ -42,9 +42,9 @@ module LinkChecker::UriChecker
 
   private
 
-    HTTP_URI_SCHEMES = %w(http https).freeze
-    FILE_URI_SCHEMES = %w(file).freeze
-    CONTACT_SCHEMES = %w(mailto tel).freeze
+    HTTP_URI_SCHEMES = %w[http https].freeze
+    FILE_URI_SCHEMES = %w[file].freeze
+    CONTACT_SCHEMES = %w[mailto tel].freeze
 
     def parsed_uri
       @parsed_uri ||= URI.parse(uri)
