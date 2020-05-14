@@ -35,7 +35,7 @@ class WebhookWorker
     batch.update!(webhook_triggered: true)
   rescue Faraday::ClientError => e
     logger.error e.message
-    raise RestartWorkerException.new
+    raise RestartWorkerException
   end
 
   def connection
