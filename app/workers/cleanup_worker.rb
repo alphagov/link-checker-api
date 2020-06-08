@@ -14,14 +14,14 @@ class CleanupWorker
 
 private
 
-  OLD_CHECK_THRESHOLD = 4.weeks.ago
+  OLD_CHECK_THRESHOLD = 4.weeks
 
   def checks_to_perform
     Check.requires_checking.pluck(:id)
   end
 
   def old_checks
-    Check.where("completed_at < ?", OLD_CHECK_THRESHOLD)
+    Check.where("completed_at < ?", OLD_CHECK_THRESHOLD.ago)
   end
 
   def old_batches
