@@ -45,13 +45,13 @@ class BatchController < ApplicationController
 
     if batch.completed?
       batch.trigger_webhook
-      render(json: batch_report(batch), status: 201)
+      render(json: batch_report(batch), status: :created)
     else
       batch.checks.each do |check|
         CheckWorker.run(check.id, priority: create_params.priority)
       end
 
-      render(json: batch_report(batch.reload), status: 202)
+      render(json: batch_report(batch.reload), status: :accepted)
     end
   end
 

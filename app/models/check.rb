@@ -6,7 +6,7 @@ class Check < ApplicationRecord
 
   belongs_to :link
 
-  scope :created_within, ->(within) { where("created_at > ?", Time.now - within) }
+  scope :created_within, ->(within) { where("created_at > ?", Time.zone.now - within) }
   scope :requires_checking, -> { where(started_at: nil).or(Check.where(completed_at: nil).where("created_at < ?", RECHECK_THRESHOLD)) }
 
   def self.fetch_all(links, within: 4.hours)

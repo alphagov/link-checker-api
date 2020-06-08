@@ -149,9 +149,9 @@ module LinkChecker::UriChecker
     end
 
     def check_request
-      start_time = Time.now
+      start_time = Time.zone.now
       @response = make_request(:get)
-      end_time = Time.now
+      end_time = Time.zone.now
       response_time = end_time - start_time
 
       return response if report.has_errors?

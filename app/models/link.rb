@@ -3,7 +3,7 @@ class Link < ApplicationRecord
   has_many :monitor_links
   has_one :link_history
 
-  validates_presence_of :uri
+  validates :uri, presence: true
 
   def self.fetch_all(uris)
     existing_links = Link.where(uri: uris).all

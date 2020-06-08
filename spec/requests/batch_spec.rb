@@ -216,15 +216,15 @@ RSpec.describe "/batch endpoint" do
         create(
           :check,
           link: create(:link, uri: uri_a),
-          completed_at: 5.minute.ago,
-          created_at: 5.minute.ago,
+          completed_at: 5.minutes.ago,
+          created_at: 5.minutes.ago,
         )
 
         create(
           :check,
           link: create(:link, uri: uri_b),
-          completed_at: 20.minute.ago,
-          created_at: 20.minute.ago,
+          completed_at: 20.minutes.ago,
+          created_at: 20.minutes.ago,
         )
 
         post "/batch",
