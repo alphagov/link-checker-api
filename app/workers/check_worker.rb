@@ -14,7 +14,7 @@ class CheckWorker
         link_warnings: [
           "Could not complete the check.",
         ],
-        completed_at: Time.now,
+        completed_at: Time.zone.now,
       )
     end
   end
@@ -28,7 +28,7 @@ class CheckWorker
 
     return trigger_callbacks(check) unless check.requires_checking?
 
-    check.update!(started_at: Time.now)
+    check.update!(started_at: Time.zone.now)
 
     report = LinkChecker.new(check.link.uri).call
 
@@ -37,7 +37,7 @@ class CheckWorker
       link_warnings: report.warnings,
       problem_summary: report.problem_summary,
       suggested_fix: report.suggested_fix,
-      completed_at: Time.now,
+      completed_at: Time.zone.now,
     )
 
     trigger_callbacks(check)

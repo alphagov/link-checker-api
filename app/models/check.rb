@@ -1,13 +1,13 @@
 class Check < ApplicationRecord
-  RECHECK_THRESHOLD = 60.minutes.ago
+  RECHECK_THRESHOLD = 60.minutes
 
   has_many :batch_checks
   has_many :batches, through: :batch_checks
 
   belongs_to :link
 
-  scope :created_within, ->(within) { where("created_at > ?", Time.now - within) }
-  scope :requires_checking, -> { where(started_at: nil).or(Check.where(completed_at: nil).where("created_at < ?", RECHECK_THRESHOLD)) }
+  scope :created_within, ->(within) { where("created_at > ?", Time.zone.now - within) }
+  scope :requires_checking, -> { where(started_at: nil).or(Check.where(completed_at: nil).where("created_at < ?", RECHECK_THRESHOLD.ago)) }
 
   def self.fetch_all(links, within: 4.hours)
     existing_checks = Check
@@ -24,7 +24,7 @@ class Check < ApplicationRecord
   end
 
   def requires_checking?
-    started_at.nil? || (completed_at.nil? && created_at < RECHECK_THRESHOLD)
+    started_at.nil? || (completed_at.nil? && created_at < RECHECK_THRESHOLD.ago)
   end
 
   def is_pending?
