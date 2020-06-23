@@ -8,7 +8,7 @@ gem "gds-sso", "~> 15.0"
 gem "govuk_app_config", "~> 2.2"
 gem "govuk_sidekiq", "~> 3.0"
 gem "pg"
-gem "plek", "~> 3.0"
+gem "plek", "~> 4.0"
 gem "rails", "6.0.3.2"
 gem "sidekiq-scheduler", "~> 3.0"
 # We can't use v5 of this because it requires redis 3 and we use 2.8
