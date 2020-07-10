@@ -90,10 +90,10 @@ GEM
     erubi (1.9.0)
     et-orbi (1.2.2)
       tzinfo
-    factory_bot (6.0.0)
+    factory_bot (6.1.0)
       activesupport (>= 5.0.0)
-    factory_bot_rails (6.0.0)
-      factory_bot (~> 6.0.0)
+    factory_bot_rails (6.1.0)
+      factory_bot (~> 6.1.0)
       railties (>= 5.0.0)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
@@ -171,7 +171,7 @@ GEM
     multipart-post (2.1.1)
     netrc (0.11.0)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     null_logger (0.0.1)
     oauth2 (1.4.4)
@@ -364,7 +364,7 @@ GEM
     websocket-driver (0.7.2)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.3.0)
+    zeitwerk (2.3.1)
 
 PLATFORMS
   ruby
@@ -374,7 +374,7 @@ DEPENDENCIES
   byebug
   climate_control (~> 0.2.0)
   deprecated_columns
-  factory_bot_rails (~> 6.0)
+  factory_bot_rails (~> 6.1)
   faraday (~> 1.0)
   faraday-cookie_jar (~> 0.0.6)
   gds-sso (~> 15.0)
