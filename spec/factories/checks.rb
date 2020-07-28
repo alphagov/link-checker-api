@@ -7,7 +7,7 @@ FactoryBot.define do
 
     trait :completed do
       started_at { 10.minutes.ago }
-      completed_at { DateTime.now }
+      completed_at { Time.zone.now }
     end
 
     trait :with_errors do
