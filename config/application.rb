@@ -26,9 +26,6 @@ module LinkCheckerApi
     # -- all .rb files in that directory are automatically loaded.
     config.load_defaults = 6.0
 
-    config.eager_load_paths << "#{config.root}/lib"
-    config.eager_load_paths += Dir["#{config.root}/lib/**/"]
-
     config.api_only = true
 
     config.active_job.queue_adapter = :sidekiq
