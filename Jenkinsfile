@@ -2,10 +2,8 @@
 
 library("govuk")
 
-node("postgresql-9.3") {
+node {
   govuk.buildProject(
-    beforeTest: { -> sh("bundle exec rake db:environment:set") },
     brakeman: true,
-    rubyLintDiff: false,
   )
 }
