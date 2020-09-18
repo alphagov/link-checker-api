@@ -2,7 +2,7 @@
 
 library("govuk")
 
-node("postgresql-9.3") {
+node {
   govuk.buildProject(
     brakeman: true,
   )
