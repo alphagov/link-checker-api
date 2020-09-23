@@ -29,7 +29,7 @@ module LinkChecker::UriChecker
       ]
 
       string = symbols
-        .map { |sym| I18n.t(sym, text_args.merge(default: nil)) }
+        .map { |sym| I18n.t(sym, **text_args.merge(default: nil)) }
         .compact
         .first
 
