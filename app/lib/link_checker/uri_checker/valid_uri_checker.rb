@@ -36,7 +36,7 @@ module LinkChecker::UriChecker
       else
         add_problem(UnusualUrl.new(from_redirect: from_redirect?))
       end
-    rescue URI::InvalidURIError
+    rescue Addressable::URI::InvalidURIError
       add_problem(InvalidUri.new(from_redirect: from_redirect?))
     end
 
@@ -47,7 +47,7 @@ module LinkChecker::UriChecker
     CONTACT_SCHEMES = %w[mailto tel].freeze
 
     def parsed_uri
-      @parsed_uri ||= URI.parse(uri)
+      @parsed_uri ||= Addressable::URI.parse(uri)
     end
   end
 end
