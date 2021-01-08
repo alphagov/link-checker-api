@@ -97,7 +97,7 @@ module LinkChecker::UriChecker
 
   class HttpChecker < Checker
     def call
-      if uri.host.nil?
+      if uri.host.blank?
         return add_problem(NoHost.new(from_redirect: from_redirect?))
       end
 

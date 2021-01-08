@@ -25,7 +25,7 @@ module LinkChecker::UriChecker
 
   class ValidUriChecker < Checker
     def call
-      if parsed_uri.scheme.nil?
+      if parsed_uri.scheme.blank?
         add_problem(MissingUriScheme.new(from_redirect: from_redirect?))
       elsif HTTP_URI_SCHEMES.include?(parsed_uri.scheme)
         report.merge(HttpChecker.new(parsed_uri, redirect_history: redirect_history, http_client: http_client).call)
