@@ -365,6 +365,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  addressable
   byebug
   climate_control
   deprecated_columns
