@@ -97,7 +97,7 @@ module LinkChecker::UriChecker
 
   class HttpChecker < Checker
     def call
-      if uri.host.nil?
+      if uri.host.blank?
         return add_problem(NoHost.new(from_redirect: from_redirect?))
       end
 
@@ -279,7 +279,7 @@ module LinkChecker::UriChecker
 
     def run_connection_request(method, check_ssl: true)
       client = check_ssl ? http_client : insecure_http_client
-      client.run_request(method, uri, nil, additional_connection_headers) do |request|
+      client.run_request(method, uri.normalize, nil, additional_connection_headers) do |request|
         request.options[:timeout] = RESPONSE_TIME_LIMIT
         request.options[:open_timeout] = RESPONSE_TIME_LIMIT
       end
