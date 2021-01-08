@@ -37,6 +37,8 @@ RSpec.describe LinkChecker do
     before do
       stub_request(:get, "https://www.gov.uk/ok").to_return(status: 200)
 
+      stub_request(:get, "https://www.gov.uk?key[]=value").to_return(status: 200)
+
       stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
         .to_return(status: 200, body: "{}")
     end
@@ -71,6 +73,13 @@ RSpec.describe LinkChecker do
 
     context "URI with supported scheme" do
       let(:uri) { "https://www.gov.uk/ok" }
+      include_examples "has no errors"
+      include_examples "has no warnings"
+    end
+
+    context "Invalid URI which can be normalised" do
+      # [] _should_ be percent-encoded, but browsers will accept it not being
+      let(:uri) { "https://www.gov.uk?key[]=value" }
       include_examples "has no errors"
       include_examples "has no warnings"
     end
