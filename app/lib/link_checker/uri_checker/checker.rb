@@ -30,8 +30,10 @@ module LinkChecker::UriChecker
 
     attr_reader :redirect_history
 
+    USER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36".freeze
+
     def client(options = {})
-      default_options = { headers: { accept_encoding: "none" } }
+      default_options = { headers: { accept_encoding: "none", user_agent: USER_AGENT } }
       Faraday.new(default_options.merge(options)) do |faraday|
         faraday.use :cookie_jar
         faraday.adapter Faraday.default_adapter
