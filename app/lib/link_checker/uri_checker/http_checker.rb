@@ -154,7 +154,7 @@ module LinkChecker::UriChecker
       end_time = Time.zone.now
       response_time = end_time - start_time
 
-      return response if report.has_errors?
+      return response if report.has_errors? || response.nil?
 
       add_problem(SlowResponse.new(from_redirect: from_redirect?)) if response_time > RESPONSE_TIME_WARNING
 
