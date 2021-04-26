@@ -19,6 +19,8 @@ group :development, :test do
   gem "byebug" # Comes standard with Rails
   gem "climate_control"
   gem "factory_bot_rails"
+  gem "pact", require: false
+  gem "pact_broker-client"
   gem "pry"
   gem "rspec-rails"
   gem "rubocop-govuk"
