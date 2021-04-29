@@ -18,6 +18,7 @@ gem "sidekiq-unique-jobs"
 group :development, :test do
   gem "byebug" # Comes standard with Rails
   gem "climate_control"
+  gem "database_cleaner"
   gem "factory_bot_rails"
   gem "pact", require: false
   gem "pact_broker-client"

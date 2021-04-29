@@ -75,6 +75,7 @@ GEM
     connection_pool (2.2.3)
     crack (0.4.4)
     crass (1.0.6)
+    database_cleaner (1.8.5)
     deprecated_columns (0.1.1)
       rails (>= 4.0)
     diff-lcs (1.4.4)
@@ -416,6 +417,7 @@ DEPENDENCIES
   addressable
   byebug
   climate_control
+  database_cleaner
   deprecated_columns
   factory_bot_rails
   faraday
