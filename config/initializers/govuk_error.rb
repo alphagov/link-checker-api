@@ -4,4 +4,8 @@ GovukError.configure do |config|
     Faraday::ConnectionFailed
     RestartWorkerException
   ]
+
+  config.backtrace_cleanup_callback = lambda do |backtrace|
+    Rails.backtrace_cleaner.clean(backtrace)
+  end
 end
