@@ -40,7 +40,6 @@ Rails.application.configure do
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
-  ## MY CHANGES: app:update changed the log level to :info
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
@@ -108,7 +107,5 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
-
-  ## MY CHANGES BELOW:
   config.action_controller.perform_caching = true
 end

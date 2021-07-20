@@ -39,8 +39,6 @@ module LinkCheckerApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
-
-    # MY CHANGES BELOW:
     config.active_job.queue_adapter = :sidekiq
     # GDS SSO requires a session to exist
     middleware.insert_before Rack::Head, ActionDispatch::Session::CacheStore

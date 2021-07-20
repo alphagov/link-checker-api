@@ -60,7 +60,6 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  ## MY CHANGES BELOW:
   # Allow requests for all domains e.g. <app>.dev.gov.uk
   config.hosts.clear
   config.debug_exception_response_format = :api
