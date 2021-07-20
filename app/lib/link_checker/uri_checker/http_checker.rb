@@ -204,12 +204,13 @@ module LinkChecker::UriChecker
         }.to_json
       end
 
-      if response.status == 200
+      case response.status
+      when 200
         data = JSON.parse(response.body)
         if data.include?("matches") && data["matches"]
           add_problem(PageContainsThreat.new(from_redirect: from_redirect?))
         end
-      elsif response.status == 429
+      when 429
         GovukStatsd.increment "safebrowsing.rate_limited"
       else
         GovukError.notify(
