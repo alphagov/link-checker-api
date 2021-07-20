@@ -2,7 +2,7 @@ module LinkChecker::UriChecker
   class Problem
     attr_reader :type, :message, :suggested_fix, :summary, :priority
 
-    def initialize(type:, summary:, message:, suggested_fix: nil, from_redirect:, **options)
+    def initialize(type:, summary:, message:, from_redirect:, suggested_fix: nil, **options)
       @type = type
       @from_redirect = from_redirect
       @text_args = options
