@@ -27,7 +27,7 @@ module LinkCheckerApi
     config.load_defaults = 6.0
 
     config.api_only = true
-
+    config.action_controller.default_protect_from_forgery = false
     config.active_job.queue_adapter = :sidekiq
 
     # GDS SSO requires a session to exist
