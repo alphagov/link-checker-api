@@ -31,8 +31,13 @@ end
 
 Pact.provider_states_for "GDS API Adapters" do
   set_up do
-    DatabaseCleaner.clean_with :truncation
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.start
     GDS::SSO.test_user = create(:user, permissions: %w[signin])
+  end
+
+  tear_down do
+    DatabaseCleaner.clean
   end
 
   provider_state "a batch exists with id 99 and uris https://www.gov.uk" do
