@@ -13,7 +13,7 @@ gem "govuk_sidekiq"
 gem "pg"
 gem "plek"
 gem "sidekiq-scheduler"
-gem "sidekiq-unique-jobs", "~> 6" #Latest version is 7.x but this currently breaks the unique options in webhook_worker, will be handled in subsequent PR
+gem "sidekiq-unique-jobs", "~> 6" # Latest version is 7.x but this currently breaks the unique options in webhook_worker, will be handled in subsequent PR
 
 group :development, :test do
   gem "byebug" # Comes standard with Rails
