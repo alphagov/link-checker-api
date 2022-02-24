@@ -4,7 +4,7 @@ end
 class WebhookWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: :webhooks, retry: 4, unique: :until_and_while_executing, unique_args: :unique_args
+  sidekiq_options queue: :webhooks, retry: 4, lock: :until_and_while_executing, lock_args_method: :unique_args
 
   def self.unique_args(args)
     [args[3]] # batch_id
