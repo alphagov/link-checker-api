@@ -20,7 +20,7 @@ RSpec.describe WebhookWorker do
         subject.perform(report, webhook_uri, webhook_secret_token, batch_id)
       end
 
-      it "generates a valid signature" do
+      it "generates a valid signature " do
         expect(a_request(:post, webhook_uri)
           .with(headers: { "X-LinkCheckerApi-Signature": expected_signature }))
           .to have_been_requested
