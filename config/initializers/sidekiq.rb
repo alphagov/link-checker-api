@@ -15,3 +15,6 @@ Sidekiq.configure_client do |config|
     chain.add SidekiqUniqueJobs::Middleware::Client
   end
 end
+
+# SidekiqUniqueJobs recommends not testing this behaviour, our tests have previously has caused flakey builds
+SidekiqUniqueJobs.config.enabled = !Rails.env.test?

@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe CheckWorker do
+  specify { expect(described_class).to have_valid_sidekiq_options }
+
   describe "perform" do
     let(:link) { create(:link, id: 123) }
     let(:report) { LinkChecker::UriChecker::Report.new }
