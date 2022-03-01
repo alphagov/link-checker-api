@@ -2,7 +2,7 @@ class CheckWorker
   include Sidekiq::Worker
   include PerformAsyncInQueue
 
-  sidekiq_options retry: 3, unique: :until_and_while_executing, unique_args: :unique_args
+  sidekiq_options retry: 3, lock: :until_and_while_executing, lock_args_method: :unique_args
 
   sidekiq_retries_exhausted do |msg|
     Check.connection_pool.with_connection do |_|
