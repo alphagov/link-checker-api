@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[6.1].define(version: 2017_07_13_101143) do
-
+ActiveRecord::Schema[7.0].define(version: 2017_07_13_101143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,20 +23,20 @@ ActiveRecord::Schema[6.1].define(version: 2017_07_13_101143) do
   end
 
   create_table "batches", id: :serial, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "webhook_uri"
     t.string "webhook_secret_token"
     t.boolean "webhook_triggered", default: false, null: false
   end
 
   create_table "checks", id: :serial, force: :cascade do |t|
-    t.datetime "started_at"
-    t.datetime "completed_at"
+    t.datetime "started_at", precision: nil
+    t.datetime "completed_at", precision: nil
     t.string "link_warnings", default: [], null: false, array: true
     t.string "link_errors", default: [], null: false, array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "link_id", null: false
     t.string "problem_summary"
     t.string "suggested_fix"
@@ -46,8 +45,8 @@ ActiveRecord::Schema[6.1].define(version: 2017_07_13_101143) do
 
   create_table "links", id: :serial, force: :cascade do |t|
     t.string "uri", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -60,8 +59,8 @@ ActiveRecord::Schema[6.1].define(version: 2017_07_13_101143) do
     t.text "permissions"
     t.boolean "remotely_signed_out", default: false
     t.boolean "disabled", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   add_foreign_key "batch_checks", "batches", on_delete: :cascade
