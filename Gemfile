@@ -16,7 +16,7 @@ gem "sidekiq-scheduler"
 gem "sidekiq-unique-jobs"
 
 group :development, :test do
-  gem "byebug" # Comes standard with Rails
+  gem "byebug"
   gem "climate_control"
   gem "database_cleaner"
   gem "factory_bot_rails"
