@@ -73,6 +73,7 @@ GEM
     ast (2.4.2)
     awesome_print (1.9.2)
     bindex (0.8.1)
+    brakeman (5.2.2)
     brpoplpush-redis_script (0.1.2)
       concurrent-ruby (~> 1.0, >= 1.0.5)
       redis (>= 1.0, <= 5.0)
@@ -463,6 +464,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   addressable
+  brakeman
   byebug
   climate_control
   database_cleaner
