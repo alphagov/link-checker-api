@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "7.0.2"
+gem "rails", "7.0.2.3"
 
 gem "activerecord-import"
 gem "addressable"
@@ -16,7 +16,8 @@ gem "sidekiq-scheduler"
 gem "sidekiq-unique-jobs"
 
 group :development, :test do
-  gem "byebug" # Comes standard with Rails
+  gem "brakeman"
+  gem "byebug"
   gem "climate_control"
   gem "database_cleaner"
   gem "factory_bot_rails"
