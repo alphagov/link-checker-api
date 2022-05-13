@@ -12,6 +12,7 @@ gem "govuk_app_config"
 gem "govuk_sidekiq"
 gem "pg"
 gem "plek"
+gem "sentry-sidekiq"
 gem "sidekiq-scheduler"
 gem "sidekiq-unique-jobs"
 
