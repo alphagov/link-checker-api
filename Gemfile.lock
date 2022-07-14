@@ -92,8 +92,6 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    deprecated_columns (0.1.1)
-      rails (>= 4.0)
     diff-lcs (1.5.0)
     dig_rb (1.0.1)
     digest (3.1.0)
@@ -469,7 +467,6 @@ DEPENDENCIES
   byebug
   climate_control
   database_cleaner
-  deprecated_columns
   factory_bot_rails
   faraday
   faraday-cookie_jar
