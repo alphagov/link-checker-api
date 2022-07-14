@@ -4,7 +4,6 @@ gem "rails", "7.0.3.1"
 
 gem "activerecord-import"
 gem "addressable"
-gem "deprecated_columns"
 gem "faraday"
 gem "faraday-cookie_jar"
 gem "gds-sso"
