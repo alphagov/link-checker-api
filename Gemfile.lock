@@ -98,9 +98,8 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    e2mmap (0.1.0)
     erubi (1.11.0)
-    et-orbi (1.2.6)
+    et-orbi (1.2.7)
       tzinfo
     expgen (0.1.1)
       parslet
@@ -119,8 +118,8 @@ GEM
     ffi (1.15.5)
     filelock (1.1.1)
     find_a_port (1.0.1)
-    fugit (1.5.2)
-      et-orbi (~> 1.1, >= 1.1.8)
+    fugit (1.6.0)
+      et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
     gds-api-adapters (79.0.0)
       addressable
@@ -378,7 +377,7 @@ GEM
       rubocop (~> 1.31)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
-    rufus-scheduler (3.8.1)
+    rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
     sentry-rails (5.4.2)
       railties (>= 5.0)
@@ -395,12 +394,10 @@ GEM
       redis (~> 4.5, < 4.6.0)
     sidekiq-logging-json (0.0.19)
       sidekiq (>= 3)
-    sidekiq-scheduler (3.1.1)
-      e2mmap
-      redis (>= 3, < 5)
+    sidekiq-scheduler (4.0.2)
+      redis (>= 4.2.0)
       rufus-scheduler (~> 3.2)
-      sidekiq (>= 3)
-      thwait
+      sidekiq (>= 4)
       tilt (>= 1.4.0)
     sidekiq-statsd (2.1.0)
       activesupport
@@ -423,9 +420,7 @@ GEM
     term-ansicolor (1.7.1)
       tins (~> 1.0)
     thor (1.2.1)
-    thwait (0.2.0)
-      e2mmap
-    tilt (2.0.10)
+    tilt (2.0.11)
     timecop (0.9.4)
     timeout (0.3.0)
     tins (1.31.0)
