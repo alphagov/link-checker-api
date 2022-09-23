@@ -103,9 +103,9 @@ en:
     singular: This page has a security problem that users may be alerted to.
     redirect: This redirects to a page with a security problem.
 
-  page_failing_to_load:
-    singular: This page is failing to load.
-    redirect: This redirects to a page that isn't loading.
+  technical_error_on_page:
+    singular: This page has a technical error.
+    redirect: This redirects to a page that has a technical error.
 
   determine_if_temporary: Determine if this is a temporary issue or the resource is no longer available.
 

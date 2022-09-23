@@ -142,6 +142,26 @@ RSpec.describe LinkChecker do
       include_examples "has warnings"
     end
 
+    context "header with CR/LF character" do
+      let(:uri) { "http://www.not-gov.uk/header_with_CRLF_character" }
+      before do
+        stub_request(:get, uri)
+          .to_return(headers: { "Invalid" => "A header containing a carriage return \r character" })
+      end
+
+      include_examples "has errors"
+      include_examples "has a problem summary", "Page unavailable"
+    end
+
+    it "does not recue from other argument error" do
+      uri = "http://www.not-gov.uk/raises_argument_error"
+      error = ArgumentError.new("something that's nothing to do with headers and carriage return line feed chars")
+
+      stub_request(:get, uri).to_raise(error)
+
+      expect { described_class.new(uri).call }.to raise_error(error)
+    end
+
     context "slow response" do
       let(:uri) { "http://www.not-gov.uk/slow_response" }
 
