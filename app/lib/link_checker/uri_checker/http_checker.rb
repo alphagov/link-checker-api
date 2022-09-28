@@ -89,7 +89,7 @@ module LinkChecker::UriChecker
     end
   end
 
-  class FaradayError < Error
+  class HttpCommunicationError < Error
     def initialize(options = {})
       super(suggested_fix: :determine_if_temporary, **options)
     end
@@ -238,7 +238,7 @@ module LinkChecker::UriChecker
       response
     rescue Faraday::ConnectionFailed
       add_problem(
-        FaradayError.new(
+        HttpCommunicationError.new(
           summary: :website_unavailable,
           message: :website_host_offline,
           from_redirect: from_redirect?,
@@ -247,7 +247,7 @@ module LinkChecker::UriChecker
       nil
     rescue Faraday::TimeoutError
       add_problem(
-        FaradayError.new(
+        HttpCommunicationError.new(
           summary: :website_unavailable,
           message: :page_is_not_responding,
           from_redirect: from_redirect?,
@@ -269,9 +269,26 @@ module LinkChecker::UriChecker
       make_request(method, check_ssl: false)
     rescue Faraday::Error
       add_problem(
-        FaradayError.new(
+        HttpCommunicationError.new(
           summary: :page_unavailable,
-          message: :page_failing_to_load,
+          message: :technical_error_on_page,
+          from_redirect: from_redirect?,
+        ),
+      )
+      nil
+    # Ruby net-http cannot handle responses with headers with CR/LF characters in, and such responses raise
+    # an argument error. We want to catch these and add to the report for now, rather than continuing to raise these
+    # as errors, which can trigger alerting. We are planning on raising this to be fixed at the net-http level which may
+    # mean we do not have to handle these here.
+    # Doing some fuzzy matching on the error message to try and ensure a bit of resilience, allowing for changes to the
+    # exact error message in the exception.
+    rescue ArgumentError => e
+      raise e unless e.message =~ /(.*)header(.*) CR\/LF/
+
+      add_problem(
+        HttpCommunicationError.new(
+          summary: :page_unavailable,
+          message: :technical_error_on_page,
           from_redirect: from_redirect?,
         ),
       )

@@ -45,7 +45,7 @@ module LinkChecker::UriChecker
       UnusualUrl
       NotAvailableOnline
       NoHost
-      FaradayError
+      HttpCommunicationError
       PageNotFound
       PageRequiresLogin
       PageIsUnavailable
