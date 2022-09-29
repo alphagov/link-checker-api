@@ -68,6 +68,13 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
     end
 
+    context "URI with an unusual format" do
+      let(:uri) { "hxxp://www.gov.uk" }
+      include_examples "has a problem summary", "Unusual URL"
+      include_examples "has warnings"
+      include_examples "has no errors"
+    end
+
     context "URI with supported scheme" do
       let(:uri) { "https://www.gov.uk/ok" }
       include_examples "has no errors"
