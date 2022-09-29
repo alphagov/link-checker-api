@@ -109,8 +109,6 @@ RSpec.describe "check path", type: :request do
 
     before do
       stub_request(:get, uri).to_return(status: 200)
-      stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-        .to_return(status: 200, body: "{}")
 
       get check_link_path(uri: uri, synchronous: "true")
     end
@@ -126,8 +124,6 @@ RSpec.describe "check path", type: :request do
       create(:check, link: create(:link, uri: uri))
 
       stub_request(:get, uri).to_return(status: 200)
-      stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-        .to_return(status: 200, body: "{}")
 
       get check_link_path(uri: uri, synchronous: true)
     end

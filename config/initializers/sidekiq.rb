@@ -18,3 +18,4 @@ end
 
 # SidekiqUniqueJobs recommends not testing this behaviour, our tests have previously has caused flakey builds
 SidekiqUniqueJobs.config.enabled = !Rails.env.test?
+SidekiqUniqueJobs.config.logger_enabled = !Rails.env.test?

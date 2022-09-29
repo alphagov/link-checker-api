@@ -38,9 +38,6 @@ RSpec.describe LinkChecker do
       stub_request(:get, "https://www.gov.uk/ok").to_return(status: 200)
 
       stub_request(:get, "https://www.gov.uk?key[]=value").to_return(status: 200)
-
-      stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-        .to_return(status: 200, body: "{}")
     end
 
     context "invalid URI" do
@@ -67,6 +64,13 @@ RSpec.describe LinkChecker do
     context "URI with an unsupported scheme" do
       let(:uri) { "mailto:test@test" }
       include_examples "has a problem summary", "Contact details"
+      include_examples "has warnings"
+      include_examples "has no errors"
+    end
+
+    context "URI with an unusual format" do
+      let(:uri) { "hxxp://www.gov.uk" }
+      include_examples "has a problem summary", "Unusual URL"
       include_examples "has warnings"
       include_examples "has no errors"
     end
@@ -187,10 +191,38 @@ RSpec.describe LinkChecker do
       include_examples "has no warnings"
     end
 
-    context "4xx status code" do
+    context "401 status code" do
+      let(:uri) { "http://www.not-gov.uk/401" }
+      before { stub_request(:get, uri).to_return(status: 401) }
+      include_examples "has errors", "401 error (page requires login)"
+      include_examples "has no warnings"
+    end
+
+    context "403 status code" do
+      let(:uri) { "http://www.not-gov.uk/403" }
+      before { stub_request(:get, uri).to_return(status: 403) }
+      include_examples "has errors", "403 error (page requires login)"
+      include_examples "has no warnings"
+    end
+
+    context "404 status code" do
       let(:uri) { "http://www.not-gov.uk/404" }
       before { stub_request(:get, uri).to_return(status: 404) }
       include_examples "has errors", "404 error (page not found)"
+      include_examples "has no warnings"
+    end
+
+    context "410 status code" do
+      let(:uri) { "http://www.not-gov.uk/410" }
+      before { stub_request(:get, uri).to_return(status: 410) }
+      include_examples "has errors", "410 error (page not found)"
+      include_examples "has no warnings"
+    end
+
+    context "an unspecified 4xx status code" do
+      let(:uri) { "http://www.not-gov.uk/418" }
+      before { stub_request(:get, uri).to_return(status: 418) }
+      include_examples "has errors", "418 error (page is unavailable)"
       include_examples "has no warnings"
     end
 
@@ -308,127 +340,6 @@ RSpec.describe LinkChecker do
           .with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
       end
     end
-
-    # Commented out as we have disabled the Google Safebrowsing intergration as the API key
-    # wasn't working properly and we were hitting the rate limit in production.
-    #
-    # FIXME uncomment all this once we've found a solution to this
-    #
-    # context "a URL detected by Google Safebrowser API" do
-    #   let(:uri) { "http://malware.testing.google.test/testing/malware/" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #       .to_return(status: 200, body: { matches: [{ threatType: "MALWARE" }] }.to_json)
-    #   end
-    #   include_examples "has a problem summary", "Suspicious content"
-    #   include_examples "has warnings"
-    #   include_examples "has no errors"
-    # end
-    #
-    # context "Google Safebrowser API on a gov.uk url" do
-    #   let(:uri) { "http://www.dev.gov.uk/malware.testing.google.test/testing/malware/" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #   end
-    #   let(:request) do
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #   end
-    #
-    #   include_examples "has no warnings"
-    #   include_examples "has no errors"
-    #   it "should not make a request" do
-    #     subject
-    #
-    #     expect(request).to_not have_been_requested
-    #   end
-    # end
-    #
-    # context "Google Safebrowser API on a gov.uk upload url" do
-    #   let(:uri) { "http://www.dev.gov.uk/government/uploads" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #   end
-    #   let(:request) do
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #       .to_return(status: 200, body: "{}")
-    #   end
-    #
-    #   include_examples "has no warnings"
-    #   include_examples "has no errors"
-    #   it "should make a request" do
-    #     subject
-    #
-    #     expect(request).to have_been_requested
-    #   end
-    # end
-    #
-    # context "Google Safebrowser API on an asset-manager upload url" do
-    #   let(:uri) { "https://assets.publishing.service.gov.uk/media/" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #   end
-    #   let(:request) do
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #       .to_return(status: 200, body: "{}")
-    #   end
-    #
-    #   include_examples "has no warnings"
-    #   include_examples "has no errors"
-    #   it "should make a request" do
-    #     subject
-    #
-    #     expect(request).to have_been_requested
-    #   end
-    # end
-    #
-    # context "Google Safebrowser API returns an error" do
-    #   let(:uri) { "http://www.gov.uk/government/uploads" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #   end
-    #   let!(:request) do
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #       .to_return(status: 500, body: "an error", headers: { 'X-Foo' => 'bar' })
-    #   end
-    #
-    #   include_examples "has no warnings"
-    #   include_examples "has no errors"
-    #   it "should log the error to Sentry" do
-    #     expect(GovukError).to receive(:notify)
-    #       .with("Unable to talk to Google Safebrowsing API!",
-    #         extra: {
-    #           status: 500,
-    #           body: 'an error',
-    #           headers: { 'X-Foo' => 'bar' },
-    #         })
-    #
-    #     subject
-    #
-    #     expect(request).to have_been_requested
-    #   end
-    # end
-    #
-    # context "Google Safebrowser API rate limits the request" do
-    #   let(:uri) { "http://www.gov.uk/government/uploads" }
-    #   before do
-    #     stub_request(:get, uri).to_return(status: 200)
-    #   end
-    #   let!(:request) do
-    #     stub_request(:post, "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=test")
-    #       .to_return(status: 429, body: "an error", headers: { 'X-Foo' => 'bar' })
-    #   end
-    #
-    #   include_examples "has no warnings"
-    #   include_examples "has no errors"
-    #   it "should increment the counter in statsd" do
-    #     expect(GovukStatsd).to receive(:increment).with("safebrowsing.rate_limited")
-    #
-    #     subject
-    #
-    #     expect(request).to have_been_requested
-    #   end
-    # end
 
     context "when calling a url that requires authentication" do
       let(:host) { "www.needsauthentication.co.uk" }
