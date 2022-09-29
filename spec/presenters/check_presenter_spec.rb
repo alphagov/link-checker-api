@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe CheckPresenter do
   let(:link) { create(:link) }
-  let(:check) { create(:check, :completed, link: link) }
+  let(:check) { create(:check, :completed, link:) }
 
   subject { described_class.new(check).link_report }
 

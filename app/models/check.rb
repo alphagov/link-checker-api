@@ -15,7 +15,7 @@ class Check < ApplicationRecord
       .where(link: links)
 
     new_checks = (links - existing_checks.map(&:link)).map do |link|
-      Check.new(link: link)
+      Check.new(link:)
     end
 
     import_result = Check.import(new_checks)

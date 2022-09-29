@@ -9,7 +9,7 @@ class Link < ApplicationRecord
     existing_links = Link.where(uri: uris).all
 
     new_links = (uris - existing_links.map(&:uri)).map do |uri|
-      Link.new(uri: uri)
+      Link.new(uri:)
     end
 
     import_result = Link.import(new_links)

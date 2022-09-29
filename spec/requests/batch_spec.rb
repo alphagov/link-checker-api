@@ -49,7 +49,7 @@ RSpec.describe "/batch endpoint" do
       let(:uri_b) { "http://example.com/b" }
       let(:webhook_secret_token) { "this is a secret key" }
 
-      let(:batch_request) { build_batch_request(uris: [uri_a, uri_b], webhook_secret_token: webhook_secret_token) }
+      let(:batch_request) { build_batch_request(uris: [uri_a, uri_b], webhook_secret_token:) }
 
       before do
         post "/batch",
@@ -90,11 +90,11 @@ RSpec.describe "/batch endpoint" do
         1000.times.map { |i| "http://example.com/#{i}" }
       end
 
-      let(:batch_request) { build_batch_request(uris: uris) }
+      let(:batch_request) { build_batch_request(uris:) }
       let(:batch_report) do
         build_batch_report(
           status: "in_progress",
-          links: uris.map { |uri| { uri: uri, status: "pending" } },
+          links: uris.map { |uri| { uri:, status: "pending" } },
         )
       end
 
@@ -244,7 +244,7 @@ RSpec.describe "/batch endpoint" do
       let(:batch_request) do
         build_batch_request(
           uris: [uri_a, uri_b],
-          webhook_uri: webhook_uri,
+          webhook_uri:,
         )
       end
 

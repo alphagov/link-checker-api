@@ -34,7 +34,7 @@ class CheckController < ApplicationController
 
     return render(json: link_report(check)) if check
 
-    check = Check.create!(link: link)
+    check = Check.create!(link:)
 
     CheckWorker.run(
       check.id,

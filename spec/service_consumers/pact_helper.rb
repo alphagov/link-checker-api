@@ -43,7 +43,7 @@ Pact.provider_states_for "GDS API Adapters" do
   provider_state "a batch exists with id 99 and uris https://www.gov.uk" do
     set_up do
       link = create(:link, uri: "https://www.gov.uk")
-      check = create(:check, link: link)
+      check = create(:check, link:)
       create(:batch, id: 99, checks: [check])
     end
   end
