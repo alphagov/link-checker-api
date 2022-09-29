@@ -111,9 +111,6 @@ module LinkChecker::UriChecker
       check_meta_mature_rating
       return report if report.has_errors?
 
-      # FIXME: once a key has been correctly configured in integration, staging and production
-      # check_google_safebrowsing if use_google_safebrowsing?
-
       report
     end
 
@@ -180,47 +177,6 @@ module LinkChecker::UriChecker
       rating = page.css("meta[name=rating]").first&.attr("value")
       if %w[restricted mature].include?(rating)
         add_problem(PageWithRating.new(from_redirect: from_redirect?, rating: rating))
-      end
-    end
-
-    def check_google_safebrowsing
-      api_key = Rails.application.secrets.google_api_key
-
-      raise "Missing API key" unless api_key
-
-      response = Faraday.post do |req|
-        req.url "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=#{api_key}"
-        req.headers["Content-Type"] = "application/json"
-        req.body = {
-          client: {
-            clientId: "gds-link-checker", clientVersion: "0.1.0"
-          },
-          threatInfo: {
-            threatTypes: %w[THREAT_TYPE_UNSPECIFIED MALWARE SOCIAL_ENGINEERING UNWANTED_SOFTWARE POTENTIALLY_HARMFUL_APPLICATION],
-            platformTypes: %w[ANY_PLATFORM],
-            threatEntryTypes: %w[URL],
-            threatEntries: [{ url: uri.to_s }],
-          },
-        }.to_json
-      end
-
-      case response.status
-      when 200
-        data = JSON.parse(response.body)
-        if data.include?("matches") && data["matches"]
-          add_problem(PageContainsThreat.new(from_redirect: from_redirect?))
-        end
-      when 429
-        GovukStatsd.increment "safebrowsing.rate_limited"
-      else
-        GovukError.notify(
-          "Unable to talk to Google Safebrowsing API!",
-          extra: {
-            status: response.status,
-            body: response.body,
-            headers: response.headers,
-          },
-        )
       end
     end
 
@@ -327,12 +283,6 @@ module LinkChecker::UriChecker
       {}
         .merge(rate_limit_header)
         .merge(basic_authorization_header)
-    end
-
-    def use_google_safebrowsing?
-      return false if gov_uk_uri? && !gov_uk_upload_uri?
-
-      Rails.env.production? || Rails.application.secrets.google_api_key
     end
 
     def base64_encode_authorization(host)
