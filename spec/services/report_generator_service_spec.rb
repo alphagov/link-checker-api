@@ -6,7 +6,7 @@ RSpec.describe ReportGeneratorService do
       # completed broken links
       5.times do |i|
         link = create(:link, uri: "https://www.example.org/#{i}")
-        create(:check, :completed, :with_errors, link: link)
+        create(:check, :completed, :with_errors, link:)
       end
 
       # uncompleted broken link

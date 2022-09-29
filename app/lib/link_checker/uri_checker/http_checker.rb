@@ -129,7 +129,7 @@ module LinkChecker::UriChecker
     def check_redirects
       add_problem(TooManyRedirects.new(from_redirect: from_redirect?)) if redirect_history.length >= REDIRECT_LIMIT
       add_problem(RedirectLoop.new(from_redirect: from_redirect?)) if redirect_history.count(uri) >= REDIRECT_LOOP_LIMIT
-      add_problem(TooManyRedirectsSlowly.new(from_redirect: :from_redirect?, uri: uri)) if redirect_history.length == REDIRECT_WARNING
+      add_problem(TooManyRedirectsSlowly.new(from_redirect: :from_redirect?, uri:)) if redirect_history.length == REDIRECT_WARNING
     end
 
     def check_credentials_in_uri
@@ -176,17 +176,17 @@ module LinkChecker::UriChecker
       page = Nokogiri::HTML(response.body)
       rating = page.css("meta[name=rating]").first&.attr("value")
       if %w[restricted mature].include?(rating)
-        add_problem(PageWithRating.new(from_redirect: from_redirect?, rating: rating))
+        add_problem(PageWithRating.new(from_redirect: from_redirect?, rating:))
       end
     end
 
     def make_request(method, check_ssl: true)
-      response = run_connection_request(method, check_ssl: check_ssl)
+      response = run_connection_request(method, check_ssl:)
 
       if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
         target_uri = uri + response.headers["location"]
         subreport = ValidUriChecker
-          .new(target_uri.to_s, redirect_history: redirect_history + [uri], http_client: http_client)
+          .new(target_uri.to_s, redirect_history: redirect_history + [uri], http_client:)
           .call
         report.merge(subreport)
       end

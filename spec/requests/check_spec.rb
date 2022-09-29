@@ -27,42 +27,42 @@ RSpec.describe "check path", type: :request do
   end
 
   context "when an ok checked uri is requested" do
-    let(:link_report) { build_link_report(uri: uri, status: "ok") }
+    let(:link_report) { build_link_report(uri:, status: "ok") }
 
     before do
       create(
         :check,
-        link: create(:link, uri: uri),
+        link: create(:link, uri:),
         completed_at: 1.minute.ago,
       )
 
-      get check_link_path(uri: uri)
+      get check_link_path(uri:)
     end
 
     include_examples "returns link report"
   end
 
   context "when an unchecked uri is requested" do
-    let(:link_report) { build_link_report(uri: uri, status: "pending") }
+    let(:link_report) { build_link_report(uri:, status: "pending") }
 
-    before { get check_link_path(uri: uri) }
+    before { get check_link_path(uri:) }
 
     include_examples "returns link report"
   end
 
   context "when a checked uri, that is of status caution, is requested" do
     let(:warnings) { ["Potentially suspicious top level domain."] }
-    let(:link_report) { build_link_report(uri: uri, status: "caution", warnings: warnings) }
+    let(:link_report) { build_link_report(uri:, status: "caution", warnings:) }
 
     before do
       create(
         :check,
-        link: create(:link, uri: uri),
+        link: create(:link, uri:),
         link_warnings: warnings,
         completed_at: 1.minute.ago,
       )
 
-      get check_link_path(uri: uri)
+      get check_link_path(uri:)
     end
 
     include_examples "returns link report"
@@ -70,34 +70,34 @@ RSpec.describe "check path", type: :request do
 
   context "when a checked uri, that is of status broken, is requested" do
     let(:errors) { ["Has a cyclic redirect."] }
-    let(:link_report) { build_link_report(uri: uri, status: "broken", errors: errors) }
+    let(:link_report) { build_link_report(uri:, status: "broken", errors:) }
 
     before do
       create(
         :check,
-        link: create(:link, uri: uri),
+        link: create(:link, uri:),
         link_errors: errors,
         completed_at: 1.minute.ago,
       )
 
-      get check_link_path(uri: uri)
+      get check_link_path(uri:)
     end
 
     include_examples "returns link report"
   end
 
   context "when a checked uri was checked outside the `content-within` time" do
-    let(:link_report) { build_link_report(uri: uri, status: "pending") }
+    let(:link_report) { build_link_report(uri:, status: "pending") }
 
     before do
       create(
         :check,
-        link: create(:link, uri: uri),
+        link: create(:link, uri:),
         completed_at: 10.minutes.ago,
         created_at: 11.minutes.ago,
       )
 
-      get check_link_path(uri: uri, checked_within: 5.minutes.to_i)
+      get check_link_path(uri:, checked_within: 5.minutes.to_i)
     end
 
     include_examples "returns link report"
@@ -105,12 +105,12 @@ RSpec.describe "check path", type: :request do
 
   context "when an unchecked uri is requested with synchronous = true" do
     let(:uri) { "http://www.example.com/page" }
-    let(:link_report) { build_link_report(uri: uri, status: "ok") }
+    let(:link_report) { build_link_report(uri:, status: "ok") }
 
     before do
       stub_request(:get, uri).to_return(status: 200)
 
-      get check_link_path(uri: uri, synchronous: "true")
+      get check_link_path(uri:, synchronous: "true")
     end
 
     include_examples "returns link report"
@@ -118,14 +118,14 @@ RSpec.describe "check path", type: :request do
 
   context "when an uri is in progress with synchronous = true" do
     let(:uri) { "http://www.example.com/page" }
-    let(:link_report) { build_link_report(uri: uri, status: "ok") }
+    let(:link_report) { build_link_report(uri:, status: "ok") }
 
     before do
-      create(:check, link: create(:link, uri: uri))
+      create(:check, link: create(:link, uri:))
 
       stub_request(:get, uri).to_return(status: 200)
 
-      get check_link_path(uri: uri, synchronous: true)
+      get check_link_path(uri:, synchronous: true)
     end
 
     include_examples "returns link report"
