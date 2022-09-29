@@ -184,10 +184,38 @@ RSpec.describe LinkChecker do
       include_examples "has no warnings"
     end
 
-    context "4xx status code" do
+    context "401 status code" do
+      let(:uri) { "http://www.not-gov.uk/401" }
+      before { stub_request(:get, uri).to_return(status: 401) }
+      include_examples "has errors", "401 error (page requires login)"
+      include_examples "has no warnings"
+    end
+
+    context "403 status code" do
+      let(:uri) { "http://www.not-gov.uk/403" }
+      before { stub_request(:get, uri).to_return(status: 403) }
+      include_examples "has errors", "403 error (page requires login)"
+      include_examples "has no warnings"
+    end
+
+    context "404 status code" do
       let(:uri) { "http://www.not-gov.uk/404" }
       before { stub_request(:get, uri).to_return(status: 404) }
       include_examples "has errors", "404 error (page not found)"
+      include_examples "has no warnings"
+    end
+
+    context "410 status code" do
+      let(:uri) { "http://www.not-gov.uk/410" }
+      before { stub_request(:get, uri).to_return(status: 410) }
+      include_examples "has errors", "410 error (page not found)"
+      include_examples "has no warnings"
+    end
+
+    context "an unspecified 4xx status code" do
+      let(:uri) { "http://www.not-gov.uk/418" }
+      before { stub_request(:get, uri).to_return(status: 418) }
+      include_examples "has errors", "418 error (page is unavailable)"
       include_examples "has no warnings"
     end
 
