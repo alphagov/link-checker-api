@@ -260,7 +260,7 @@ module LinkChecker::UriChecker
     end
 
     def gov_uk_uri?
-      @gov_uk_uri ||= Plek.new.website_root.include?(uri.host)
+      @gov_uk_uri ||= Plek.website_root.include?(uri.host)
     end
 
     def gov_uk_upload_uri?

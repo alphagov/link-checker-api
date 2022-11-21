@@ -328,7 +328,7 @@ RSpec.describe LinkChecker do
           .to_return(status: 200)
       end
 
-      let(:uri) { "#{Plek.new.website_root}/government/document" }
+      let(:uri) { "#{Plek.website_root}/government/document" }
 
       include_examples "has no errors"
       include_examples "has no warnings"
