@@ -473,6 +473,7 @@ DEPENDENCIES
   govuk_app_config
   govuk_sidekiq
   listen
+  mail (~> 2.7.1)
   pact
   pact_broker-client
   pg
