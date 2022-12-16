@@ -28,4 +28,4 @@ Check the [docs](docs) directory.
 
 ## Licence
 
-[MIT License](LICENSE)
+[MIT License](LICENCE)
