@@ -1,8 +1,5 @@
 ---
 :concurrency: 3
-<% if ENV.key?('SIDEKIQ_LOGFILE') %>
-:logfile: <%= ENV['SIDEKIQ_LOGFILE'] %>
-<% end %>
 :queues:
   - [webhooks, 1]
   - [default, 20]  # remove this ratio when LLM is using a low priority queue and can cope with lots of requests

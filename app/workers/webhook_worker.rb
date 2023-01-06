@@ -19,8 +19,6 @@ class WebhookWorker
   SIGNATURE_HEADER = "X-LinkCheckerApi-Signature".freeze
 
   def perform(report, uri, secret_token, batch_id)
-    body = report.to_json
-
     batch = Batch.find(batch_id)
     return if batch.webhook_triggered
 
@@ -28,8 +26,8 @@ class WebhookWorker
       req.url uri
       req.headers["Content-Type"] = "application/json"
       req.headers["User-Agent"] = "#{ENV.fetch('GOVUK_APP_NAME', 'link-checker-api')} (webhook-worker)"
-      req.headers[SIGNATURE_HEADER] = generate_signature(body, secret_token) if secret_token
-      req.body = body
+      req.headers[SIGNATURE_HEADER] = generate_signature(report, secret_token) if secret_token
+      req.body = report
     end
 
     batch.update!(webhook_triggered: true)

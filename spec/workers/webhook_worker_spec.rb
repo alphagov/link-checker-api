@@ -4,7 +4,7 @@ RSpec.describe WebhookWorker do
   specify { expect(described_class).to have_valid_sidekiq_options }
 
   describe "perform" do
-    let(:report) { { some: "json" } }
+    let(:report) { { some: "json" }.to_json }
     let(:webhook_uri) { "http://webhooks-rule.org/webhook" }
     let(:webhook_secret_token) { nil }
     let(:batch) { create(:batch) }
