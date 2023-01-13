@@ -73,6 +73,8 @@ GEM
     ast (2.4.2)
     awesome_print (1.9.2)
     bindex (0.8.1)
+    bootsnap (1.15.0)
+      msgpack (~> 1.2)
     brakeman (5.4.0)
     brpoplpush-redis_script (0.1.3)
       concurrent-ruby (~> 1.0, >= 1.0.5)
@@ -186,6 +188,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
     minitest (5.17.0)
+    msgpack (1.6.0)
     multi_xml (0.6.0)
     net-imap (0.3.1)
       net-protocol
@@ -462,6 +465,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   addressable
+  bootsnap
   brakeman
   byebug
   climate_control
