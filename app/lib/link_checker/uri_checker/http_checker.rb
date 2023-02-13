@@ -101,6 +101,8 @@ module LinkChecker::UriChecker
         return add_problem(NoHost.new(from_redirect: from_redirect?))
       end
 
+      logger.info "Checking #{uri}"
+
       check_redirects
       check_credentials_in_uri
       check_top_level_domain
