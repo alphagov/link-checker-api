@@ -326,7 +326,8 @@ RSpec.describe "/batch endpoint" do
   describe "GET /batch/:id" do
     context "when requesting a batch that doesn't exist" do
       it "returns 404" do
-        expect { get "/batch/432" }.to raise_error(ActiveRecord::RecordNotFound)
+        get "/batch/432"
+        expect(response).to be_not_found
       end
     end
 

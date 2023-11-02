@@ -1,5 +1,5 @@
 class User < ApplicationRecord
   include GDS::SSO::User
 
-  serialize :permissions, Array
+  serialize :permissions, type: Array, coder: YAML
 end
