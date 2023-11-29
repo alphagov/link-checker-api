@@ -109,7 +109,6 @@ en:
 
   determine_if_temporary: Determine if this is a temporary issue or the resource is no longer available.
 
-  invalid_url: Invalid URL
   link_missing_scheme:
     singular: This link is missing the scheme (http, ftp, mailto).
     redirect: This redirects to an invalid link.
