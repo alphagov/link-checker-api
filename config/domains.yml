@@ -3,8 +3,8 @@ default: &default
     # NOTE: These domains are considered suspicious by GDS corporate IT
     #       making requests from the corporate network may raise flags.
     - nostringsng.com
-    - www.becauseiamagirl.org
-    - www.bilebrizoua.ci
+    - becauseiamagirl.org
+    - bilebrizoua.ci
     # NOTE: This is not a comprehensive list of all suspicious domains on the internet.
 
 test:
