@@ -49,6 +49,10 @@ en:
     singular: This link is hosted on a website meant for adult content.
     redirect: This redirects to websites meant for adult content.
 
+  website_on_list_of_suspicious_domains:
+    singular: This link is hosted on a domain which is on our list of suspicious domains
+    redirect: This redirects to a website which is on our list of suspicious domains
+
   slow_page: Slow page
   page_is_slow:
     singular: This page is slow loading and may frustrate users.
