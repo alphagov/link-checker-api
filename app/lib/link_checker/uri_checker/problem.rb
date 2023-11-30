@@ -56,6 +56,7 @@ module LinkChecker::UriChecker
       TooManyRedirectsSlowly
       CredentialsInUri
       SuspiciousTld
+      SuspiciousDomain
       SlowResponse
       PageWithRating
       PageContainsThreat

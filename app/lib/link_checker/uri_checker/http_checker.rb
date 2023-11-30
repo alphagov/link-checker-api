@@ -35,6 +35,12 @@ module LinkChecker::UriChecker
     end
   end
 
+  class SuspiciousDomain < LinkChecker::UriChecker::Warning
+    def initialize(options = {})
+      super(summary: :suspicious_destination, message: :website_on_list_of_suspicious_domains, **options)
+    end
+  end
+
   class SlowResponse < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :slow_page, message: :page_is_slow, suggested_fix: :contact_site_administrator, **options)
@@ -104,6 +110,7 @@ module LinkChecker::UriChecker
       check_redirects
       check_credentials_in_uri
       check_top_level_domain
+      check_suspicious_domains
 
       check_request
       return report if report.has_errors?
@@ -119,6 +126,7 @@ module LinkChecker::UriChecker
     attr_reader :response
 
     INVALID_TOP_LEVEL_DOMAINS = %w[xxx adult dating porn sex sexy singles].freeze
+    SUSPICIOUS_DOMAINS = Rails.application.config_for(:domains).suspicious_domains.freeze
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
     REDIRECT_LOOP_LIMIT = 5
@@ -142,6 +150,12 @@ module LinkChecker::UriChecker
       tld = uri.host.split(".").last
       if INVALID_TOP_LEVEL_DOMAINS.include?(tld)
         add_problem(SuspiciousTld.new(from_redirect: from_redirect?))
+      end
+    end
+
+    def check_suspicious_domains
+      if SUSPICIOUS_DOMAINS.any? { |d| uri.host.ends_with? d }
+        add_problem(SuspiciousDomain.new(from_redirect: from_redirect?))
       end
     end
 
