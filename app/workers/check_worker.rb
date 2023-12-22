@@ -44,7 +44,7 @@ class CheckWorker
   end
 
   def trigger_callbacks(check)
-    check.batches.where(webhook_triggered: false).each(&:trigger_webhook)
+    check.batches.where(webhook_triggered: false).find_each(&:trigger_webhook)
   end
 
   def self.run(check_id, priority: "high", synchronous: false)
