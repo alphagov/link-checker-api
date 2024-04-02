@@ -34,6 +34,8 @@ class WebhookWorker
   rescue Faraday::ClientError => e
     logger.error e.message
     raise RestartWorkerException
+  rescue Faraday::ServerError => e
+    logger.error e.message
   end
 
   def connection
