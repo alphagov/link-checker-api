@@ -10,9 +10,10 @@ RSpec.describe LinkChecker do
       end
     end
 
-    shared_examples "has errors" do
+    shared_examples "has errors" do |error = nil|
       it "should have errors" do
         expect(subject.errors).to_not be_empty
+        expect(subject.errors).to include(error) if error
       end
     end
 
@@ -202,42 +203,42 @@ RSpec.describe LinkChecker do
     context "401 status code" do
       let(:uri) { "http://www.not-gov.uk/401" }
       before { stub_request(:get, uri).to_return(status: 401) }
-      include_examples "has errors", "401 error (page requires login)"
+      include_examples "has errors", "A login is required to view this page."
       include_examples "has no warnings"
     end
 
     context "403 status code" do
       let(:uri) { "http://www.not-gov.uk/403" }
       before { stub_request(:get, uri).to_return(status: 403) }
-      include_examples "has errors", "403 error (page requires login)"
+      include_examples "has errors", "A login is required to view this page."
       include_examples "has no warnings"
     end
 
     context "404 status code" do
       let(:uri) { "http://www.not-gov.uk/404" }
       before { stub_request(:get, uri).to_return(status: 404) }
-      include_examples "has errors", "404 error (page not found)"
+      include_examples "has errors", "This page was not found (404)."
       include_examples "has no warnings"
     end
 
     context "410 status code" do
       let(:uri) { "http://www.not-gov.uk/410" }
       before { stub_request(:get, uri).to_return(status: 410) }
-      include_examples "has errors", "410 error (page not found)"
+      include_examples "has errors", "This page was not found (404)."
       include_examples "has no warnings"
     end
 
     context "an unspecified 4xx status code" do
       let(:uri) { "http://www.not-gov.uk/418" }
       before { stub_request(:get, uri).to_return(status: 418) }
-      include_examples "has errors", "418 error (page is unavailable)"
+      include_examples "has errors", "This page is unavailable (418)."
       include_examples "has no warnings"
     end
 
     context "5xx status code" do
       let(:uri) { "http://www.not-gov.uk/500" }
       before { stub_request(:get, uri).to_return(status: 500) }
-      include_examples "has errors", "500 (server error)"
+      include_examples "has errors", "This page is responding with an error (500) and won't work for users."
       include_examples "has no warnings"
     end
 
