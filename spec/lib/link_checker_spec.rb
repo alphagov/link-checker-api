@@ -23,9 +23,10 @@ RSpec.describe LinkChecker do
       end
     end
 
-    shared_examples "has warnings" do
+    shared_examples "has warnings" do |warning = nil|
       it "should have warnings" do
         expect(subject.warnings).to_not be_empty
+        expect(subject.warnings).to include(warning) if warning
       end
     end
 
@@ -207,7 +208,21 @@ RSpec.describe LinkChecker do
       include_examples "has no warnings"
     end
 
-    context "403 status code" do
+    context "403 status code with Cloudflare challenge header" do
+      let(:uri) { "http://www.not-gov.uk/403" }
+      before do
+        stub_request(:get, uri).to_return(
+          status: 403,
+          headers: {
+            "cf-mitigated" => "challenge",
+          },
+        )
+      end
+      include_examples "has no errors"
+      include_examples "has warnings", "Our link checker was blocked from accessing the website."
+    end
+
+    context "403 status code without Cloudflare challenge header" do
       let(:uri) { "http://www.not-gov.uk/403" }
       before { stub_request(:get, uri).to_return(status: 403) }
       include_examples "has errors", "A login is required to view this page."

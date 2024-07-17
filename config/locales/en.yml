@@ -64,6 +64,11 @@ en:
     redirect: This redirects to a page not found (404).
   find_content_now: Find where the content is now hosted and link to that instead.
 
+  page_blocks_bots: Page blocks robots
+  page_blocked_bots:
+    singular: Our link checker was blocked from accessing the website.
+    redirect: This redirects to a page that blocked our link checker from accessing the website.
+
   page_requires_login: Page requires login
   login_required_to_view:
     singular: A login is required to view this page.

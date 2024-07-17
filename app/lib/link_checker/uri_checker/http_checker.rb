@@ -53,6 +53,12 @@ module LinkChecker::UriChecker
     end
   end
 
+  class PageBlocksBots < LinkChecker::UriChecker::Warning
+    def initialize(options = {})
+      super(summary: :page_blocks_bots, message: :page_blocked_bots, **options)
+    end
+  end
+
   class PageRequiresLogin < Error
     def initialize(options = {})
       super(summary: :page_requires_login, message: :login_required_to_view, **options)
@@ -172,7 +178,11 @@ module LinkChecker::UriChecker
       if response.status == 404 || response.status == 410
         add_problem(PageNotFound.new(from_redirect: from_redirect?))
       elsif response.status == 401 || response.status == 403
-        add_problem(PageRequiresLogin.new(from_redirect: from_redirect?))
+        if response.headers["cf-mitigated"] == "challenge"
+          add_problem(PageBlocksBots.new(from_redirect: from_redirect?))
+        else
+          add_problem(PageRequiresLogin.new(from_redirect: from_redirect?))
+        end
       elsif response.status >= 400 && response.status < 500
         add_problem(PageIsUnavailable.new(from_redirect: from_redirect?, status: response.status))
       elsif response.status >= 500 && response.status < 600

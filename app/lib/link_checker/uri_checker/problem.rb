@@ -47,6 +47,7 @@ module LinkChecker::UriChecker
       NoHost
       HttpCommunicationError
       PageNotFound
+      PageBlocksBots
       PageRequiresLogin
       PageIsUnavailable
       PageRespondsWithError
