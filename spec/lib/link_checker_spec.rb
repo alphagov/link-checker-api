@@ -348,7 +348,7 @@ RSpec.describe LinkChecker do
     context "bypassing the GOV.UK rate limiter" do
       before do
         stub_request(:get, uri)
-          .with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
+          .with(headers: { "Rate-Limit-Token": Rails.application.credentials.govuk_rate_limit_token, "Accept-Encoding": "none" })
           .to_return(status: 200)
       end
 
@@ -361,7 +361,7 @@ RSpec.describe LinkChecker do
         subject
 
         expect(WebMock).to have_requested(:get, uri)
-          .with(headers: { "Rate-Limit-Token": Rails.application.secrets.govuk_rate_limit_token, "Accept-Encoding": "none" })
+          .with(headers: { "Rate-Limit-Token": Rails.application.credentials.govuk_rate_limit_token, "Accept-Encoding": "none" })
       end
     end
 
@@ -370,12 +370,12 @@ RSpec.describe LinkChecker do
       let(:uri) { "http://#{host}/a/page" }
       let!(:request) do
         stub_request(:get, uri)
-          .with(headers: { "Authorization": "Basic #{Base64.encode64(Rails.application.secrets.govuk_basic_auth_credentials)}".strip })
+          .with(headers: { "Authorization": "Basic #{Base64.encode64(Rails.application.credentials.govuk_basic_auth_credentials)}".strip })
           .to_return(status: 200)
       end
 
       before do
-        LinkCheckerApi.hosts_with_basic_authorization[host.to_s] = Rails.application.secrets.govuk_basic_auth_credentials
+        LinkCheckerApi.hosts_with_basic_authorization[host.to_s] = Rails.application.credentials.govuk_basic_auth_credentials
       end
 
       it "should add basic auth" do
