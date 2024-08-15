@@ -1,3 +1,4 @@
+require "active_support"
 require "pact/provider/rspec"
 require "webmock/rspec"
 require "factory_bot_rails"
