@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "7.2.0"
+gem "rails", "7.2.1"
 
 gem "activerecord-import"
 gem "addressable"
