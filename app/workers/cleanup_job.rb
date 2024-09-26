@@ -1,7 +1,7 @@
 require "sidekiq-scheduler"
 
-class CleanupWorker
-  include Sidekiq::Worker
+class CleanupJob
+  include Sidekiq::Job
 
   def perform
     checks_to_perform.each do |check_id|

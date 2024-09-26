@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CleanupWorker do
+RSpec.describe CleanupJob do
   describe "perform" do
     let(:link1) { create(:link, id: 1) }
     let(:link2) { create(:link, id: 2) }
