@@ -5,7 +5,7 @@ class CleanupWorker
 
   def perform
     checks_to_perform.each do |check_id|
-      CheckWorker.perform_async(check_id)
+      CheckJob.perform_async(check_id)
     end
 
     old_batches.delete_all

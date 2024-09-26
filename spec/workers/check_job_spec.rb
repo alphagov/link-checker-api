@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CheckWorker do
+RSpec.describe CheckJob do
   specify { expect(described_class).to have_valid_sidekiq_options }
 
   describe "perform" do

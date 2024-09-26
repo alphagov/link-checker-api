@@ -1,5 +1,5 @@
-class CheckWorker
-  include Sidekiq::Worker
+class CheckJob
+  include Sidekiq::Job
   include PerformAsyncInQueue
 
   sidekiq_options retry: 3, lock: :until_and_while_executing, lock_args_method: :unique_args
