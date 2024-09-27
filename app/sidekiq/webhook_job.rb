@@ -49,3 +49,5 @@ class WebhookJob
     OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha1"), key, body)
   end
 end
+
+WebhookWorker = WebhookJob

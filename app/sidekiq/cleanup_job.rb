@@ -28,3 +28,5 @@ private
     Batch.where(id: BatchCheck.select(:batch_id).where(check: old_checks))
   end
 end
+
+CleanupWorker = CleanupJob
