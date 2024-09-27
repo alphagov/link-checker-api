@@ -23,7 +23,7 @@ class Batch < ApplicationRecord
     return unless completed?
     return if webhook_triggered
 
-    WebhookWorker.perform_async(
+    WebhookJob.perform_async(
       BatchPresenter.new(self).report.to_json,
       webhook_uri,
       webhook_secret_token,

@@ -36,7 +36,7 @@ class CheckController < ApplicationController
 
     check = Check.create!(link:)
 
-    CheckWorker.run(
+    CheckJob.run(
       check.id,
       priority: check_params.priority,
       synchronous: check_params.synchronous,

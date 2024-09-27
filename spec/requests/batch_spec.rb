@@ -40,7 +40,7 @@ RSpec.describe "/batch endpoint" do
       include_examples "returns batch report"
 
       it "creates a job" do
-        expect(CheckWorker.jobs.size).to eq(2)
+        expect(CheckJob.jobs.size).to eq(2)
       end
     end
 

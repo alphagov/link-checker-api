@@ -48,7 +48,7 @@ class BatchController < ApplicationController
       render(json: batch_report(batch), status: :created)
     else
       batch.checks.each do |check|
-        CheckWorker.run(check.id, priority: create_params.priority)
+        CheckJob.run(check.id, priority: create_params.priority)
       end
 
       render(json: batch_report(batch.reload), status: :accepted)

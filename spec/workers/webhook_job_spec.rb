@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe WebhookWorker do
+RSpec.describe WebhookJob do
   specify { expect(described_class).to have_valid_sidekiq_options }
 
   describe "perform" do

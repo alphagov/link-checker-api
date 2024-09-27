@@ -1,8 +1,8 @@
-class RestartWorkerException < RuntimeError
+class RestartJobException < RuntimeError
 end
 
-class WebhookWorker
-  include Sidekiq::Worker
+class WebhookJob
+  include Sidekiq::Job
 
   sidekiq_options queue: :webhooks, retry: 4, lock: :until_and_while_executing, lock_args_method: :unique_args
 
@@ -25,7 +25,7 @@ class WebhookWorker
     connection.post do |req|
       req.url uri
       req.headers["Content-Type"] = "application/json"
-      req.headers["User-Agent"] = "#{ENV.fetch('GOVUK_APP_NAME', 'link-checker-api')} (webhook-worker)"
+      req.headers["User-Agent"] = "#{ENV.fetch('GOVUK_APP_NAME', 'link-checker-api')} (webhook-job)"
       req.headers[SIGNATURE_HEADER] = generate_signature(report, secret_token) if secret_token
       req.body = report
     end
@@ -33,7 +33,7 @@ class WebhookWorker
     batch.update!(webhook_triggered: true)
   rescue Faraday::ClientError => e
     logger.error e.message
-    raise RestartWorkerException
+    raise RestartJobException
   rescue Faraday::ServerError => e
     logger.error e.message
   end
@@ -49,3 +49,5 @@ class WebhookWorker
     OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha1"), key, body)
   end
 end
+
+WebhookWorker = WebhookJob

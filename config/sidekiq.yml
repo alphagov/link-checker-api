@@ -8,4 +8,4 @@
   :schedule:
     cleanup:
       every: 60m
-      class: CleanupWorker
+      class: CleanupJob
