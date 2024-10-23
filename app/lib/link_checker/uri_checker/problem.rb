@@ -54,7 +54,7 @@ module LinkChecker::UriChecker
       PageRespondsUnusually
       TooManyRedirects
       RedirectLoop
-      TooManyRedirectsSlowly
+      PointlessRedirect
       CredentialsInUri
       SuspiciousTld
       SuspiciousDomain

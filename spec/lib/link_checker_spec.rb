@@ -36,6 +36,12 @@ RSpec.describe LinkChecker do
       end
     end
 
+    shared_examples "has a suggested fix" do |fix|
+      it "should have a suggested fix of #{fix}" do
+        expect(subject.suggested_fix).to eq(fix)
+      end
+    end
+
     before do
       stub_request(:get, "https://www.gov.uk/ok").to_return(status: 200)
 
@@ -281,22 +287,19 @@ RSpec.describe LinkChecker do
       include_examples "has warnings"
     end
 
-    context "multiple redirects" do
+    context "pointless redirect" do
+      let(:uri) { "http://www.gov.uk/redirect" }
+
       before do
         stub_request(:get, uri)
-          .to_return(status: 301, headers: { "Location" => "/multiple_redirects_1" })
+          .to_return(status: 301, headers: { "Location" => "/some_other_place" })
 
-        2.times do |i|
-          stub_request(:get, "http://www.not-gov.uk/multiple_redirects_#{i}")
-            .to_return(status: 301, headers: { "Location" => "/multiple_redirects_#{i + 1}" })
-        end
-
-        stub_request(:get, "http://www.not-gov.uk/multiple_redirects_2")
-          .to_return(status: 301, headers: { "Location" => "https://www.gov.uk/ok" })
+        stub_request(:get, "http://www.gov.uk/some_other_place")
+          .to_return(status: 200)
       end
 
-      let(:uri) { "http://www.not-gov.uk/multiple_redirects" }
       include_examples "has a problem summary", "Bad Redirect"
+      include_examples "has a suggested fix", "Link directly to: http://www.gov.uk/some_other_place"
       include_examples "has warnings"
       include_examples "has no errors"
     end

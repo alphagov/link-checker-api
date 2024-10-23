@@ -37,7 +37,7 @@ en:
   contact_site_administrator: Contact the site administrator to see if they have an issue that can be fixed.
 
   bad_redirect: Bad Redirect
-  redirects_too_many_times_slowly: This redirects too many times and will open slowly.
+  pointless_redirect: This link redirects to another site.
   link_directly_to: "Link directly to: %{uri}"
 
   login_details_in_url: Login details in URL
