@@ -17,9 +17,9 @@ module LinkChecker::UriChecker
     end
   end
 
-  class TooManyRedirectsSlowly < LinkChecker::UriChecker::Warning
+  class PointlessRedirect < LinkChecker::UriChecker::Warning
     def initialize(options = {})
-      super(summary: :bad_redirect, message: :redirects_too_many_times_slowly, suggested_fix: :link_directly_to, **options)
+      super(summary: :bad_redirect, message: :pointless_redirect, suggested_fix: :link_directly_to, **options)
     end
   end
 
@@ -136,14 +136,14 @@ module LinkChecker::UriChecker
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
     REDIRECT_LOOP_LIMIT = 5
-    REDIRECT_WARNING = 2
+    REDIRECT_WARNING = 1
     RESPONSE_TIME_LIMIT = 15
     RESPONSE_TIME_WARNING = 5
 
     def check_redirects
       add_problem(TooManyRedirects.new(from_redirect: from_redirect?)) if redirect_history.length >= REDIRECT_LIMIT
       add_problem(RedirectLoop.new(from_redirect: from_redirect?)) if redirect_history.count(uri) >= REDIRECT_LOOP_LIMIT
-      add_problem(TooManyRedirectsSlowly.new(from_redirect: :from_redirect?, uri:)) if redirect_history.length == REDIRECT_WARNING
+      add_problem(PointlessRedirect.new(from_redirect: :from_redirect?, uri:)) if redirect_history.length >= REDIRECT_WARNING
     end
 
     def check_credentials_in_uri
