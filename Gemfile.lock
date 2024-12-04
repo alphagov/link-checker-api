@@ -103,7 +103,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.4.0)
+    date (3.4.1)
     diff-lcs (1.5.1)
     dig_rb (1.0.1)
     docile (1.4.1)
@@ -136,7 +136,7 @@ GEM
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
-    gds-api-adapters (97.4.0)
+    gds-api-adapters (97.5.0)
       addressable
       link_header
       null_logger
@@ -179,7 +179,7 @@ GEM
       sentry-rails (~> 5.3)
       sentry-ruby (~> 5.3)
       statsd-ruby (~> 1.5)
-    govuk_sidekiq (9.0.2)
+    govuk_sidekiq (9.0.3)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-client (>= 0.22.2)
@@ -226,10 +226,10 @@ GEM
     mime-types (3.6.0)
       logger
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2024.1105)
+    mime-types-data (3.2024.1203)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.2)
+    minitest (5.25.4)
     msgpack (1.7.5)
     multi_json (1.15.0)
     multi_xml (0.7.1)
@@ -703,7 +703,7 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uri (1.0.2)
-    useragent (0.16.10)
+    useragent (0.16.11)
     version_gem (1.1.4)
     warden (1.2.9)
       rack (>= 2.0.9)
