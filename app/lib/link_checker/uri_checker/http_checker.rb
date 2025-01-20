@@ -175,9 +175,9 @@ module LinkChecker::UriChecker
 
       add_problem(SlowResponse.new(from_redirect: from_redirect?)) if response_time > RESPONSE_TIME_WARNING
 
-      if response.status == 404 || response.status == 410
+      if [404, 410].include?(response.status)
         add_problem(PageNotFound.new(from_redirect: from_redirect?))
-      elsif response.status == 401 || response.status == 403
+      elsif [401, 403].include?(response.status)
         if response.headers["cf-mitigated"] == "challenge"
           add_problem(PageBlocksBots.new(from_redirect: from_redirect?))
         else
