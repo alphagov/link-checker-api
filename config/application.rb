@@ -24,7 +24,7 @@ module LinkCheckerApi
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -43,8 +43,11 @@ module LinkCheckerApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
     config.action_controller.default_protect_from_forgery = false
+
     config.active_job.queue_adapter = :sidekiq
+
     # GDS SSO requires a session to exist
     middleware.insert_before Rack::Head, ActionDispatch::Session::CacheStore
   end
