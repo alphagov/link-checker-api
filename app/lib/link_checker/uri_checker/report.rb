@@ -29,6 +29,13 @@ module LinkChecker::UriChecker
         .uniq
     end
 
+    def danger
+      problems
+        .select { |problem| problem.type == :danger }
+        .map(&:message)
+        .uniq
+    end
+
     def errors
       problems
         .select { |problem| problem.type == :error }
