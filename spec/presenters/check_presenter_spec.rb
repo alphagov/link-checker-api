@@ -15,6 +15,7 @@ RSpec.describe CheckPresenter do
       suggested_fix: nil,
       uri: link.uri,
       warnings: [],
+      danger: [],
     }
   end
 

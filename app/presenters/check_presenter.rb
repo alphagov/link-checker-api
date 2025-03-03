@@ -7,6 +7,7 @@ class CheckPresenter < SimpleDelegator
       problem_summary:,
       errors: link_errors,
       warnings: link_warnings,
+      danger: link_danger,
       suggested_fix:,
     }
   end

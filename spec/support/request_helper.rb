@@ -10,6 +10,7 @@ module RequestHelper
       "problem_summary" => ok_or_pending ? nil : anything,
       "errors" => params.fetch(:errors, []),
       "warnings" => params.fetch(:warnings, []),
+      "danger" => params.fetch(:danger, []),
       "suggested_fix" => ok_or_pending ? nil : anything,
     }
   end
