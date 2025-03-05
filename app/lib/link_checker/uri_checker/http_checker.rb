@@ -35,7 +35,7 @@ module LinkChecker::UriChecker
     end
   end
 
-  class SuspiciousDomain < LinkChecker::UriChecker::Warning
+  class SuspiciousDomain < LinkChecker::UriChecker::Danger
     def initialize(options = {})
       super(summary: :suspicious_destination, message: :website_on_list_of_suspicious_domains, **options)
     end
