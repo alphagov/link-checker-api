@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2017_07_13_101143) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_04_095608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2017_07_13_101143) do
     t.integer "link_id", null: false
     t.string "problem_summary"
     t.string "suggested_fix"
+    t.string "link_danger", default: [], null: false, array: true
     t.index ["link_id"], name: "index_checks_on_link_id"
   end
 

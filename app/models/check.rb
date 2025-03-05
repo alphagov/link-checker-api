@@ -39,6 +39,10 @@ class Check < ApplicationRecord
     link_warnings.any?
   end
 
+  def has_danger?
+    link_danger.any?
+  end
+
   def is_ok?
     !is_pending? && !has_errors? && !has_warnings?
   end
@@ -51,6 +55,7 @@ class Check < ApplicationRecord
     return :pending if is_pending?
     return :broken if has_errors?
     return :caution if has_warnings?
+    return :danger if has_danger?
 
     :ok
   end
