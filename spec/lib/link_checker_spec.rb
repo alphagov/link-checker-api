@@ -30,6 +30,13 @@ RSpec.describe LinkChecker do
       end
     end
 
+    shared_examples "has danger" do |danger = nil|
+      it "should have danger" do
+        expect(subject.danger).to_not be_empty
+        expect(subject.danger).to include(danger) if danger
+      end
+    end
+
     shared_examples "has a problem summary" do |summary|
       it "should have a problem summary of #{summary}" do
         expect(subject.problem_summary).to eq(summary)
@@ -102,7 +109,7 @@ RSpec.describe LinkChecker do
       let(:uri) { "https://malicious.example.com" }
       before { stub_request(:get, uri).to_return(status: 200) }
       include_examples "has a problem summary", "Suspicious Destination"
-      include_examples "has warnings"
+      include_examples "has danger"
       include_examples "has no errors"
     end
 

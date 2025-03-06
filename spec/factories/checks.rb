@@ -3,6 +3,7 @@ FactoryBot.define do
     started_at { nil }
     completed_at { nil }
     link_warnings { [] }
+    link_danger { [] }
     link_errors { [] }
 
     trait :completed do
