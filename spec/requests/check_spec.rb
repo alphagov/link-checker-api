@@ -68,6 +68,24 @@ RSpec.describe "check path", type: :request do
     include_examples "returns link report"
   end
 
+  context "when a checked uri, that is of status danger, is requested" do
+    let(:danger) { ["Has a dangerous link"] }
+    let(:link_report) { build_link_report(uri:, status: "danger", danger:) }
+
+    before do
+      create(
+        :check,
+        link: create(:link, uri:),
+        link_danger: danger,
+        completed_at: 1.minute.ago,
+      )
+
+      get check_link_path(uri:)
+    end
+
+    include_examples "returns link report"
+  end
+
   context "when a checked uri, that is of status broken, is requested" do
     let(:errors) { ["Has a cyclic redirect."] }
     let(:link_report) { build_link_report(uri:, status: "broken", errors:) }
