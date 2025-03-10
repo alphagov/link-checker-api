@@ -14,9 +14,7 @@ module LinkChecker::UriChecker
       redirect_history.any?
     end
 
-    def add_problem(problem)
-      @report.add_problem(problem)
-    end
+    delegate :add_problem, to: :@report
 
     def http_client
       @http_client ||= client
