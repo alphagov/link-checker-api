@@ -2,6 +2,7 @@ class BatchPresenter < SimpleDelegator
   def report
     {
       id:,
+      guid: guid,
       status: status.to_s,
       links: checks.map { |check| CheckPresenter.new(check).link_report },
       totals: {

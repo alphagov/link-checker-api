@@ -53,12 +53,16 @@ RSpec.describe "/batch endpoint" do
 
       before do
         post "/batch",
-             params: batch_request.to_json,
-             headers: { "Content-Type" => "application/json" }
+            params: batch_request.to_json,
+            headers: { "Content-Type" => "application/json" }
       end
 
       it "creates a batch with a secret key" do
         expect(Batch.last.webhook_secret_token).to eq(webhook_secret_token)
+      end
+
+      it "creates a guid" do
+        expect(Batch.last.guid).to match(/\A[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\z/)
       end
     end
 

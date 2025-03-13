@@ -38,6 +38,7 @@ module RequestHelper
 
     {
       "id" => params.fetch(:id, kind_of(Integer)),
+      "guid" => params.fetch(:guid, anything),
       "status" => params.fetch(:status, "in_progress"),
       "completed_at" => params.fetch(:completed_at, anything),
       "totals" => totals,
