@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_04_095608) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_13_122045) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pgcrypto"
 
   create_table "batch_checks", id: :serial, force: :cascade do |t|
     t.integer "batch_id", null: false
@@ -28,6 +29,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_04_095608) do
     t.string "webhook_uri"
     t.string "webhook_secret_token"
     t.boolean "webhook_triggered", default: false, null: false
+    t.string "guid", default: -> { "gen_random_uuid()" }
+    t.index ["guid"], name: "index_batches_on_guid", unique: true
   end
 
   create_table "checks", id: :serial, force: :cascade do |t|
