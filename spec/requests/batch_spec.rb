@@ -16,6 +16,42 @@ RSpec.describe "/batch endpoint" do
   end
 
   describe "POST /batch" do
+    context "checking the ID generation" do
+      let(:uri_a) { "http://example.com/a" }
+      let(:uri_b) { "http://example.com/b" }
+      let(:batch_request) { build_batch_request(uris: [uri_a, uri_b]) }
+
+      it "creates a timestamp-based ID" do
+        Timecop.freeze(Time.zone.local(2020, 1, 1, 10, 30, 0)) do
+          post "/batch",
+               params: batch_request.to_json,
+               headers: { "Content-Type" => "application/json" }
+
+          expect(Batch.last.id).to eq(1_577_874_600)
+        end
+      end
+
+      it "auto-increments ID if there is a clash" do
+        Timecop.freeze(Time.zone.local(2020, 1, 1, 10, 30, 0)) do
+          post "/batch",
+               params: batch_request.to_json,
+               headers: { "Content-Type" => "application/json" }
+          post "/batch",
+               params: batch_request.to_json,
+               headers: { "Content-Type" => "application/json" }
+          post "/batch",
+               params: batch_request.to_json,
+               headers: { "Content-Type" => "application/json" }
+
+          expect(Batch.last(3).pluck(:id)).to eq([
+            1_577_874_600,
+            1_577_874_601,
+            1_577_874_602,
+          ])
+        end
+      end
+    end
+
     context "when creating a batch of links that haven't been checked" do
       let(:uri_a) { "http://example.com/a" }
       let(:uri_b) { "http://example.com/b" }
