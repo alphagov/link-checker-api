@@ -113,10 +113,12 @@ module LinkChecker::UriChecker
         return add_problem(NoHost.new(from_redirect: from_redirect?))
       end
 
+      check_suspicious_domains
+      return report if report.problems.any?
+
       check_redirects
       check_credentials_in_uri
       check_top_level_domain
-      check_suspicious_domains
 
       check_request
       return report if report.has_errors?
