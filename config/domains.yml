@@ -9,8 +9,6 @@ default: &default
 
 test:
   <<: *default
-  suspicious_domains:
-    - malicious.example.com
 
 development:
   <<: *default
