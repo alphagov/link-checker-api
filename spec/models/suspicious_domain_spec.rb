@@ -20,4 +20,34 @@ RSpec.describe SuspiciousDomain, type: :model do
       expect([ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique]).to include(e.class)
     end
   end
+
+  it "only allows domains to be saved" do
+    suspicious_domain = SuspiciousDomain.new(domain: "example.com")
+    expect(suspicious_domain).to be_valid
+  end
+
+  it "prevents domains prefixed with protocol from being saved" do
+    suspicious_domain = SuspiciousDomain.new(domain: "http://example.com")
+    expect(suspicious_domain).not_to be_valid
+  end
+
+  it "prevents domains suffixed with any path from being saved" do
+    suspicious_domain = SuspiciousDomain.new(domain: "example.com/foo")
+    expect(suspicious_domain).not_to be_valid
+  end
+
+  it "prevents domains suffixed with even a stray '/' from being saved" do
+    suspicious_domain = SuspiciousDomain.new(domain: "example.com/")
+    expect(suspicious_domain).not_to be_valid
+  end
+
+  it "prevents domains surrounded by any spacing from being saved" do
+    suspicious_domain = SuspiciousDomain.new(domain: " example.com ")
+    expect(suspicious_domain).not_to be_valid
+  end
+
+  it "prevents things that don't look like domains from being saved" do
+    suspicious_domain = SuspiciousDomain.new(domain: "example")
+    expect(suspicious_domain).not_to be_valid
+  end
 end
