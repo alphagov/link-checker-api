@@ -32,6 +32,7 @@ $ curl -s http://link-checker-api.dev.gov.uk/check\?uri\=https%3A%2F%2Fwww.gov.u
   "checked": null,
   "errors": [],
   "warnings": [],
+  "danger": [],
   "problem_summary": null,
   "suggested_fix": null
 }
@@ -45,6 +46,7 @@ $ curl -s http://link-checker-api.dev.gov.uk/check\?uri\=https%3A%2F%2Fwww.gov.u
   "checked": "2017-04-12T18:47:16Z",
   "errors": [],
   "warnings": [],
+  "danger": [],
   "problem_summary": null,
   "suggested_fix": null
 }
@@ -90,6 +92,7 @@ $ curl -s -H "Content-Type: application/json" -X POST -d '{"uris": ["https://www
       "checked": "2017-04-12T18:47:16Z",
       "errors": [],
       "warnings": [],
+      "danger": [],
       "problem_summary": null,
       "suggested_fix": null
     },
@@ -101,6 +104,7 @@ $ curl -s -H "Content-Type: application/json" -X POST -d '{"uris": ["https://www
         "Received 404 response from the server."
       ],
       "warnings": [],
+      "danger": [],
       "problem_summary": "404 error (page not found)",
       "suggested_fix": ""
     },
@@ -109,7 +113,7 @@ $ curl -s -H "Content-Type: application/json" -X POST -d '{"uris": ["https://www
       "status": "pending",
       "checked": null,
       "errors": [],
-      "warnings": [],
+      "danger": [],
       "problem_summary": null,
       "suggested_fix": null
     }
@@ -119,7 +123,8 @@ $ curl -s -H "Content-Type: application/json" -X POST -d '{"uris": ["https://www
     "ok": 1,
     "caution": 0,
     "broken": 1,
-    "pending": 1
+    "pending": 1,
+    "danger": 1
   },
   "completed_at": null
 }
@@ -171,6 +176,7 @@ $ curl -s http://link-checker-api.dev.gov.uk/batch/137125 | jq
       "checked": "2017-04-12T18:47:16Z",
       "errors": [],
       "warnings": [],
+      "danger": [],
       "problem_summary": null,
       "suggested_fix": null
     },
@@ -182,6 +188,7 @@ $ curl -s http://link-checker-api.dev.gov.uk/batch/137125 | jq
         "Received 404 response from the server."
       ],
       "warnings": [],
+      "danger": [],
       "problem_summary": "404 error (page not found)",
       "suggested_fix": ""
     },
@@ -191,6 +198,7 @@ $ curl -s http://link-checker-api.dev.gov.uk/batch/137125 | jq
       "checked": "2017-04-12T18:55:29Z",
       "errors": [],
       "warnings": [],
+      "danger": [],
       "problem_summary": null,
       "suggested_fix": null
     }
@@ -200,7 +208,8 @@ $ curl -s http://link-checker-api.dev.gov.uk/batch/137125 | jq
     "ok": 2,
     "caution": 0,
     "broken": 1,
-    "pending": 0
+    "pending": 0,
+    "danger": 0
   },
   "completed_at": "2017-04-12T18:55:29Z"
 }
@@ -257,6 +266,7 @@ And verify this matches the value in the header.
   "checked": "2017-04-12T18:47:16Z",
   "errors": [],
   "warnings": [],
+  "danger": [],
   "problem_summary": null,
   "suggested_fix": null
 }
@@ -277,6 +287,9 @@ And verify this matches the value in the header.
       end user should apply caution when linking to it.
     - "broken" - There were errors detected for this link, an end user should
       not link to it.
+    - "danger" - There were dangers detected for this link, and under no
+      circumstances should that link be used. E.g. a link to a site that has
+      been taken over by a malicious third party.
 - `checked`
   - An [RFC 3339][rfc-3339] formatted timestamp, will be `null` for a link with a
     `status` of "pending".
@@ -284,12 +297,14 @@ And verify this matches the value in the header.
   - An array of strings with details of each error found.
 - `warnings`
   - An array of strings with details of each warning found.
+- `danger`
+  - An array of strings with details of each danger found.
 - `problem_summary`
   - A short description of the most critical problem with the link.
 - `suggested_fix`
   - Where possible, this provides a suggested fix to the user.
 
-`errors`, `warnings`, `problem_summary` and `suggested_fix` are all designed to
+`errors`, `warnings`, `danger`, `problem_summary` and `suggested_fix` are all designed to
 be shown to the end user.
 
 ## BatchReport entity
@@ -308,6 +323,7 @@ be shown to the end user.
       "checked": "2017-04-12T18:47:16Z",
       "errors": [],
       "warnings": [],
+      "danger": [],
       "problem_summary": null,
       "suggested_fix": null
     },
@@ -319,6 +335,7 @@ be shown to the end user.
         "Received 404 response from the server."
       ],
       "warnings": [],
+      "danger": [],
       "problem_summary": "404 error (page not found)",
       "suggested_fix": ""
     },
@@ -328,6 +345,7 @@ be shown to the end user.
       "checked": "2017-04-12T18:55:29Z",
       "errors": [],
       "warnings": [],
+      "danger": [],
       "problem_summary": null,
       "suggested_fix": null
     }
@@ -337,7 +355,8 @@ be shown to the end user.
     "ok": 2,
     "caution": 0,
     "broken": 1,
-    "pending": 0
+    "pending": 0,
+    "danger": 0
   },
   "completed_at": "2017-04-12T18:55:29Z"
 }
@@ -362,6 +381,7 @@ be shown to the end user.
     - `caution` - The number of links with a status of "caution"
     - `broken` - The number of links with a status of "broken"
     - `pending` - The number of links with a status of "pending"
+    - `danger` - The number of links with a status of "danger"
 - `completed_at`
   - An [RFC 3339][rfc-3339] formatted timestamp if this batch has a status of
     "completed" otherwise null.
