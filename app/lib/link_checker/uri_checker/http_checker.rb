@@ -134,7 +134,7 @@ module LinkChecker::UriChecker
     attr_reader :response
 
     INVALID_TOP_LEVEL_DOMAINS = %w[xxx adult dating porn sex sexy singles].freeze
-    SUSPICIOUS_DOMAINS = Rails.application.config_for(:domains).suspicious_domains.freeze
+    SUSPICIOUS_DOMAINS = ::SuspiciousDomain.pluck(:domain)
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
     REDIRECT_LOOP_LIMIT = 5

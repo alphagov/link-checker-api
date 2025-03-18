@@ -7,3 +7,4 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.find_or_create_by!(name: "Test user")
+SuspiciousDomain.find_or_create_by!(domain: "malicious.example.com")
