@@ -34,6 +34,7 @@ module RequestHelper
       "caution" => links.count { |link| link["status"] == "caution" },
       "broken" => links.count { |link| link["status"] == "broken" },
       "pending" => links.count { |link| link["status"] == "pending" },
+      "danger" => links.count { |link| link["status"] == "danger" },
     }
 
     {
