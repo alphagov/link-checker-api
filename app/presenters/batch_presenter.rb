@@ -10,6 +10,7 @@ class BatchPresenter < SimpleDelegator
         caution: checks.each.count { |check| check.status == :caution },
         broken: checks.each.count { |check| check.status == :broken },
         pending: checks.each.count { |check| check.status == :pending },
+        danger: checks.each.count { |check| check.status == :danger },
       },
       completed_at: completed_at.try(:iso8601),
     }
