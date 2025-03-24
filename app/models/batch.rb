@@ -42,7 +42,9 @@ private
 
     # Use a transaction to ensure atomicity
     self.id = self.class.transaction do
-      # Check if current epoch time is already taken
+      # Lock the rows while checking for an existing ID
+      self.class.connection.execute("LOCK TABLE #{self.class.table_name} IN ACCESS EXCLUSIVE MODE")
+
       if self.class.exists?(id: current_epoch)
         # If taken, get the highest ID and increment
         self.class.maximum(:id).to_i + 1
