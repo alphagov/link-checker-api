@@ -55,7 +55,7 @@ module LinkChecker::UriChecker
 
   class PageBlocksBots < LinkChecker::UriChecker::Warning
     def initialize(options = {})
-      super(summary: :page_blocks_bots, message: :page_blocked_bots, **options)
+      super(summary: :page_blocks_bots, message: :page_blocked_bots, suggested_fix: :how_to_fix_page_blocks_bots, **options)
     end
   end
 

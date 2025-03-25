@@ -226,7 +226,7 @@ RSpec.describe LinkChecker do
         )
       end
       include_examples "has no errors"
-      include_examples "has warnings", "Our link checker was blocked from accessing the website."
+      include_examples "has warnings", "Our automatic link checker was blocked from accessing the website."
     end
 
     context "403 status code without Cloudflare challenge header" do

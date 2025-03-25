@@ -66,8 +66,9 @@ en:
 
   page_blocks_bots: Page blocks robots
   page_blocked_bots:
-    singular: Our link checker was blocked from accessing the website.
-    redirect: This redirects to a page that blocked our link checker from accessing the website.
+    singular: Our automatic link checker was blocked from accessing the website.
+    redirect: This redirects to a page that blocked our automatic link checker from accessing.
+  how_to_fix_page_blocks_bots: Check the link yourself to make sure it works.
 
   page_requires_login: Page requires login
   login_required_to_view:
