@@ -21,7 +21,7 @@ private
   end
 
   def old_checks
-    Check.where("completed_at < ?", OLD_CHECK_THRESHOLD.ago)
+    @old_checks ||= Check.where("completed_at < ?", OLD_CHECK_THRESHOLD.ago)
   end
 
   def old_batches
