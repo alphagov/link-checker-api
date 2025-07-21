@@ -770,6 +770,7 @@ DEPENDENCIES
   brakeman
   byebug
   climate_control
+  csv
   database_cleaner
   factory_bot_rails
   faraday

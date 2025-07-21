@@ -5,6 +5,7 @@ gem "rails", "8.0.2"
 gem "activerecord-import"
 gem "addressable"
 gem "bootsnap", require: false
+gem "csv"
 gem "faraday"
 gem "faraday-cookie_jar"
 gem "gds-sso"
