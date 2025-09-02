@@ -53,6 +53,12 @@ en:
     singular: This link is hosted on a domain which is on our list of suspicious domains
     redirect: This redirects to a website which is on our list of suspicious domains
 
+  internal_domain: Internal domain
+
+  website_on_internal_domain:
+    singular: This links to an internal domain that is not intended to be viewed by the public.
+    redirect: This redirects to an internal domain that is not intended to be viewed by the public.
+
   slow_page: Slow page
   page_is_slow:
     singular: This page is slow loading and may frustrate users.
