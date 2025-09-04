@@ -105,6 +105,14 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
     end
 
+    context "host is internal" do
+      let(:uri) { "https://integration.publishing.service.gov.uk/foo/bar" }
+      before { stub_request(:get, uri).to_return(status: 200) }
+      include_examples "has a problem summary", "Internal domain"
+      include_examples "has warnings"
+      include_examples "has no errors"
+    end
+
     context "domain is risky" do
       let(:uri) { "https://malicious.example.com" }
       before { stub_request(:get, uri).to_return(status: 200) }

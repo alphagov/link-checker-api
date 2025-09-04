@@ -45,6 +45,7 @@ module LinkChecker::UriChecker
       UnusualUrl
       NotAvailableOnline
       NoHost
+      InternalDomain
       HttpCommunicationError
       PageNotFound
       PageBlocksBots

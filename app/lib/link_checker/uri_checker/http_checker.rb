@@ -41,6 +41,12 @@ module LinkChecker::UriChecker
     end
   end
 
+  class InternalDomain < LinkChecker::UriChecker::Warning
+    def initialize(options = {})
+      super(summary: :internal_domain, message: :website_on_internal_domain, **options)
+    end
+  end
+
   class SlowResponse < LinkChecker::UriChecker::Warning
     def initialize(options = {})
       super(summary: :slow_page, message: :page_is_slow, suggested_fix: :contact_site_administrator, **options)
@@ -119,6 +125,7 @@ module LinkChecker::UriChecker
       check_redirects
       check_credentials_in_uri
       check_top_level_domain
+      check_internal_domain
 
       check_request
       return report if report.has_errors?
@@ -134,6 +141,9 @@ module LinkChecker::UriChecker
     attr_reader :response
 
     INVALID_TOP_LEVEL_DOMAINS = %w[xxx adult dating porn sex sexy singles].freeze
+    INTERNAL_HOSTS = %w[
+      publishing.service.gov.uk
+    ].freeze
     SUSPICIOUS_DOMAINS = ::SuspiciousDomain.pluck(:domain)
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
@@ -164,6 +174,12 @@ module LinkChecker::UriChecker
     def check_suspicious_domains
       if SUSPICIOUS_DOMAINS.any? { |d| uri.host.ends_with? d }
         add_problem(SuspiciousDomain.new(from_redirect: from_redirect?))
+      end
+    end
+
+    def check_internal_domain
+      if INTERNAL_HOSTS.any? { |d| uri.host == d || uri.host.end_with?(".#{d}") }
+        add_problem(InternalDomain.new(from_redirect: from_redirect?))
       end
     end
 
