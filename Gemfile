@@ -15,7 +15,7 @@ gem "pg"
 gem "plek"
 gem "sentry-sidekiq"
 gem "sidekiq-scheduler"
-gem "sidekiq-unique-jobs", "< 8.0.12"
+gem "sidekiq-unique-jobs"
 
 group :development, :test do
   gem "brakeman"
