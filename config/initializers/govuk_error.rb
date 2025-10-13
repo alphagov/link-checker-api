@@ -4,4 +4,8 @@ GovukError.configure do |config|
     Faraday::ConnectionFailed
     RestartJobException
   ]
+
+  config.excluded_exceptions += %w[
+    RestartJobException
+  ]
 end
