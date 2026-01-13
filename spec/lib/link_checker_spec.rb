@@ -113,6 +113,13 @@ RSpec.describe LinkChecker do
       include_examples "has no errors"
     end
 
+    context "subdomain is the asset manager service" do
+      let(:uri) { "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/123/file.pdf" }
+      before { stub_request(:get, uri).to_return(status: 200) }
+      include_examples "has no errors"
+      include_examples "has no warnings"
+    end
+
     context "domain is risky" do
       let(:uri) { "https://malicious.example.com" }
       before { stub_request(:get, uri).to_return(status: 200) }
