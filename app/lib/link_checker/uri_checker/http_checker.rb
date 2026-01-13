@@ -144,6 +144,7 @@ module LinkChecker::UriChecker
     INTERNAL_HOSTS = %w[
       publishing.service.gov.uk
     ].freeze
+    EXTERNAL_SUBDOMAINS = %w[assets].freeze
     SUSPICIOUS_DOMAINS = ::SuspiciousDomain.pluck(:domain)
     REDIRECT_STATUS_CODES = [301, 302, 303, 307, 308].freeze
     REDIRECT_LIMIT = 8
@@ -178,9 +179,18 @@ module LinkChecker::UriChecker
     end
 
     def check_internal_domain
-      if INTERNAL_HOSTS.any? { |d| uri.host == d || uri.host.end_with?(".#{d}") }
-        add_problem(InternalDomain.new(from_redirect: from_redirect?))
-      end
+      return unless internal_domain?
+      return if external_subdomains?
+
+      add_problem(InternalDomain.new(from_redirect: from_redirect?))
+    end
+
+    def internal_domain?
+      INTERNAL_HOSTS.any? { |d| uri.host == d || uri.host.end_with?(".#{d}") }
+    end
+
+    def external_subdomains?
+      EXTERNAL_SUBDOMAINS.any? { |subdomain| uri.host.start_with?("#{subdomain}.") }
     end
 
     def check_request
