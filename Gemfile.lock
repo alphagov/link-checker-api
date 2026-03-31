@@ -758,7 +758,7 @@ DEPENDENCIES
   govuk_app_config
   govuk_sidekiq
   listen
-  pact
+  pact (~> 1.67)
   pact_broker-client
   pg
   plek
