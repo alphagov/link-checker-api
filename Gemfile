@@ -23,7 +23,7 @@ group :development, :test do
   gem "climate_control"
   gem "database_cleaner"
   gem "factory_bot_rails"
-  gem "pact", "~> 1.67", require: false
+  gem "pact", "~> 2.0", require: false
   gem "pact_broker-client"
   gem "pry"
   gem "rspec-rails"
