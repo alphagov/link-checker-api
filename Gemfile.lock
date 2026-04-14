@@ -706,7 +706,7 @@ GEM
     term-ansicolor (1.11.2)
       tins (~> 1.0)
     thor (1.5.0)
-    timecop (0.9.10)
+    timecop (0.9.11)
     timeout (0.6.1)
     tins (1.38.0)
       bigdecimal
