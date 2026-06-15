@@ -57,5 +57,3 @@ class CheckJob
     end
   end
 end
-
-CheckWorker = CheckJob
