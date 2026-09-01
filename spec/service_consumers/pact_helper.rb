@@ -21,7 +21,7 @@ Pact.service_provider "Link Checker API" do
     else
       base_url = "https://govuk-pact-broker-6991351eca05.herokuapp.com"
       path = "pacts/provider/#{url_encode(name)}/consumer/#{url_encode(consumer_name)}"
-      version_modifier = "versions/#{url_encode(ENV.fetch('PACT_CONSUMER_VERSION', 'branch-master'))}"
+      version_modifier = "versions/#{url_encode(ENV.fetch('PACT_CONSUMER_VERSION', 'branch-main'))}"
 
       pact_uri("#{base_url}/#{path}/#{version_modifier}")
     end
