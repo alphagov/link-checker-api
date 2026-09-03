@@ -24,7 +24,7 @@ group :development, :test do
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem "pact", "~> 1.67", require: false
-  gem "pact_broker-client"
+  gem "pact-ffi", "~> 0.4.28", require: false
   gem "pry"
   gem "rspec-rails"
   gem "rubocop-govuk"

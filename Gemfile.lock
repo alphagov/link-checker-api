@@ -110,7 +110,6 @@ GEM
     database_cleaner-core (2.0.1)
     date (3.5.1)
     diff-lcs (1.6.2)
-    dig_rb (1.0.1)
     domain_name (0.6.20240107)
     drb (2.2.3)
     erb (6.0.7)
@@ -133,7 +132,6 @@ GEM
       http-cookie (>= 1.0.0)
     faraday-net_http (3.4.4)
       net-http (~> 0.5)
-    ffi (1.17.3)
     ffi (1.17.3-aarch64-linux-gnu)
     ffi (1.17.3-arm64-darwin)
     ffi (1.17.3-x86_64-linux-gnu)
@@ -159,9 +157,6 @@ GEM
       warden-oauth2 (~> 0.0.1)
     globalid (1.4.0)
       activesupport (>= 6.1)
-    google-protobuf (4.36.1)
-      bigdecimal
-      rake (~> 13.3)
     google-protobuf (4.36.1-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
@@ -197,10 +192,6 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.1.6)
       domain_name (~> 0.5)
-    httparty (0.24.2)
-      csv
-      mini_mime (>= 1.0.0)
-      multi_xml (>= 0.5.2)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     io-console (0.9.2)
@@ -241,11 +232,9 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2026.0701)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
-    mize (0.6.1)
     msgpack (1.8.4)
     multi_json (1.19.1)
     multi_xml (0.9.1)
@@ -263,9 +252,6 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.5)
-    nokogiri (1.19.4)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.19.4-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.4-arm64-darwin)
@@ -465,7 +451,6 @@ GEM
       opentelemetry-semantic_conventions
     opentelemetry-semantic_conventions (1.44.0)
       opentelemetry-api (~> 1.0)
-    ostruct (0.6.3)
     pact (1.67.5)
       pact-mock_service (~> 3.0, >= 3.3.1)
       pact-support (~> 1.21, >= 1.21.2)
@@ -477,6 +462,12 @@ GEM
       thor (>= 0.20, < 2.0)
       webrick (~> 1.8)
       zeitwerk (~> 2.3)
+    pact-ffi (0.4.28.0-aarch64-linux)
+      ffi (~> 1.15)
+    pact-ffi (0.4.28.0-arm64-darwin)
+      ffi (~> 1.15)
+    pact-ffi (0.4.28.0-x86_64-linux)
+      ffi (~> 1.15)
     pact-mock_service (3.12.4)
       find_a_port (~> 1.0.1)
       json
@@ -495,21 +486,11 @@ GEM
       logger (< 2.0)
       rainbow (~> 3.1.1)
       string_pattern (~> 2.0)
-    pact_broker-client (1.78.0)
-      base64 (~> 0.2)
-      dig_rb (~> 1.0)
-      httparty (>= 0.21.0, < 1.0.0)
-      ostruct
-      rake (~> 13.0)
-      table_print (~> 1.5)
-      term-ansicolor (~> 1.7)
-      thor (>= 0.20, < 2.0)
     parallel (1.28.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
     parslet (2.0.0)
-    pg (1.6.3)
     pg (1.6.3-aarch64-linux)
     pg (1.6.3-arm64-darwin)
     pg (1.6.3-x86_64-linux)
@@ -587,8 +568,6 @@ GEM
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
       tsort
-    readline (0.0.4)
-      reline
     redis-client (0.30.1)
       connection_pool
     regexp_parser (2.12.0)
@@ -701,18 +680,9 @@ GEM
     statsd-ruby (1.5.0)
     string_pattern (2.4.0)
       regexp_parser (~> 2.5, >= 2.5.0)
-    sync (0.5.0)
-    table_print (1.5.7)
-    term-ansicolor (1.11.3)
-      tins (~> 1)
     thor (1.5.0)
     timecop (0.9.11)
     timeout (0.6.1)
-    tins (1.54.0)
-      bigdecimal
-      mize (~> 0.6)
-      readline
-      sync
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -744,7 +714,6 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -764,7 +733,7 @@ DEPENDENCIES
   govuk_sidekiq
   listen
   pact (~> 1.67)
-  pact_broker-client
+  pact-ffi (~> 0.4.28)
   pg
   plek
   pry
