@@ -1,9 +1,8 @@
 require "rails_helper"
-require "pact/v2"
-require "pact/v2/rspec"
+require "pact/rspec"
 
-RSpec.describe "Verify consumers for Link Checker API", :pact_v2 do
-  Pact::V2.configure do |config|
+RSpec.describe "Verify consumers for Link Checker API", :pact do
+  Pact.configure do |config|
     config.before_provider_state_setup do
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.start
