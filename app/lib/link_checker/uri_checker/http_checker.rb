@@ -195,7 +195,7 @@ module LinkChecker::UriChecker
 
     def check_request
       start_time = Time.zone.now
-      @response = make_request(:get)
+      @response = make_request(:head)
       end_time = Time.zone.now
       response_time = end_time - start_time
 
