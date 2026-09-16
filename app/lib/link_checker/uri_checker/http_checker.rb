@@ -130,7 +130,7 @@ module LinkChecker::UriChecker
       check_request
       return report if report.has_errors?
 
-      check_meta_mature_rating
+      # check_meta_mature_rating
       return report if report.has_errors?
 
       report
