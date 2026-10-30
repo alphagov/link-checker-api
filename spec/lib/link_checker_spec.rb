@@ -97,6 +97,26 @@ RSpec.describe LinkChecker do
       include_examples "has no warnings"
     end
 
+    context "URI contains invalid UTF-8 bytes" do
+      let(:uri) { "http://www.not-gov.uk/caf\xE9".dup.force_encoding(Encoding::UTF_8) }
+      include_examples "has a problem summary", "Invalid URL"
+      include_examples "has errors"
+      include_examples "has no warnings"
+    end
+
+    context "redirect location header contains invalid UTF-8 bytes" do
+      let(:uri) { "http://www.not-gov.uk/bad_location_encoding" }
+      let(:headers) { { "Location" => "http://www.not-gov.uk/recherche?q=caf\xE9".dup.force_encoding(Encoding::UTF_8) } }
+
+      before do
+        stub_request(:get, uri).to_return(status: 301, headers:)
+        stub_request(:get, "http://www.not-gov.uk/recherche?q=caf%E9").to_return(status: 200)
+      end
+
+      include_examples "has no errors"
+      include_examples "has no warnings"
+    end
+
     context "TLD is risky" do
       let(:uri) { "https://www.gov.xxx" }
       before { stub_request(:get, uri).to_return(status: 200) }

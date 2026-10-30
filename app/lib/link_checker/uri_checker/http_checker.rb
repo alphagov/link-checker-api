@@ -236,7 +236,7 @@ module LinkChecker::UriChecker
       response = run_connection_request(method, check_ssl:)
 
       if REDIRECT_STATUS_CODES.include?(response.status) && response.headers.include?("location") && !report.has_errors?
-        target_uri = uri + response.headers["location"]
+        target_uri = uri + sanitised_location_header(response)
         subreport = ValidUriChecker
           .new(target_uri.to_s, redirect_history: redirect_history + [uri], http_client:)
           .call
@@ -301,6 +301,16 @@ module LinkChecker::UriChecker
         ),
       )
       nil
+    end
+
+    def sanitised_location_header(response)
+      location = response.headers["location"]
+      return location if location.nil?
+
+      utf8_location = location.dup.force_encoding(Encoding::UTF_8)
+      return location if utf8_location.valid_encoding?
+
+      utf8_location.scrub { |bytes| bytes.bytes.map { |byte| sprintf("%%%02X", byte) }.join }
     end
 
     def run_connection_request(method, check_ssl: true)
