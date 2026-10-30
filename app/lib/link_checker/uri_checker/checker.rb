@@ -35,6 +35,7 @@ module LinkChecker::UriChecker
       Faraday.new(default_options.merge(options)) do |faraday|
         faraday.use :cookie_jar
         faraday.adapter Faraday.default_adapter
+        faraday.options.params_encoder = TolerantParamsEncoder
       end
     end
   end
