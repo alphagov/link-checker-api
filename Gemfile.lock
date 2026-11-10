@@ -147,7 +147,7 @@ GEM
       plek (>= 1.9.0)
       rack (>= 2.2.0)
       rest-client (~> 2.0)
-    gds-sso (23.0.0)
+    gds-sso (23.1.1)
       oauth2 (~> 2.0)
       omniauth (~> 2.1)
       omniauth-oauth2 (~> 1.8)
@@ -815,7 +815,7 @@ CHECKSUMS
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
   fugit (1.13.0) sha256=a4f093fce740da52f216740a5041e2a594ea763cdb89e8b2754ca4399634ab18
   gds-api-adapters (103.4.4) sha256=d53085a8134493167b4069561e51acfc27e47e42c06045819392d45f50c3a0f2
-  gds-sso (23.0.0) sha256=869f52f7f0766e3cd4fa22e06870498dec9d488457b87cf0c4a878d304df8cbb
+  gds-sso (23.1.1) sha256=4f9314ea9514602c2dbd7accd078cd0c3c231850a1d4fc01d9acabd23a96fef1
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   google-protobuf (4.36.2-aarch64-linux-gnu) sha256=c3279ec6eaa59f6ed6276eda2a33cffb4306471183ab79a332e698b8564f5169
   google-protobuf (4.36.2-aarch64-linux-musl) sha256=0772c9dde1e6dce9a6b44d1d35c28c29adee99d9bd6aff5e21840daeb22161ce
